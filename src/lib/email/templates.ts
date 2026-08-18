@@ -3,33 +3,57 @@ import { event } from "@/config/event";
 function baseLayout(bodyHtml: string): string {
   return `
 <!doctype html>
-<html>
-  <body style="margin:0;padding:0;background:#F4F8FA;font-family:Arial,Helvetica,sans-serif;color:#0B1720;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F8FA;padding:32px 16px;">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${event.name}</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#F2F5F8;font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;color:#1E293B;-webkit-font-smoothing:antialiased;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F2F5F8;padding:40px 16px;">
       <tr>
         <td align="center">
-          <table role="presentation" width="100%" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #DCE5E9;">
+          <table role="presentation" width="100%" style="max-width:600px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);border:1px solid #E2E8F0;">
+            
+            <!-- Header Section with Gradient Look -->
             <tr>
-              <td style="background:#0B1720;padding:24px 32px;">
-                <span style="color:#02A3DC;font-weight:800;font-size:18px;">Tanzania</span>
-                <span style="color:#ffffff;font-weight:800;font-size:18px;"> Buildcon</span>
-                <div style="color:rgba(255,255,255,0.6);font-size:12px;margin-top:4px;letter-spacing:0.05em;text-transform:uppercase;">
-                  International Expo ${event.edition}
-                </div>
+              <td style="background:#0F172A;padding:32px 40px;background-image:linear-gradient(to right, #0F172A, #1E293B);">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td>
+                      <span style="color:#38BDF8;font-weight:900;font-size:22px;letter-spacing:-0.5px;">Tanzania</span>
+                      <span style="color:#ffffff;font-weight:900;font-size:22px;letter-spacing:-0.5px;"> Buildcon</span>
+                      <div style="color:#94A3B8;font-size:11px;margin-top:6px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">
+                        International Expo ${event.edition}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
+
+            <!-- Main Content Area -->
             <tr>
-              <td style="padding:32px;">
+              <td style="padding:40px;">
                 ${bodyHtml}
               </td>
             </tr>
+
+            <!-- Footer Section -->
             <tr>
-              <td style="background:#F4F8FA;padding:20px 32px;font-size:12px;color:#4A5962;">
-                ${event.name}<br />
-                ${event.dates.display} · ${event.venue.fullLocation}<br />
-                ${event.websiteDisplay}
+              <td style="background-color:#F8FAFC;padding:28px 40px;border-top:1px solid #F1F5F9;font-size:12px;line-height:1.6;color:#64748B;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td>
+                      <strong style="color:#334155;">${event.name}</strong><br />
+                      📅 ${event.dates.display} &nbsp;•&nbsp; 📍 ${event.venue.fullLocation}<br />
+                      🌐 <a href="https://${event.websiteDisplay}" style="color:#0284C7;text-decoration:none;font-weight:600;" target="_blank">${event.websiteDisplay}</a>
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
+
           </table>
         </td>
       </tr>
@@ -40,9 +64,10 @@ function baseLayout(bodyHtml: string): string {
 
 function detailRow(label: string, value?: string | null): string {
   if (!value) return "";
-  return `<tr>
-    <td style="padding:6px 0;font-size:13px;color:#4A5962;width:160px;vertical-align:top;">${label}</td>
-    <td style="padding:6px 0;font-size:13px;color:#0B1720;font-weight:600;">${value}</td>
+  return `
+  <tr>
+    <td style="padding:10px 0;font-size:13px;color:#64748B;width:160px;vertical-align:top;border-bottom:1px solid #F1F5F9;font-weight:500;">${label}</td>
+    <td style="padding:10px 0;font-size:13px;color:#0F172A;font-weight:600;border-bottom:1px solid #F1F5F9;">${value}</td>
   </tr>`;
 }
 
@@ -52,11 +77,17 @@ export function organiserNotificationEmail(params: {
   rows: Array<{ label: string; value?: string | null }>;
 }): string {
   const body = `
-    <h1 style="font-size:18px;margin:0 0 4px;">${params.heading}</h1>
-    <p style="font-size:13px;color:#4A5962;margin:0 0 20px;">Reference: <strong>${params.referenceId}</strong></p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-      ${params.rows.map((r) => detailRow(r.label, r.value)).join("")}
-    </table>
+    <div style="display:inline-block;padding:4px 12px;background:#E0F2FE;color:#0369A1;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:0.02em;">
+      ADMIN NOTIFICATION
+    </div>
+    <h1 style="font-size:22px;font-weight:800;color:#0F172A;margin:0 0 6px;letter-spacing:-0.5px;">${params.heading}</h1>
+    <p style="font-size:13px;color:#64748B;margin:0 0 24px;">Reference ID: <strong style="color:#0284C7;">${params.referenceId}</strong></p>
+    
+    <div style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:8px 20px;margin-bottom:10px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        ${params.rows.map((r) => detailRow(r.label, r.value)).join("")}
+      </table>
+    </div>
   `;
   return baseLayout(body);
 }
@@ -68,16 +99,33 @@ export function userAcknowledgementEmail(params: {
   referenceId: string;
 }): string {
   const body = `
-    <h1 style="font-size:18px;margin:0 0 12px;">${params.heading}</h1>
-    <p style="font-size:14px;line-height:1.6;color:#0B1720;margin:0 0 16px;">Dear ${params.greetingName},</p>
-    <p style="font-size:14px;line-height:1.6;color:#0B1720;margin:0 0 16px;">${params.bodyText}</p>
-    <table role="presentation" cellpadding="0" cellspacing="0" style="background:#F4F8FA;border-radius:8px;padding:16px;margin:0 0 16px;">
-      <tr><td style="padding:12px 16px;font-size:13px;color:#4A5962;">Your Reference ID</td></tr>
-      <tr><td style="padding:0 16px 12px;font-size:20px;font-weight:800;color:#02A3DC;">${params.referenceId}</td></tr>
+    <h1 style="font-size:22px;font-weight:800;color:#0F172A;margin:0 0 16px;letter-spacing:-0.5px;">${params.heading}</h1>
+    <p style="font-size:15px;line-height:1.6;color:#334155;margin:0 0 12px;">Dear <strong>${params.greetingName}</strong>,</p>
+    <p style="font-size:15px;line-height:1.6;color:#334155;margin:0 0 28px;">${params.bodyText}</p>
+    
+    <!-- Premium Reference Card -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);border:1px solid #BAE6FD;border-radius:12px;margin:0 0 28px;">
+      <tr>
+        <td style="padding:20px;text-align:center;">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:#0369A1;font-weight:700;margin-bottom:4px;">Your Official Reference ID</div>
+          <div style="font-size:26px;font-weight:900;color:#0284C7;letter-spacing:1px;">${params.referenceId}</div>
+        </td>
+      </tr>
     </table>
-    <p style="font-size:13px;line-height:1.6;color:#4A5962;margin:0;">
-      This email confirms receipt of your submission only. Our team will be in touch directly
-      regarding next steps.
+
+    <!-- CTA Button -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+      <tr>
+        <td align="center">
+          <a href="https://${event.websiteDisplay}" target="_blank" style="display:inline-block;background-color:#0284C7;color:#ffffff;font-size:14px;font-weight:700;padding:14px 28px;border-radius:8px;text-decoration:none;box-shadow:0 4px 6px -1px rgba(2, 132, 199, 0.3);">
+            Visit Event Website
+          </a>
+        </td>
+      </tr>
+    </table>
+
+    <p style="font-size:13px;line-height:1.6;color:#64748B;margin:0;border-top:1px dashed #E2E8F0;padding-top:20px;">
+      This email confirms receipt of your submission. Our team will review your details and be in touch shortly regarding next steps.
     </p>
   `;
   return baseLayout(body);

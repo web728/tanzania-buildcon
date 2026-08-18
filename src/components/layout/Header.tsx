@@ -15,7 +15,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const navRef = useRef<HTMLInputElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
   // Close menus cleanly on route change
@@ -78,12 +78,12 @@ export function Header() {
       className={clsx(
         "sticky top-0 z-50 w-full transition-all duration-300 ease-in-out",
         scrolled
-          ? "border-b border-slate-200/80 bg-white/85 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/85"
+          ? "border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/90"
           : "border-b border-transparent bg-white dark:bg-slate-900"
       )}
     >
-      <Container className="flex items-center justify-between gap-4 py-3 transition-all duration-300 lg:py-0">
-        {/* Brand Logo */}
+      <Container className="flex items-center justify-between gap-4 py-2 sm:py-3 lg:py-2">
+        {/* Brand Logo - Responsive & Always Large */}
         <Link
           href="/"
           className="relative z-10 flex flex-shrink-0 items-center transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue rounded-lg"
@@ -91,14 +91,16 @@ export function Header() {
           <div
             className={clsx(
               "relative transition-all duration-300",
-              scrolled ? "h-8 w-44 sm:h-9 sm:w-52" : "h-10 w-52 sm:h-12 sm:w-64"
+              scrolled
+                ? "h-12 w-44 sm:h-14 sm:w-56 lg:h-16 lg:w-72"
+                : "h-14 w-52 sm:h-16 sm:w-64 lg:h-20 lg:w-80"
             )}
           >
             <Image
-              src="/logos/tanzania-buildcon-logo.png"
+              src="/logos/Tanzania-Logo.png"
               alt={event.name}
               fill
-              sizes="(max-width: 768px) 200px, 280px"
+              sizes="(max-width: 768px) 240px, (max-width: 1200px) 320px, 400px"
               className="object-contain object-left"
               priority
             />
@@ -107,7 +109,7 @@ export function Header() {
 
         {/* Desktop Navigation */}
         <nav aria-label="Primary Navigation" ref={navRef} className="hidden lg:block">
-          <ul className="flex items-center gap-1 xl:gap-2">
+          <ul className="flex items-center gap-1 xl:gap-3">
             {mainNav.map((item) => {
               const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
               const hasChildren = Boolean(item.children?.length);
@@ -116,7 +118,7 @@ export function Header() {
               return (
                 <li
                   key={item.href}
-                  className="group relative py-5"
+                  className="group relative py-4"
                   onMouseEnter={() => hasChildren && setOpenDropdown(item.label)}
                   onMouseLeave={() => hasChildren && setOpenDropdown(null)}
                 >
@@ -124,7 +126,7 @@ export function Header() {
                     <Link
                       href={item.href}
                       className={clsx(
-                        "relative flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-medium transition-all duration-200",
+                        "relative flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-all duration-200 xl:px-3.5",
                         isActive
                           ? "text-brand-blue font-semibold"
                           : "text-slate-700 hover:text-brand-blue dark:text-slate-200 dark:hover:text-brand-blue",
@@ -163,7 +165,7 @@ export function Header() {
                           </svg>
                         </button>
                       )}
-                      
+
                       {/* Active / Hover Indicator */}
                       <span
                         className={clsx(
@@ -224,12 +226,12 @@ export function Header() {
         </nav>
 
         {/* CTA Actions */}
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 xl:gap-3 lg:flex">
           <Button
             href={event.cta.bookStand}
             variant="primary"
             size="md"
-            className="shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+            className="shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-xs xl:text-sm px-3.5 xl:px-4"
           >
             Book a Stand
           </Button>
@@ -237,13 +239,13 @@ export function Header() {
             href={event.cta.registerVisit}
             variant="secondary"
             size="md"
-            className="shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+            className="shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-xs xl:text-sm px-3.5 xl:px-4"
           >
             Register to Visit
           </Button>
         </div>
 
-        {/* Hamburger Toggle Button */}
+        {/* Mobile Hamburger Button */}
         <button
           type="button"
           onClick={() => setMobileOpen((v) => !v)}

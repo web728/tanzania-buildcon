@@ -49,8 +49,8 @@ function FooterColumn({ title, links }: { title: string; links?: { label: string
 
   return (
     <div className="flex flex-col">
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-white/50">{title}</h3>
-      <ul className="mt-3 flex flex-col gap-1.5">
+      <h3 className="text-xs font-bold uppercase tracking-widest text-brand-blue">{title}</h3>
+      <ul className="mt-4 flex flex-col gap-2">
         {links.map((link) => (
           <li key={link.href}>
             <Link
@@ -77,23 +77,46 @@ export function Footer() {
       </div>
 
       <Container className="relative z-10">
-        {/* Top Grid Section */}
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6 lg:gap-10">
-          {/* Brand Info */}
-          <div className="col-span-2 sm:col-span-3 lg:col-span-1 flex flex-col justify-start">
+        {/* Brand Header Section (Prominent Large Logo & Event Info) */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between pb-10 border-b border-white/10 gap-6">
+          <div className="max-w-2xl">
             <Link href="/" className="inline-block transition-opacity hover:opacity-90">
               <Image
-                src="/logos/tanzania-buildcon-logo.png"
+                src="/logos/Tanzania-Logo.png"
                 alt={event.name}
-                width={200}
-                height={50}
-                className="h-10 w-auto brightness-0 invert object-contain"
+                width={500}
+                height={160}
+                priority
+                className="w-64 sm:w-80 lg:w-96 h-auto object-contain object-left"
               />
             </Link>
-            <p className="mt-4 text-sm leading-relaxed text-white/70">{event.descriptor}</p>
+            <p className="mt-4 text-sm sm:text-base leading-relaxed text-white/80">{event.descriptor}</p>
           </div>
 
-          {/* Navigation Columns */}
+          {/* Social Links Badge Block */}
+          {SOCIAL_LINKS.length > 0 && (
+            <div className="flex flex-col gap-3 lg:items-end">
+              <span className="text-xs font-semibold uppercase tracking-wider text-white/50">Follow Our Updates</span>
+              <div className="flex items-center gap-2">
+                {SOCIAL_LINKS.map((s) => (
+                  <a
+                    key={s.key}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-blue hover:bg-brand-blue/20 hover:text-white"
+                  >
+                    {SOCIAL_ICONS[s.key] || s.label[0]}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Navigation Grid Section */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-8 py-12">
           <FooterColumn title="Event" links={footerNav.event} />
           <FooterColumn title="Exhibit" links={footerNav.exhibit} />
           <FooterColumn title="Visit" links={footerNav.visit} />
@@ -101,8 +124,32 @@ export function Footer() {
           <FooterColumn title="Legal" links={footerNav.legal} />
         </div>
 
+        {/* Organisers Card Banner (Dedicated Prominent Display) */}
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md sm:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-md">
+              <span className="inline-block text-xs font-bold uppercase tracking-widest text-brand-blue mb-1">
+                Official Event Organisers
+              </span>
+              <h3 className="text-lg font-bold text-white">{event.name}</h3>
+              <p className="mt-1 text-sm text-white/70">
+                {event.dates.display} · {event.venue.fullLocation}
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 border-t border-white/10 pt-4 lg:border-t-0 lg:pt-0">
+              <span className="text-xs font-semibold uppercase tracking-wider text-white/50 sm:hidden">
+                Jointly Organised By
+              </span>
+              <div className="p-3 rounded-xl bg-white/10 border border-white/10 inline-flex items-center justify-center">
+                <OrganiserLogos onDark boxClassName="h-12 w-36 sm:h-14 sm:w-44" />
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Newsletter Callout Banner */}
-        <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-md sm:p-8">
+        <div className="mt-8 rounded-2xl border border-white/10 bg-gradient-to-r from-white/5 to-white/[0.02] p-6 sm:p-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-xl">
               <h3 className="text-base font-bold uppercase tracking-wider text-white">Stay Informed</h3>
@@ -117,53 +164,13 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Organizer & Event Meta Row */}
-        <div className="mt-12 flex flex-col gap-8 border-t border-white/10 pt-8 lg:flex-row lg:items-center lg:justify-between">
-          <div>
-            <p className="text-base font-bold text-white">{event.name}</p>
-            <p className="mt-1 text-sm text-white/70">
-              {event.dates.display} · {event.venue.fullLocation}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-8">
-            {/* Joint Organisers */}
-            <div>
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/50">
-                Jointly Organised By
-              </p>
-              <OrganiserLogos onDark boxClassName="h-10 w-28" />
-            </div>
-
-            {/* Social Media Links */}
-            {SOCIAL_LINKS.length > 0 && (
-              <div>
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/50">Connect With Us</p>
-                <div className="flex items-center gap-2">
-                  {SOCIAL_LINKS.map((s) => (
-                    <a
-                      key={s.key}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={s.label}
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/10 hover:text-white"
-                    >
-                      {SOCIAL_ICONS[s.key] || s.label[0]}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* Bottom Legal Copyright */}
-        <div className="mt-8 border-t border-white/5 pt-6 text-center sm:text-left">
-          <p className="text-xs text-white/40">
+        <div className="mt-10 border-t border-white/10 pt-6 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-white/40">
+          <p>
             © {new Date().getFullYear()} {event.name}. {organiserNames ? `Jointly organised by ${organiserNames}.` : ""}{" "}
             All rights reserved.
           </p>
+          <p>Tanzania Buildcon International Expo</p>
         </div>
       </Container>
     </footer>

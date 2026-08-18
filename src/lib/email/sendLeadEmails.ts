@@ -24,7 +24,7 @@ export async function sendExhibitorEnquiryEmails(data: ExhibitorEnquiryInput & {
           { label: "Product Category", value: data.productCategory },
           { label: "Preferred Participation", value: data.preferredParticipation },
           { label: "Required Area", value: data.requiredArea },
-          { label: "Products / Services", value: data.productsServices },
+          { label: "Products / Services", value: data.productsServices || "-" },
           { label: "Message", value: data.message },
         ],
       }),
