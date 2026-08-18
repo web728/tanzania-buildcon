@@ -34,7 +34,7 @@ export function VisitorRegistrationForm() {
     return (
       <SuccessPanel
         title="Visitor Registration Received"
-        message="Thank you for registering to visit Tanzania Buildcon International Expo. Please keep this reference for your records."
+        message="Thank you for registering to visit Tanzania Buildcon International Expo. Please keep this reference for your records and entry badge collection."
         referenceId={referenceId}
       />
     );
@@ -45,133 +45,202 @@ export function VisitorRegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-10">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-10">
+      {/* Bot Honeypot Field */}
       <div className="hidden" aria-hidden="true">
         <label htmlFor="website_hp">Website</label>
         <input id="website_hp" type="text" tabIndex={-1} autoComplete="off" {...register("website_hp")} />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <FieldWrapper label="First Name" htmlFor="firstName" required error={errors.firstName}>
-          <input id="firstName" className={inputClasses(!!errors.firstName)} {...register("firstName")} />
-        </FieldWrapper>
-        <FieldWrapper label="Last Name" htmlFor="lastName" required error={errors.lastName}>
-          <input id="lastName" className={inputClasses(!!errors.lastName)} {...register("lastName")} />
-        </FieldWrapper>
-        <FieldWrapper label="Designation" htmlFor="designation" required error={errors.designation}>
-          <input id="designation" className={inputClasses(!!errors.designation)} {...register("designation")} />
-        </FieldWrapper>
-        <FieldWrapper label="Company" htmlFor="company" required error={errors.company}>
-          <input id="company" className={inputClasses(!!errors.company)} {...register("company")} />
-        </FieldWrapper>
-        <FieldWrapper label="Country" htmlFor="country" required error={errors.country}>
-          <select id="country" className={inputClasses(!!errors.country)} {...register("country")} defaultValue="">
-            <option value="" disabled>Select country</option>
-            {countries.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-        </FieldWrapper>
-        <FieldWrapper label="City" htmlFor="city" required error={errors.city}>
-          <input id="city" className={inputClasses(!!errors.city)} {...register("city")} />
-        </FieldWrapper>
-        <FieldWrapper label="Business Email" htmlFor="email" required error={errors.email}>
-          <input id="email" type="email" className={inputClasses(!!errors.email)} {...register("email")} />
-        </FieldWrapper>
-        <FieldWrapper label="Mobile / WhatsApp" htmlFor="mobile" required error={errors.mobile}>
-          <input id="mobile" type="tel" className={inputClasses(!!errors.mobile)} {...register("mobile")} />
-        </FieldWrapper>
-        <FieldWrapper label="Nature of Business" htmlFor="natureOfBusiness" required error={errors.natureOfBusiness} className="sm:col-span-2">
-          <select id="natureOfBusiness" className={inputClasses(!!errors.natureOfBusiness)} {...register("natureOfBusiness")} defaultValue="">
-            <option value="" disabled>Select an option</option>
-            {natureOfBusinessOptions.map((o) => (
-              <option key={o} value={o}>{o}</option>
-            ))}
-          </select>
-        </FieldWrapper>
-      </div>
+      {/* SECTION 1: PERSONAL & COMPANY DETAILS */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+            01
+          </span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            Contact & Professional Details
+          </h3>
+        </div>
 
-      <div>
-        <p className="mb-3 text-sm font-semibold text-brand-dark">
-          Products Interested In <span className="text-brand-blue">*</span>
-        </p>
-        <Controller
-          name="productsInterested"
-          control={control}
-          render={({ field }) => (
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              {exhibitionSectors.map((sector) => {
-                const checked = field.value?.includes(sector.name);
-                return (
-                  <label
-                    key={sector.slug}
-                    className="flex items-center gap-2.5 rounded-md border border-brand-border px-3 py-2.5 text-sm text-brand-body has-checked:border-brand-blue has-checked:bg-brand-blue/5 has-checked:text-brand-dark"
-                  >
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded border-brand-border"
-                      checked={checked}
-                      onChange={(e) => {
-                        const next = e.target.checked
-                          ? [...(field.value ?? []), sector.name]
-                          : (field.value ?? []).filter((v) => v !== sector.name);
-                        field.onChange(next);
-                      }}
-                    />
-                    {sector.name}
-                  </label>
-                );
-              })}
-            </div>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <FieldWrapper label="First Name" htmlFor="firstName" required error={errors.firstName}>
+            <input id="firstName" placeholder="John" className={inputClasses(!!errors.firstName)} {...register("firstName")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Last Name" htmlFor="lastName" required error={errors.lastName}>
+            <input id="lastName" placeholder="Doe" className={inputClasses(!!errors.lastName)} {...register("lastName")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Designation / Job Title" htmlFor="designation" required error={errors.designation}>
+            <input id="designation" placeholder="e.g. Project Manager, Architect" className={inputClasses(!!errors.designation)} {...register("designation")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Company / Organization" htmlFor="company" required error={errors.company}>
+            <input id="company" placeholder="e.g. BuildTech Solutions" className={inputClasses(!!errors.company)} {...register("company")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Country" htmlFor="country" required error={errors.country}>
+            <select id="country" className={inputClasses(!!errors.country)} {...register("country")} defaultValue="">
+              <option value="" disabled>Select country</option>
+              {countries.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          </FieldWrapper>
+
+          <FieldWrapper label="City" htmlFor="city" required error={errors.city}>
+            <input id="city" placeholder="e.g. Dar es Salaam" className={inputClasses(!!errors.city)} {...register("city")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Business Email" htmlFor="email" required error={errors.email}>
+            <input id="email" type="email" placeholder="john@company.com" className={inputClasses(!!errors.email)} {...register("email")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Mobile / WhatsApp Number" htmlFor="mobile" required error={errors.mobile}>
+            <input id="mobile" type="tel" placeholder="+255 123 456 789" className={inputClasses(!!errors.mobile)} {...register("mobile")} />
+          </FieldWrapper>
+
+          <FieldWrapper label="Nature of Business" htmlFor="natureOfBusiness" required error={errors.natureOfBusiness} className="sm:col-span-2">
+            <select id="natureOfBusiness" className={inputClasses(!!errors.natureOfBusiness)} {...register("natureOfBusiness")} defaultValue="">
+              <option value="" disabled>Select primary business focus</option>
+              {natureOfBusinessOptions.map((o) => (
+                <option key={o} value={o}>{o}</option>
+              ))}
+            </select>
+          </FieldWrapper>
+        </div>
+      </section>
+
+      {/* SECTION 2: INTERESTED SECTORS / PRODUCTS */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+            02
+          </span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            Products & Sectors Interested In <span className="text-red-500">*</span>
+          </h3>
+        </div>
+
+        <div>
+          <Controller
+            name="productsInterested"
+            control={control}
+            render={({ field }) => (
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {exhibitionSectors.map((sector) => {
+                  const checked = field.value?.includes(sector.name);
+                  return (
+                    <label
+                      key={sector.slug}
+                      className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 text-sm transition-all ${
+                        checked
+                          ? "border-emerald-600 bg-emerald-50/60 font-medium text-slate-900 ring-2 ring-emerald-600/20"
+                          : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-600"
+                        checked={checked}
+                        onChange={(e) => {
+                          const next = e.target.checked
+                            ? [...(field.value ?? []), sector.name]
+                            : (field.value ?? []).filter((v) => v !== sector.name);
+                          field.onChange(next);
+                        }}
+                      />
+                      <span>{sector.name}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          />
+          {errors.productsInterested && (
+            <p className="mt-2 text-xs font-medium text-red-600">
+              {errors.productsInterested.message}
+            </p>
           )}
-        />
-        {errors.productsInterested ? (
-          <p className="mt-1.5 text-xs font-medium text-red-600">{errors.productsInterested.message}</p>
-        ) : null}
-      </div>
+        </div>
+      </section>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <FieldWrapper label="Purchasing Responsibility" htmlFor="purchasingResponsibility" required error={errors.purchasingResponsibility}>
-          <select id="purchasingResponsibility" className={inputClasses(!!errors.purchasingResponsibility)} {...register("purchasingResponsibility")} defaultValue="">
-            <option value="" disabled>Select an option</option>
-            {purchasingResponsibilityOptions.map((o) => (
-              <option key={o} value={o}>{o}</option>
-            ))}
-          </select>
-        </FieldWrapper>
-        <FieldWrapper label="Purpose of Visit" htmlFor="purposeOfVisit" required error={errors.purposeOfVisit}>
-          <select id="purposeOfVisit" className={inputClasses(!!errors.purposeOfVisit)} {...register("purposeOfVisit")} defaultValue="">
-            <option value="" disabled>Select an option</option>
-            {purposeOfVisitOptions.map((o) => (
-              <option key={o} value={o}>{o}</option>
-            ))}
-          </select>
-        </FieldWrapper>
-      </div>
+      {/* SECTION 3: PURCHASING RESPONSIBILITY & PURPOSE */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-700">
+            03
+          </span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            Purchasing Intent
+          </h3>
+        </div>
 
-      <div>
-        <label className="flex items-start gap-3 text-sm text-brand-body">
-          <input type="checkbox" className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-brand-border" {...register("consent")} />
-          <span>
-            I agree that Tanzania Buildcon International Expo may contact me regarding my visitor
-            registration, in line with the{" "}
-            <a href="/privacy-policy" className="underline hover:text-brand-blue">Privacy Policy</a>.
+        <div className="grid gap-5 sm:grid-cols-2">
+          <FieldWrapper label="Purchasing Responsibility" htmlFor="purchasingResponsibility" required error={errors.purchasingResponsibility}>
+            <select id="purchasingResponsibility" className={inputClasses(!!errors.purchasingResponsibility)} {...register("purchasingResponsibility")} defaultValue="">
+              <option value="" disabled>Select decision level</option>
+              {purchasingResponsibilityOptions.map((o) => (
+                <option key={o} value={o}>{o}</option>
+              ))}
+            </select>
+          </FieldWrapper>
+
+          <FieldWrapper label="Primary Purpose of Visit" htmlFor="purposeOfVisit" required error={errors.purposeOfVisit}>
+            <select id="purposeOfVisit" className={inputClasses(!!errors.purposeOfVisit)} {...register("purposeOfVisit")} defaultValue="">
+              <option value="" disabled>Select visit goal</option>
+              {purposeOfVisitOptions.map((o) => (
+                <option key={o} value={o}>{o}</option>
+              ))}
+            </select>
+          </FieldWrapper>
+        </div>
+      </section>
+
+      {/* SECTION 4: CONSENT & SUBMIT */}
+      <div className="space-y-6 pt-2">
+        <label className="flex items-start gap-3 text-sm text-slate-600">
+          <input 
+            type="checkbox" 
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-600" 
+            {...register("consent")} 
+          />
+          <span className="leading-relaxed">
+            I agree that Tanzania Buildcon International Expo may contact me regarding my visitor registration, in accordance with the{" "}
+            <a href="/privacy-policy" className="font-medium text-emerald-600 underline hover:text-emerald-700">
+              Privacy Policy
+            </a>.
           </span>
         </label>
-        {errors.consent ? <p className="mt-1.5 opacity-100 text-xs font-medium text-red-600 transition-opacity duration-150 ease-out starting:opacity-0">{errors.consent.message}</p> : null}
+        {errors.consent && (
+          <p className="text-xs font-medium text-red-600">{errors.consent.message}</p>
+        )}
+
+        {status === "error" && errorMessage && (
+          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            {errorMessage}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {status === "submitting" ? (
+            <span className="flex items-center gap-2">
+              <svg className="h-5 w-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Registering Visitor...
+            </span>
+          ) : (
+            "Complete Visitor Registration"
+          )}
+        </button>
       </div>
-
-      {status === "error" && errorMessage ? (
-        <p role="alert" className="translate-y-0 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 opacity-100 transition-[transform,opacity] duration-200 ease-out starting:translate-y-1 starting:opacity-0">{errorMessage}</p>
-      ) : null}
-
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center rounded-md bg-brand-green px-7 py-3.5 text-base font-semibold uppercase tracking-wide text-white transition-[background-color,transform] duration-150 ease-out active:scale-[0.97] disabled:active:scale-100 hover:bg-brand-green-dark disabled:opacity-60 sm:w-auto"
-      >
-        {status === "submitting" ? "Submitting…" : "Register to Visit"}
-      </button>
     </form>
   );
 }

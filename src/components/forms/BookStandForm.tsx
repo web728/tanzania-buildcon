@@ -25,10 +25,19 @@ export function BookStandForm() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ExhibitorEnquiryInput>({
     resolver: zodResolver(exhibitorEnquirySchema),
+    defaultValues: {
+      preferredParticipation: participationOptions[0],
+      requiredArea: areaOptions[0],
+    },
   });
+
+  const selectedParticipation = watch("preferredParticipation");
+  const selectedArea = watch("requiredArea");
 
   if (status === "success" && referenceId) {
     return (
@@ -45,18 +54,34 @@ export function BookStandForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-10">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-10">
+      {/* Honeypot field for bot protection */}
       <div className="hidden" aria-hidden="true">
         <label htmlFor="website_hp">Website</label>
         <input id="website_hp" type="text" tabIndex={-1} autoComplete="off" {...register("website_hp")} />
       </div>
 
-      <fieldset>
-        <legend className="text-xs font-bold uppercase tracking-[0.2em] text-brand-blue">Company</legend>
-        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+      {/* SECTION 1: COMPANY INFORMATION */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue/10 text-xs font-bold text-brand-blue">
+            01
+          </span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            Company Information
+          </h3>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
           <FieldWrapper label="Company Name" htmlFor="companyName" required error={errors.companyName}>
-            <input id="companyName" className={inputClasses(!!errors.companyName)} {...register("companyName")} />
+            <input 
+              id="companyName" 
+              placeholder="e.g. Acme Construction Ltd" 
+              className={inputClasses(!!errors.companyName)} 
+              {...register("companyName")} 
+            />
           </FieldWrapper>
+
           <FieldWrapper label="Country" htmlFor="country" required error={errors.country}>
             <select id="country" className={inputClasses(!!errors.country)} {...register("country")} defaultValue="">
               <option value="" disabled>Select country</option>
@@ -65,12 +90,15 @@ export function BookStandForm() {
               ))}
             </select>
           </FieldWrapper>
+
           <FieldWrapper label="City" htmlFor="city" error={errors.city}>
-            <input id="city" className={inputClasses(!!errors.city)} {...register("city")} />
+            <input id="city" placeholder="e.g. Dar es Salaam" className={inputClasses(!!errors.city)} {...register("city")} />
           </FieldWrapper>
-          <FieldWrapper label="Website" htmlFor="website" error={errors.website}>
-            <input id="website" placeholder="https://" className={inputClasses(!!errors.website)} {...register("website")} />
+
+          <FieldWrapper label="Company Website" htmlFor="website" error={errors.website}>
+            <input id="website" placeholder="https://example.com" className={inputClasses(!!errors.website)} {...register("website")} />
           </FieldWrapper>
+
           <FieldWrapper label="Company Type" htmlFor="companyType" required error={errors.companyType} className="sm:col-span-2">
             <select id="companyType" className={inputClasses(!!errors.companyType)} {...register("companyType")} defaultValue="">
               <option value="" disabled>Select company type</option>
@@ -80,105 +108,207 @@ export function BookStandForm() {
             </select>
           </FieldWrapper>
         </div>
-      </fieldset>
+      </section>
 
-      <fieldset>
-        <legend className="text-xs font-bold uppercase tracking-[0.2em] text-brand-blue">Contact</legend>
-        <div className="mt-5 grid gap-5 sm:grid-cols-2">
+      {/* SECTION 2: CONTACT DETAILS */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue/10 text-xs font-bold text-brand-blue">
+            02
+          </span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            Primary Contact Person
+          </h3>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
           <FieldWrapper label="First Name" htmlFor="firstName" required error={errors.firstName}>
-            <input id="firstName" className={inputClasses(!!errors.firstName)} {...register("firstName")} />
+            <input id="firstName" placeholder="John" className={inputClasses(!!errors.firstName)} {...register("firstName")} />
           </FieldWrapper>
+
           <FieldWrapper label="Last Name" htmlFor="lastName" required error={errors.lastName}>
-            <input id="lastName" className={inputClasses(!!errors.lastName)} {...register("lastName")} />
+            <input id="lastName" placeholder="Doe" className={inputClasses(!!errors.lastName)} {...register("lastName")} />
           </FieldWrapper>
-          <FieldWrapper label="Designation" htmlFor="designation" required error={errors.designation}>
-            <input id="designation" className={inputClasses(!!errors.designation)} {...register("designation")} />
+
+          <FieldWrapper label="Designation / Job Title" htmlFor="designation" required error={errors.designation}>
+            <input id="designation" placeholder="e.g. Sales Director" className={inputClasses(!!errors.designation)} {...register("designation")} />
           </FieldWrapper>
+
           <FieldWrapper label="Business Email" htmlFor="email" required error={errors.email}>
-            <input id="email" type="email" className={inputClasses(!!errors.email)} {...register("email")} />
+            <input id="email" type="email" placeholder="john@company.com" className={inputClasses(!!errors.email)} {...register("email")} />
           </FieldWrapper>
-          <FieldWrapper label="Mobile / WhatsApp" htmlFor="mobile" required error={errors.mobile} className="sm:col-span-2">
-            <input id="mobile" type="tel" className={inputClasses(!!errors.mobile)} {...register("mobile")} />
+
+          <FieldWrapper label="Mobile / WhatsApp Number" htmlFor="mobile" required error={errors.mobile} className="sm:col-span-2">
+            <input id="mobile" type="tel" placeholder="+255 123 456 789" className={inputClasses(!!errors.mobile)} {...register("mobile")} />
           </FieldWrapper>
         </div>
-      </fieldset>
+      </section>
 
-      <fieldset>
-        <legend className="text-xs font-bold uppercase tracking-[0.2em] text-brand-blue">Participation</legend>
-        <div className="mt-5 grid gap-5 sm:grid-cols-2">
-          <FieldWrapper label="Product Category" htmlFor="productCategory" required error={errors.productCategory}>
+      {/* SECTION 3: EXHIBITION REQUIREMENT */}
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue/10 text-xs font-bold text-brand-blue">
+            03
+          </span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-800">
+            Stand & Exhibition Preferences
+          </h3>
+        </div>
+
+        <div className="grid gap-6">
+          {/* Sector Selection */}
+          <FieldWrapper label="Product Category / Sector" htmlFor="productCategory" required error={errors.productCategory}>
             <select id="productCategory" className={inputClasses(!!errors.productCategory)} {...register("productCategory")} defaultValue="">
-              <option value="" disabled>Select category</option>
+              <option value="" disabled>Select sector category</option>
               {exhibitionSectors.map((s) => (
                 <option key={s.slug} value={s.name}>{s.name}</option>
               ))}
             </select>
           </FieldWrapper>
-          <FieldWrapper label="Preferred Participation" htmlFor="preferredParticipation" required error={errors.preferredParticipation}>
-            <select id="preferredParticipation" className={inputClasses(!!errors.preferredParticipation)} {...register("preferredParticipation")} defaultValue="">
-              <option value="" disabled>Select an option</option>
-              {participationOptions.map((o) => (
-                <option key={o} value={o}>{o}</option>
+
+          {/* Interactive Participation Options Visual Card Selector */}
+          <div>
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+              Preferred Participation Type <span className="text-red-500">*</span>
+            </label>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {participationOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setValue("preferredParticipation", option, { shouldValidate: true })}
+                  className={`flex flex-col items-start rounded-xl border p-4 text-left transition-all ${
+                    selectedParticipation === option
+                      ? "border-brand-blue bg-brand-blue/5 ring-2 ring-brand-blue/20"
+                      : "border-slate-200 bg-white hover:border-slate-300"
+                  }`}
+                >
+                  <span className="text-sm font-semibold text-slate-900">{option}</span>
+                  <span className="mt-1 text-xs text-slate-500">
+                    {option.includes("Shell") 
+                      ? "Includes pre-built booth, lighting, table & chairs" 
+                      : "Custom build space (min 18 sqm)"}
+                  </span>
+                </button>
               ))}
-            </select>
-          </FieldWrapper>
-          <FieldWrapper label="Products / Services" htmlFor="productsServices" required error={errors.productsServices} className="sm:col-span-2">
-            <textarea id="productsServices" rows={3} className={inputClasses(!!errors.productsServices)} {...register("productsServices")} />
-          </FieldWrapper>
-          <FieldWrapper label="Required Area" htmlFor="requiredArea" required error={errors.requiredArea}>
-            <select id="requiredArea" className={inputClasses(!!errors.requiredArea)} {...register("requiredArea")} defaultValue="">
-              <option value="" disabled>Select area</option>
-              {areaOptions.map((o) => (
-                <option key={o} value={o}>{o}</option>
+            </div>
+            {errors.preferredParticipation && (
+              <p className="mt-1.5 text-xs text-red-600">{errors.preferredParticipation.message}</p>
+            )}
+          </div>
+
+          {/* Area Options Pill Selector */}
+          <div>
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-700">
+              Required Area Space <span className="text-red-500">*</span>
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {areaOptions.map((area) => (
+                <button
+                  key={area}
+                  type="button"
+                  onClick={() => setValue("requiredArea", area, { shouldValidate: true })}
+                  className={`rounded-lg border px-4 py-2.5 text-xs font-medium transition-all ${
+                    selectedArea === area
+                      ? "border-brand-blue bg-brand-blue text-white shadow-sm"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
+                  }`}
+                >
+                  {area}
+                </button>
               ))}
-            </select>
+            </div>
+            {errors.requiredArea && (
+              <p className="mt-1.5 text-xs text-red-600">{errors.requiredArea.message}</p>
+            )}
+          </div>
+
+          <FieldWrapper label="Key Products / Services to Display" htmlFor="productsServices" required error={errors.productsServices}>
+            <textarea 
+              id="productsServices" 
+              rows={3} 
+              placeholder="Briefly describe what products or machinery you will display..." 
+              className={inputClasses(!!errors.productsServices)} 
+              {...register("productsServices")} 
+            />
           </FieldWrapper>
-          <div />
-          <FieldWrapper label="Existing business in Tanzania?" htmlFor="existingBusinessInTanzania" error={errors.existingBusinessInTanzania}>
-            <select id="existingBusinessInTanzania" className={inputClasses()} {...register("existingBusinessInTanzania")} defaultValue="">
-              <option value="">Select</option>
-              {yesNoOptions.map((o) => (
-                <option key={o} value={o}>{o}</option>
-              ))}
-            </select>
-          </FieldWrapper>
-          <FieldWrapper label="Looking for a distributor in Tanzania?" htmlFor="lookingForDistributor" error={errors.lookingForDistributor}>
-            <select id="lookingForDistributor" className={inputClasses()} {...register("lookingForDistributor")} defaultValue="">
-              <option value="">Select</option>
-              {yesNoMaybeOptions.map((o) => (
-                <option key={o} value={o}>{o}</option>
-              ))}
-            </select>
-          </FieldWrapper>
-          <FieldWrapper label="Message / Requirements" htmlFor="message" error={errors.message} className="sm:col-span-2">
-            <textarea id="message" rows={3} className={inputClasses()} {...register("message")} />
+
+          {/* Business Intent Questions */}
+          <div className="grid gap-5 rounded-xl border border-slate-100 bg-slate-50/70 p-4 sm:grid-cols-2 sm:p-5">
+            <FieldWrapper label="Existing business in Tanzania?" htmlFor="existingBusinessInTanzania" error={errors.existingBusinessInTanzania}>
+              <select id="existingBusinessInTanzania" className={inputClasses()} {...register("existingBusinessInTanzania")} defaultValue="">
+                <option value="">Select option</option>
+                {yesNoOptions.map((o) => (
+                  <option key={o} value={o}>{o}</option>
+                ))}
+              </select>
+            </FieldWrapper>
+
+            <FieldWrapper label="Looking for local distributors?" htmlFor="lookingForDistributor" error={errors.lookingForDistributor}>
+              <select id="lookingForDistributor" className={inputClasses()} {...register("lookingForDistributor")} defaultValue="">
+                <option value="">Select option</option>
+                {yesNoMaybeOptions.map((o) => (
+                  <option key={o} value={o}>{o}</option>
+                ))}
+              </select>
+            </FieldWrapper>
+          </div>
+
+          <FieldWrapper label="Additional Messages / Custom Requirements" htmlFor="message" error={errors.message}>
+            <textarea 
+              id="message" 
+              rows={3} 
+              placeholder="Any specific location preference, height requirement, or questions..." 
+              className={inputClasses()} 
+              {...register("message")} 
+            />
           </FieldWrapper>
         </div>
-      </fieldset>
+      </section>
 
-      <div>
-        <label className="flex items-start gap-3 text-sm text-brand-body">
-          <input type="checkbox" className="mt-0.5 h-4 w-4 flex-shrink-0 rounded border-brand-border" {...register("consent")} />
-          <span>
-            I agree that Tanzania Buildcon International Expo may contact me regarding my exhibitor
-            enquiry, in line with the{" "}
-            <a href="/privacy-policy" className="underline hover:text-brand-blue">Privacy Policy</a>.
+      {/* SECTION 4: CONSENT & SUBMISSION */}
+      <div className="space-y-6 pt-4">
+        <label className="flex items-start gap-3 text-sm text-slate-600">
+          <input 
+            type="checkbox" 
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-blue focus:ring-brand-blue" 
+            {...register("consent")} 
+          />
+          <span className="leading-relaxed">
+            I agree that Tanzania Buildcon International Expo may contact me regarding my exhibitor enquiry in accordance with the{" "}
+            <a href="/privacy-policy" className="font-medium text-brand-blue underline hover:text-brand-blue/80">
+              Privacy Policy
+            </a>.
           </span>
         </label>
-        {errors.consent ? <p className="mt-1.5 opacity-100 text-xs font-medium text-red-600 transition-opacity duration-150 ease-out starting:opacity-0">{errors.consent.message}</p> : null}
+        {errors.consent && (
+          <p className="text-xs font-medium text-red-600">{errors.consent.message}</p>
+        )}
+
+        {status === "error" && errorMessage && (
+          <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+            {errorMessage}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          className="inline-flex w-full items-center justify-center rounded-xl bg-brand-blue px-8 py-4 text-base font-semibold text-white shadow-lg shadow-brand-blue/20 transition-all hover:bg-brand-blue/90 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {status === "submitting" ? (
+            <span className="flex items-center gap-2">
+              <svg className="h-5 w-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Submitting Application...
+            </span>
+          ) : (
+            "Submit Exhibitor Application"
+          )}
+        </button>
       </div>
-
-      {status === "error" && errorMessage ? (
-        <p role="alert" className="translate-y-0 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 opacity-100 transition-[transform,opacity] duration-200 ease-out starting:translate-y-1 starting:opacity-0">{errorMessage}</p>
-      ) : null}
-
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center rounded-md bg-brand-blue px-7 py-3.5 text-base font-semibold uppercase tracking-wide text-white transition-[background-color,transform] duration-150 ease-out active:scale-[0.97] disabled:active:scale-100 hover:bg-brand-blue-dark disabled:opacity-60 sm:w-auto"
-      >
-        {status === "submitting" ? "Submitting…" : "Submit Exhibitor Enquiry"}
-      </button>
     </form>
   );
 }

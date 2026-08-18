@@ -23,12 +23,36 @@ export const metadata: Metadata = {
 };
 
 const BENEFITS = [
-  { title: "Source New Products", icon: TargetIcon, body: "Discover building materials, machinery, equipment and technologies from participating suppliers." },
-  { title: "Meet Manufacturers Directly", icon: HandshakeIcon, body: "Discuss products, specifications, pricing and supply requirements directly with manufacturers and authorised suppliers." },
-  { title: "Compare Products & Suppliers", icon: CompassIcon, body: "Evaluate alternative products, technologies and suppliers efficiently in one location." },
-  { title: "Discover New Brands", icon: PresentationIcon, body: "Identify manufacturers and products seeking business opportunities in the Tanzanian market." },
-  { title: "Discuss Technical Requirements", icon: BlueprintIcon, body: "Get direct technical guidance from manufacturers and suppliers on your specific project needs." },
-  { title: "Develop Business Relationships", icon: LinkIcon, body: "Build direct business contacts for current requirements and future projects." },
+  {
+    title: "Source New Products",
+    Icon: TargetIcon,
+    body: "Discover building materials, machinery, equipment and technologies from participating suppliers.",
+  },
+  {
+    title: "Meet Manufacturers Directly",
+    Icon: HandshakeIcon,
+    body: "Discuss products, specifications, pricing and supply requirements directly with manufacturers and authorised suppliers.",
+  },
+  {
+    title: "Compare Products & Suppliers",
+    Icon: CompassIcon,
+    body: "Evaluate alternative products, technologies and suppliers efficiently in one location.",
+  },
+  {
+    title: "Discover New Brands",
+    Icon: PresentationIcon,
+    body: "Identify manufacturers and products seeking business opportunities in the Tanzanian market.",
+  },
+  {
+    title: "Discuss Technical Requirements",
+    Icon: BlueprintIcon,
+    body: "Get direct technical guidance from manufacturers and suppliers on your specific project needs.",
+  },
+  {
+    title: "Develop Business Relationships",
+    Icon: LinkIcon,
+    body: "Build direct business contacts for current requirements and future projects.",
+  },
 ];
 
 export default function VisitPage() {
@@ -41,7 +65,12 @@ export default function VisitPage() {
           <SectionHeading title="Source Products. Meet Suppliers. Develop Business." />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {BENEFITS.map((b) => (
-              <BenefitCard key={b.title} title={b.title} description={b.body} icon={b.icon} />
+              <BenefitCard
+                key={b.title}
+                title={b.title}
+                description={b.body}
+                icon={<b.Icon className="h-6 w-6 text-brand-blue" />}
+              />
             ))}
           </div>
 
