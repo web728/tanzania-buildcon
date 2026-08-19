@@ -9,6 +9,6 @@ function randomSegment(length: number): string {
 }
 
 /** Generates a human-readable reference ID, e.g. TBEX-4K7QZP. */
-export function generateReferenceId(prefix: "TBEX" | "TBVR" | "TBPT" | "TBCN"): string {
+export function generateReferenceId(prefix: "TBEX" | "TBVR" | "TBPT" | "TBCN" | "BRCH"): string {
   return `${prefix}-${randomSegment(6)}`;
 }
