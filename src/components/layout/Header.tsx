@@ -18,13 +18,11 @@ export function Header() {
   const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
-  // Close menus cleanly on route change
   useEffect(() => {
     setMobileOpen(false);
     setOpenDropdown(null);
   }, [pathname]);
 
-  // Handle scroll detection
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -34,7 +32,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Prevent background scroll when mobile menu is active
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -46,7 +43,6 @@ export function Header() {
     };
   }, [mobileOpen]);
 
-  // Close dropdown on Escape key or outside click
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === "Escape") {
       setOpenDropdown(null);
@@ -69,39 +65,39 @@ export function Header() {
     };
   }, [handleKeyDown]);
 
-  const toggleDropdown = (label: string) => {
-    setOpenDropdown((prev) => (prev === label ? null : label));
-  };
-
   return (
     <header
       className={clsx(
         "sticky top-0 z-50 w-full transition-all duration-300 ease-in-out",
         scrolled
-          ? "border-b border-slate-200/80 bg-white/90 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/90 py-2"
+          ? "border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-md dark:border-slate-800/80 dark:bg-slate-900/95 py-2"
           : "border-b border-transparent bg-white py-3 sm:py-4 dark:bg-slate-900"
       )}
     >
       <Container className="flex items-center justify-between gap-4">
-        {/* Brand Logo - Responsive sizing without layout shift */}
-        <Link
-          href="/"
-          className="relative z-10 flex shrink-0 items-center rounded-lg transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
-        >
-          <div className="relative h-16 w-32 sm:h-11 sm:w-44 lg:h-22 lg:w-48 xl:h-14 xl:w-56 transition-all duration-300">
+        {/* Left-most Logo Container */}
+        <div className="flex shrink-0 items-center justify-start">
+          <Link
+            href="/"
+            className="relative z-10 -ml-2 sm:-ml-3 flex items-center transition-transform hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
+          >
             <Image
               src="/logos/Tanzania-Logo.png"
               alt={event.name}
-              fill
-              sizes="(max-width: 740px) 148px, (max-width: 1024px) 176px, 224px"
-              className="object-contain object-left"
+              width={400}
+              height={140}
               priority
+              className="h-16 w-auto sm:h-20 md:h-24 lg:h-24 xl:h-28 max-w-[260px] sm:max-w-[320px] md:max-w-[360px] lg:max-w-[400px] object-contain object-left"
             />
-          </div>
-        </Link>
+          </Link>
+        </div>
 
-        {/* Desktop Navigation */}
-        <nav aria-label="Primary Navigation" ref={navRef} className="hidden lg:block">
+        {/* Desktop Navigation - Centered / Pushed comfortably */}
+        <nav
+          aria-label="Primary Navigation"
+          ref={navRef}
+          className="hidden lg:flex items-center justify-center mx-auto px-2 xl:px-4"
+        >
           <ul className="flex items-center gap-1 xl:gap-2">
             {mainNav.map((item) => {
               const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
@@ -119,7 +115,7 @@ export function Header() {
                     <Link
                       href={item.href}
                       className={clsx(
-                        "relative flex items-center gap-1.5 rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 xl:px-4 xl:text-sm",
+                        "relative flex items-center gap-1.5 whitespace-nowrap rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 xl:px-3.5 xl:text-sm",
                         isActive
                           ? "text-brand-blue font-semibold"
                           : "text-slate-700 hover:text-brand-blue dark:text-slate-200 dark:hover:text-brand-blue",
@@ -129,7 +125,6 @@ export function Header() {
                     >
                       <span>{item.label}</span>
 
-                      {/* Dropdown Indicator Icon */}
                       {hasChildren && (
                         <svg
                           className={clsx(
@@ -150,10 +145,9 @@ export function Header() {
                         </svg>
                       )}
 
-                      {/* Active Indicator Bar */}
                       <span
                         className={clsx(
-                          "absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-brand-blue transition-all duration-300",
+                          "absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-brand-blue transition-all duration-300 xl:left-3.5 xl:right-3.5",
                           isActive
                             ? "opacity-100"
                             : "scale-x-0 opacity-0 group-hover:scale-x-100 group-hover:opacity-100"
@@ -162,11 +156,11 @@ export function Header() {
                     </Link>
                   </div>
 
-                  {/* Dropdown Submenu */}
+                  {/* Dropdown Menu */}
                   {hasChildren && (
                     <div
                       className={clsx(
-                        "absolute left-0 top-full pt-2 transition-all duration-200 ease-out z-50",
+                        "absolute left-1/2 -translate-x-1/2 top-full pt-2 transition-all duration-200 ease-out z-50",
                         isDropdownOpen
                           ? "pointer-events-auto visible translate-y-0 opacity-100"
                           : "pointer-events-none invisible translate-y-2 opacity-0"
@@ -211,25 +205,25 @@ export function Header() {
           </ul>
         </nav>
 
-     {/* Action Buttons - Visible on Desktop (`lg:` and up) */}
-<div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0">
-  <Button
-    href={event.cta.bookStand}
-    variant="primary"
-    size="md"
-    className="shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-xs xl:text-sm px-3 xl:px-4 py-1.5"
-  >
-    Book a Stand
-  </Button>
-  <Button
-    href={event.cta.registerVisit}
-    variant="secondary"
-    size="md"
-    className="shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-xs xl:text-sm px-3 xl:px-4 py-1.5"
-  >
-    Register to Visit
-  </Button>
-</div>
+        {/* Right Section: Action Buttons */}
+        <div className="hidden lg:flex items-center justify-end gap-2 xl:gap-3 shrink-0">
+          <Button
+            href={event.cta.bookStand}
+            variant="primary"
+            size="md"
+            className="shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-xs xl:text-sm px-3.5 xl:px-4 py-2 whitespace-nowrap"
+          >
+            Book a Stand
+          </Button>
+          <Button
+            href={event.cta.registerVisit}
+            variant="secondary"
+            size="md"
+            className="shadow-sm hover:shadow-md transition-all active:scale-[0.98] text-xs xl:text-sm px-3.5 xl:px-4 py-2 whitespace-nowrap"
+          >
+            Register to Visit
+          </Button>
+        </div>
 
         {/* Mobile Hamburger Button */}
         <button
@@ -238,7 +232,7 @@ export function Header() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50/50 transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-blue lg:hidden dark:border-slate-800 dark:bg-slate-900"
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-slate-200/80 bg-slate-50/50 transition-colors hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-blue lg:hidden dark:border-slate-800 dark:bg-slate-900"
         >
           <div className="relative h-4 w-5">
             <span
@@ -263,7 +257,6 @@ export function Header() {
         </button>
       </Container>
 
-      {/* Mobile Drawer Menu */}
       <MobileMenu open={mobileOpen} onClose={() => setMobileOpen(false)} />
     </header>
   );
