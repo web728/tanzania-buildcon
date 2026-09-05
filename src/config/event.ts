@@ -62,23 +62,27 @@ export const event = {
   contact: {
     exhibitorEnquiries: {
       label: "Exhibition Enquiries",
-      email: process.env.NEXT_PUBLIC_CONTACT_EXHIBITOR_EMAIL || "[TO BE PROVIDED]",
-      phone: process.env.NEXT_PUBLIC_CONTACT_EXHIBITOR_PHONE || "[TO BE PROVIDED]",
+      name: "Mr. Namit Gupta",
+      email: "namit@futurextrade.com",
+      phone: "(+91) 9810855697",
     },
     internationalParticipation: {
       label: "International Participation",
-      email: process.env.NEXT_PUBLIC_CONTACT_INTERNATIONAL_EMAIL || "[TO BE PROVIDED]",
-      phone: process.env.NEXT_PUBLIC_CONTACT_INTERNATIONAL_PHONE || "[TO BE PROVIDED]",
+      name: "Mr. Vijayanka Brighuvanshi",
+      email: "vijayanka@etsipl.in",
+      phone: "(+91) 9324232529",
     },
     visitorEnquiries: {
       label: "Visitor Enquiries",
-      email: process.env.NEXT_PUBLIC_CONTACT_VISITOR_EMAIL || "[TO BE PROVIDED]",
-      phone: process.env.NEXT_PUBLIC_CONTACT_VISITOR_PHONE || "[TO BE PROVIDED]",
+      name: "Mr. Vaibhav Srivastava",
+      email: "vaibhav@futurextrade.com",
+      phone: "(+91) 9807169880",
     },
     general: {
       label: "General Enquiries",
-      email: process.env.NEXT_PUBLIC_CONTACT_GENERAL_EMAIL || "[TO BE PROVIDED]",
-      phone: process.env.NEXT_PUBLIC_CONTACT_GENERAL_PHONE || "[TO BE PROVIDED]",
+      name: "Mr. Namit Gupta",
+      email: "namit@futurextrade.com",
+      phone: "(+91) 9810855697",
     },
   },
 
