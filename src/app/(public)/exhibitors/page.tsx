@@ -80,7 +80,7 @@ export default async function ExhibitorsPage() {
                       What&apos;s on Display?
                     </h3>
                   </div>
-                  <span className="text-xs text-slate-400">15 Specialized Sectors</span>
+                  <span className="text-xs text-slate-400">Specialized Sectors</span>
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-2">

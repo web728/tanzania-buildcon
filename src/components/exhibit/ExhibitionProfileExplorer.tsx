@@ -75,7 +75,7 @@ export function ExhibitionProfileExplorer() {
           <div className="flex items-center justify-between gap-4 text-xs font-semibold text-slate-500 lg:justify-end">
             <span className="inline-flex items-center gap-2 rounded-full bg-slate-100/80 px-3.5 py-1.5 border border-slate-200/60">
               <span className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
-              Showing <strong className="text-slate-900">{filtered.length}</strong> of {exhibitionSectors.length} Sectors
+              Showing all Sectors
             </span>
             {(activeSlug || query) && (
               <button
@@ -106,7 +106,7 @@ export function ExhibitionProfileExplorer() {
                 : "bg-slate-100/80 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900"
             }`}
           >
-            All 15 Sectors
+            All Sectors
           </button>
           {exhibitionSectors.map((sector) => {
             const isSelected = activeSlug === sector.slug;
@@ -191,9 +191,7 @@ export function ExhibitionProfileExplorer() {
                         )}
                       </div>
 
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 group-hover:bg-brand-blue/10 group-hover:text-brand-blue transition-colors">
-                        Sector #{String(index + 1).padStart(2, "0")}
-                      </span>
+                  
                     </div>
 
                     {/* Sector Title */}

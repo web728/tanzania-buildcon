@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/ui/PageHero";
 import { Container } from "@/components/ui/Container";
-import { ExhibitionProfileExplorer } from "@/components/sections/ExhibitionProfileExplorer";
+import { ExhibitionProfileExplorer } from "@/components/exhibit/ExhibitionProfileExplorer";
 
 export const metadata: Metadata = {
   title: "Exhibition Profile | 15 Specialized Exhibit Sectors",

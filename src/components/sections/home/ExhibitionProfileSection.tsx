@@ -185,7 +185,7 @@ export function ExhibitionProfileSection() {
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue" />
               </span>
               <span className="text-[11px] font-bold uppercase tracking-wider text-brand-blue">
-                What&apos;s On Display • 15 Industry Sectors
+                What&apos;s On Display • Industry Sectors
               </span>
             </div>
 
@@ -197,7 +197,7 @@ export function ExhibitionProfileSection() {
             </h2>
 
             <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
-              Covering the entire building supply chain across 15 official exhibit categories with live product showcases and working machinery displays.
+              Covering the entire building supply chain across all official exhibit categories with live product showcases and working machinery displays.
             </p>
           </div>
 
@@ -206,7 +206,7 @@ export function ExhibitionProfileSection() {
               href="/exhibition-profile"
               className="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-slate-700 shadow-sm transition-all duration-300 hover:border-brand-blue hover:text-brand-blue hover:shadow-md active:scale-95"
             >
-              All 15 Sectors Page →
+              All Sectors Page →
             </Link>
           </div>
         </div>
@@ -229,15 +229,7 @@ export function ExhibitionProfileSection() {
                 }`}
               >
                 <span>{tab.label}</span>
-                <span
-                  className={`rounded-lg px-2 py-0.5 text-[10px] font-bold transition-colors ${
-                    isActive
-                      ? "bg-brand-blue text-white"
-                      : "bg-slate-100 text-slate-500"
-                  }`}
-                >
-                  {tab.count}
-                </span>
+             
               </button>
             );
           })}

@@ -210,7 +210,7 @@ export function VisitClientView() {
                 Free pre-registration is open for trade professionals
               </h4>
               <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Join 10,000+ industry professionals from 25–27 August 2027 at Diamond Jubilee Hall, Dar es Salaam[cite: 3].
+                Join 10,000+ industry professionals from 25–27 August 2027 at Diamond Jubilee Hall, Dar es Salaam.
               </p>
             </div>
           </div>
@@ -219,7 +219,7 @@ export function VisitClientView() {
             href={event.cta.registerVisit}
             className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all duration-200"
           >
-            Register to Visit[cite: 3]
+            Register to Visit
           </Link>
         </div>
       </Container>

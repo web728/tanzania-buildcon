@@ -125,7 +125,7 @@ export function WhyExhibitSection() {
                     : "text-slate-400 hover:text-white"
                 }`}
               >
-                5 Core Pillars
+                Core Pillars
               </button>
               <button
                 type="button"
@@ -148,7 +148,7 @@ export function WhyExhibitSection() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 backdrop-blur-md">
               <div className="text-base font-extrabold text-brand-green tracking-tight">+6.5%</div>
               <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                Sector Growth (Q3 2025)
+                Sector Growth 
               </div>
             </div>
 

@@ -338,7 +338,7 @@ export function PlanYourVisitClientView() {
                 Free trade visitor registration is currently active
               </h4>
               <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Held from 25–27 August 2027 at Diamond Jubilee Hall, Dar es Salaam[cite: 3].
+                Held from 25–27 August 2027 at Diamond Jubilee Hall, Dar es Salaam.
               </p>
             </div>
           </div>

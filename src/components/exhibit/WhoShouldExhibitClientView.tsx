@@ -136,7 +136,7 @@ export function WhoShouldExhibitClientView() {
             </h2>
 
             <p className="mt-2.5 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
-              Direct access to East Africa&apos;s decision-makers for manufacturers, international suppliers, and material producers across 11 core profiles.
+              Direct access to East Africa&apos;s decision-makers for manufacturers, international suppliers, and material producers across core profiles.
             </p>
           </div>
 
@@ -145,7 +145,7 @@ export function WhoShouldExhibitClientView() {
               href="/exhibition-profile"
               className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-blue hover:text-brand-blue hover:-translate-y-0.5"
             >
-              15 Exhibit Sectors →
+              Exhibit Sectors →
             </Link>
             <Link
               href={event.cta.bookStand}

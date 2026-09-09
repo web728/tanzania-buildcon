@@ -111,7 +111,7 @@ export function ExhibitorDirectoryPreviewSection({
             </h2>
 
             <p className="mt-2.5 text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
-              Connect directly with verified machinery manufacturers, material exporters, and East African master distributors across 15 exhibition profiles.
+              Connect directly with verified machinery manufacturers, material exporters, and East African master distributors across all exhibition profiles.
             </p>
           </div>
 

@@ -27,10 +27,10 @@ export function EmptyState({ title, body }: { title: string; body: string }) {
       <div className="mx-auto mt-8 flex max-w-xl flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50/70 p-4 text-left">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            Joint Event Organisers[cite: 3]
+            Joint Event Organisers
           </span>
           <p className="text-xs font-bold text-brand-dark">
-            Futurex Trade Fair &amp; Events &bull; ETSIPL[cite: 3]
+            Futurex Trade Fair &amp; Events &bull; ETSIPL 
           </p>
         </div>
 
@@ -38,7 +38,7 @@ export function EmptyState({ title, body }: { title: string; body: string }) {
           href={`tel:${event.contact.general.phone.replace(/[^0-9+]/g, "")}`}
           className="text-xs font-bold text-brand-blue hover:underline whitespace-nowrap"
         >
-          Contact Secretariat: {event.contact.general.phone}[cite: 3]
+          Contact Secretariat: {event.contact.general.phone} 
         </Link>
       </div>
     </div>
