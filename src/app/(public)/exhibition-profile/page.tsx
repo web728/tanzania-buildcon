@@ -4,26 +4,29 @@ import { Container } from "@/components/ui/Container";
 import { ExhibitionProfileExplorer } from "@/components/sections/ExhibitionProfileExplorer";
 
 export const metadata: Metadata = {
-  title: "Exhibition Profile",
+  title: "Exhibition Profile | 15 Specialized Exhibit Sectors",
   description:
-    "Fifteen sectors covering building materials Tanzania and construction machinery Tanzania buyers source, plus hardware, steel, HVAC, plumbing and electrical Tanzania suppliers — the full building and construction supply chain in one exhibition profile.",
+    "Explore 15 specialized construction, machinery, building materials and interior technology exhibit sectors at Tanzania Buildcon International Expo 2027.",
   alternates: { canonical: "/exhibition-profile" },
 };
 
 export default function ExhibitionProfilePage() {
   return (
-    <>
+    <main className="min-h-screen bg-[#fafbfd] selection:bg-brand-blue selection:text-white">
       <PageHero
-        title="Products. Machinery. Materials. Technologies."
-        intro="Fifteen product sectors covering the full building and construction supply chain — from raw materials and structural systems to finishing, safety and energy solutions."
-        image={{ src: "/images/sectors/crane-machinery.jpg", alt: "Construction crane against a clear sky" }}
+        title="Products, Machinery & Materials"
+        intro="Fifteen specialized exhibit sectors covering the complete building and infrastructure supply chain across East Africa."
+        image={{
+          src: "/images/sectors/crane-machinery.jpg",
+          alt: "Tanzania Buildcon Construction Machinery",
+        }}
       />
 
-      <section className="bg-brand-light py-20 sm:py-24">
+      <section className="relative py-16 lg:py-24 border-t border-slate-200/80">
         <Container>
           <ExhibitionProfileExplorer />
         </Container>
       </section>
-    </>
+    </main>
   );
 }

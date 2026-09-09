@@ -1,165 +1,198 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { Countdown } from "@/components/ui/Countdown";
-import { BrandMotif } from "@/components/brand/BrandMotif";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
 
 export function HeroSection() {
   return (
-    <section 
-      className="relative flex min-h-[90vh] lg:min-h-screen w-full items-center justify-center overflow-hidden bg-brand-dark text-white"
-      aria-label="Hero Banner - Tanzania Buildcon Expo 2027"
-    >
-      {/* Background Image Layer */}
-      <div className="absolute inset-0 z-0">
+  <section
+  className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-hidden bg-[#071118] pt-28 sm:pt-36 lg:pt-40 pb-16 text-white selection:bg-brand-blue selection:text-white"
+  aria-label="Hero Banner - Tanzania Buildcon Expo"
+>
+      {/* Background Image Canvas with Soft Frosted Fog */}
+      <div className="absolute inset-0 z-0 select-none overflow-hidden">
         <Image
           src="/images/home/skyline-construction.jpg"
-          alt="Tanzania Buildcon Expo 2027"
+          alt="Tanzania Buildcon Expo"
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-20 scale-105"
-          style={{ objectPosition: "75% 50%" }}
+          className="object-cover opacity-75 scale-100"
+          style={{ objectPosition: "center 45%" }}
         />
-        {/* Ambient Glow Effects */}
-        <div className="absolute -left-32 -top-32 h-[400px] w-[400px] rounded-full bg-brand-blue/20 blur-[120px] pointer-events-none" />
-        <div className="absolute -right-20 -bottom-20 h-[350px] w-[350px] rounded-full bg-brand-green/15 blur-[120px] pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/90 to-brand-dark/40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/60 via-transparent to-brand-dark" />
+
+        {/* Translucent Frosted Fog Wash */}
+        <div className="absolute inset-0 bg-[#071118]/45 backdrop-blur-[3px]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#071118]/85 via-transparent to-[#071118]/40" />
       </div>
 
-      {/* Blueprint Grid Texture */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 z-0 opacity-[0.04] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
-          backgroundSize: "36px 36px",
-        }}
-      />
+      {/* Floating 3D Wireframe Wave Mesh (Reference Image Inspired) */}
+      <div className="pointer-events-none absolute inset-0 z-0 select-none overflow-hidden">
+        <svg
+          viewBox="0 0 1440 900"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-full w-full opacity-65"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            <linearGradient id="waveBlueLight" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#02a3dc" stopOpacity="0.1" />
+              <stop offset="50%" stopColor="#02a3dc" stopOpacity="0.8" />
+              <stop offset="85%" stopColor="#25b34b" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#02a3dc" stopOpacity="0.05" />
+            </linearGradient>
+            <linearGradient id="waveGreenLight" x1="100%" y1="0%" x2="0%" y2="0%">
+              <stop offset="0%" stopColor="#25b34b" stopOpacity="0.1" />
+              <stop offset="50%" stopColor="#25b34b" stopOpacity="0.75" />
+              <stop offset="85%" stopColor="#02a3dc" stopOpacity="0.65" />
+              <stop offset="100%" stopColor="#25b34b" stopOpacity="0.05" />
+            </linearGradient>
+          </defs>
 
-      {/* Right Side Brand Motif Image Graphic (Desktop & Large Screens) */}
-      <motion.div 
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-        className="pointer-events-none absolute -right-[8%] top-1/2 z-0 hidden h-[600px] w-[600px] -translate-y-1/2 lg:block xl:-right-[2%] xl:h-[720px] xl:w-[720px]"
-      >
-        <BrandMotif
-          variant="full"
-          opacity={0.8}
-          priority
-          className="h-full w-full animate-pulse transition-all duration-1000"
-        />
-      </motion.div>
+          {/* Left Side Concentric Rings */}
+          <g opacity="0.4">
+            <circle cx="80" cy="620" r="150" stroke="#02a3dc" strokeWidth="1" strokeDasharray="5 7" />
+            <circle cx="80" cy="620" r="230" stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.3" />
+            <circle cx="80" cy="620" r="320" stroke="#25b34b" strokeWidth="1" strokeDasharray="8 12" />
+          </g>
 
-      {/* Main Content Container */}
-      <Container className="relative z-10 py-16 lg:py-20">
-        <div className="max-w-2xl">
-          
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-          >
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-green opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-green"></span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-brand-green">
-                {event.descriptor || "East Africa's Premier Construction Trade Show"}
-              </span>
-            </div>
-          </motion.div>
+          {/* Right Side Concentric Rings */}
+          <g opacity="0.4">
+            <circle cx="1360" cy="620" r="160" stroke="#25b34b" strokeWidth="1" strokeDasharray="6 8" />
+            <circle cx="1360" cy="620" r="250" stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.3" />
+            <circle cx="1360" cy="620" r="340" stroke="#02a3dc" strokeWidth="1" strokeDasharray="10 14" />
+          </g>
 
-          {/* Main Heading */}
+          {/* Animated 3D Flowing Ribbon Lines */}
+          {Array.from({ length: 10 }).map((_, i) => (
+            <motion.path
+              key={i}
+              d={`M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`}
+              stroke={i % 2 === 0 ? "url(#waveBlueLight)" : "url(#waveGreenLight)"}
+              strokeWidth={i % 3 === 0 ? "1.4" : "0.85"}
+              strokeOpacity={0.25 + (i / 10) * 0.45}
+              fill="none"
+              animate={{
+                d: [
+                  `M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`,
+                  `M-100,${500 + i * 16} C${260 + i * 12},${430 + i * 8} ${560 - i * 8},${640 - i * 6} ${940 + i * 6},${550 + i * 4} C${1180 - i * 8},${420 + i * 8} 1380,${580 - i * 8} 1600,${520 + i * 6}`,
+                  `M-100,${520 + i * 16} C${240 + i * 14},${400 + i * 10} ${580 - i * 10},${680 - i * 8} ${920 + i * 8},${520 + i * 6} C${1200 - i * 8},${400 + i * 10} 1360,${610 - i * 6} 1600,${500 + i * 8}`,
+                ],
+              }}
+              transition={{
+                duration: 14 + i * 1,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </svg>
+
+        {/* Ambient Fog Glow Points */}
+        <div className="absolute top-1/4 left-1/3 h-[320px] w-[320px] rounded-full bg-brand-blue/20 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-1/3 right-1/3 h-[300px] w-[300px] rounded-full bg-brand-green/20 blur-[140px] pointer-events-none" />
+      </div>
+
+      {/* Main Content (Spacious & Minimal) */}
+      <Container className="relative z-10 w-full py-16 sm:py-20">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="mx-auto flex max-w-4xl flex-col items-center text-center"
+        >
+          {/* Main Title */}
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.15, ease: "easeOut" }}
-            className="mt-4 text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white"
+            variants={itemVariants}
+            className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white drop-shadow-md"
           >
             Tanzania Buildcon
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-blue-400 to-teal-300">
+            <span className="block mt-2 font-extrabold tracking-normal text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-300 to-brand-green">
               International Expo 2027
             </span>
           </motion.h1>
 
-          {/* Event Details Badges (Date, Venue) */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-            className="mt-6 flex flex-wrap items-center gap-2.5 text-xs font-semibold text-white/80"
+          {/* Short Crisp Tagline */}
+          <motion.p
+            variants={itemVariants}
+            className="mt-6 max-w-xl text-sm sm:text-base leading-relaxed tracking-wide text-slate-100 font-normal drop-shadow"
           >
-            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-sm">
+            {event.descriptor || "East Africa's Premier Building & Construction Trade Exhibition"}
+          </motion.p>
+
+          {/* Featured Glass Date & Venue Pill */}
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 inline-flex flex-wrap items-center justify-center gap-y-2 rounded-full border border-white/20 bg-brand-dark/45 px-5 py-2 backdrop-blur-xl shadow-2xl"
+          >
+            {/* Date */}
+            <div className="flex items-center gap-2.5 px-3 py-0.5 text-xs sm:text-sm font-semibold tracking-wide text-white">
               <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span>{event.dates.displayShort}</span>
+              <span>{event.dates.display}</span>
             </div>
 
-            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-sm">
-              <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-              <span>{event.venue.name}</span>
-            </div>
+            <div className="hidden h-4 w-[1px] bg-white/20 sm:block" />
 
-            <div className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 backdrop-blur-sm">
-              <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            {/* Venue & Country */}
+            <div className="flex items-center gap-2.5 px-3 py-0.5 text-xs sm:text-sm font-semibold tracking-wide text-white">
+              <svg className="h-4 w-4 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span>{event.venue.city}, {event.venue.country}</span>
+              <span>{event.venue.name}, {event.venue.city}</span>
             </div>
           </motion.div>
 
           {/* Action CTAs */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.45, ease: "easeOut" }}
-            className="mt-8 flex flex-wrap items-center gap-4"
+            variants={itemVariants}
+            className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-5"
           >
-            <Button 
-              href={event.cta.bookStand} 
-              size="md" 
-              className="shadow-lg shadow-brand-blue/30 hover:scale-105 transition-transform duration-300"
+            <Button
+              href={event.cta.bookStand}
+              className="inline-flex items-center justify-center rounded-full bg-brand-blue px-9 py-3.5 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white shadow-[0_0_28px_rgba(2,163,220,0.4)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_0_36px_rgba(2,163,220,0.55)] hover:-translate-y-0.5 active:translate-y-0"
             >
               Book a Stand
             </Button>
-            <Button 
-              href={event.cta.registerVisit} 
-              variant="secondary" 
-              size="md"
-              className="border-white/20 bg-white/10 backdrop-blur-md hover:scale-105 transition-transform duration-300 hover:bg-white/20"
+            <Button
+              href={event.cta.registerVisit}
+              variant="secondary"
+              className="inline-flex items-center justify-center rounded-full border border-white/25 bg-white/10 px-9 py-3.5 text-xs sm:text-sm font-semibold tracking-wider uppercase text-white backdrop-blur-xl transition-all duration-300 hover:border-brand-green/60 hover:bg-white/20 hover:-translate-y-0.5 active:translate-y-0"
             >
               Register to Visit
             </Button>
           </motion.div>
-
-          {/* Live Countdown Timer */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-            className="mt-8 rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-md max-w-lg"
-          >
-            <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-white/60">
-              Official Exhibition Opening In
-            </p>
-            <Countdown targetIso={event.dates.countdownTargetIso} />
-          </motion.div>
-
-        </div>
+        </motion.div>
       </Container>
     </section>
   );

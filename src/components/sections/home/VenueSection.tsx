@@ -1,120 +1,159 @@
 "use client";
 
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
 import { event } from "@/config/event";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
-import { SectionMotif } from "@/components/brand/SectionMotif";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
 
 export function VenueSection() {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50 py-24 sm:py-32">
-      
-      {/* Background Decor Motifs & Blueprint Grid */}
-      <SectionMotif position="top-left" size="lg" opacity={0.05} />
+  const mapSearchQuery = encodeURIComponent(`${event.venue.name}, ${event.venue.city}, Tanzania`);
 
-      <div className="absolute inset-0 pointer-events-none opacity-[0.025]">
-        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#fafbfd] via-white to-[#fafbfd] py-12 sm:py-16 lg:py-20 text-brand-dark border-b border-slate-200/80">
+      
+      {/* Background Architectural Vector Mesh */}
+      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.03]">
+        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="grid-pattern-venue" width="32" height="32" patternUnits="userSpaceOnUse">
-              <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#000000" strokeWidth="0.8" />
+            <pattern id="venue-grid" width="36" height="36" patternUnits="userSpaceOnUse">
+              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
             </pattern>
           </defs>
-          <rect width="100%" height="100%" fill="url(#grid-pattern-venue)" />
+          <rect width="100%" height="100%" fill="url(#venue-grid)" />
         </svg>
       </div>
 
-      <Container className="relative z-10">
-        <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
-          
-          {/* Left Column: Venue Details */}
+      <Container className="relative z-10 w-full">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-40px" }}
+          className="grid items-stretch gap-6 lg:grid-cols-12 lg:gap-8"
+        >
+          {/* ========================================================= */}
+          {/* Left Column: Official Venue Briefing Glass Card           */}
+          {/* ========================================================= */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            variants={itemVariants}
+            className="flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white/80 p-6 sm:p-8 lg:p-10 shadow-[0_4px_24px_rgb(0,0,0,0.03)] backdrop-blur-xl lg:col-span-6"
           >
-            {/* Top Pill Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/5 px-3.5 py-1 text-xs font-bold uppercase tracking-wider text-brand-blue">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-blue opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue"></span>
-              </span>
-              Official Event Venue
-            </div>
-
-            {/* Venue Heading */}
-            <h2 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl leading-[1.15]">
-              {event.venue.name}
-            </h2>
-
-            {/* Event Date Badge */}
-            <div className="mt-4 inline-flex items-center gap-2 rounded-xl bg-slate-100 px-3.5 py-1.5 text-sm font-semibold text-slate-700">
-              <svg className="h-4 w-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              {event.dates.display}
-            </div>
-
-            {/* Intro Description */}
-            <p className="mt-5 max-w-xl text-base sm:text-lg leading-relaxed text-slate-600">
-              {event.name} takes place at <strong className="font-semibold text-slate-800">{event.venue.name}</strong>, a world-class exhibition center situated in the heart of <strong className="font-semibold text-slate-800">{event.venue.city}</strong> — Tanzania&apos;s principal commercial and international trade hub.
-            </p>
-
-            {/* Quick Feature Badges Grid */}
-            <div className="mt-8 grid grid-cols-2 gap-4 border-t border-slate-200/80 pt-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue">
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Location</h4>
-                  <p className="text-sm font-bold text-slate-800">{event.venue.city}, Tanzania</p>
-                </div>
+            <div>
+              {/* Context Live Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/[0.06] px-3.5 py-1">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-blue opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue" />
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
+                  Official Event Location
+                </span>
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10 text-teal-600">
-                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5" />
-                  </svg>
+              {/* Venue Name Heading */}
+              <h2 className="mt-4 text-2xl sm:text-4xl lg:text-[2.4rem] font-extrabold tracking-[-0.03em] leading-[1.14] text-brand-dark">
+                {event.venue.name}
+              </h2>
+
+              {/* Sub-Header / City Context */}
+              <div className="mt-2 text-base sm:text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-brand-blue to-brand-green">
+                {event.venue.city}, Tanzania
+              </div>
+
+              {/* Concise Venue Narrative */}
+              <p className="mt-3.5 text-xs sm:text-sm leading-[1.7] tracking-normal text-slate-600 font-normal">
+                Situated in Tanzania&apos;s principal commercial and logistics hub, this premier venue offers dedicated exhibition halls, direct access from key transit corridors, and high-capacity trade infrastructure.
+              </p>
+
+              {/* Compact Key Parameters Grid */}
+              <div className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                {/* Date Capsule */}
+                <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-blue/10 text-brand-blue">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Dates
+                    </span>
+                    <span className="text-xs font-bold text-brand-dark">
+                      {event.dates.display}
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Facility</h4>
-                  <p className="text-sm font-bold text-slate-800">Modern Exhibition Halls</p>
+
+                {/* Hub Capsule */}
+                <div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/70 p-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-green/10 text-brand-green">
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                      Facility
+                    </span>
+                    <span className="text-xs font-bold text-brand-dark">
+                      Exhibition Halls
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Action Buttons */}
-           <div className="mt-8 flex flex-wrap items-center gap-4">
-  <Button href="/plan-your-visit" size="md" className="shadow-lg shadow-brand-blue/15">
-    Plan Your Visit →
-  </Button>
-  
-  <a
-    href={`https://maps.google.com/?q=${encodeURIComponent(`${event.venue.name}, ${event.venue.city}`)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-800 transition-all hover:bg-slate-50 hover:border-slate-300 shadow-sm"
-  >
-    Open in Google Maps ↗
-  </a>
-</div>
+            {/* Actions Pill Row */}
+            <div className="mt-8 flex flex-wrap items-center gap-3 pt-5 border-t border-slate-100">
+              <Link
+                href="/plan-your-visit"
+                className="inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(2,163,220,0.25)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_22px_rgba(2,163,220,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+              >
+                Plan Your Visit →
+              </Link>
+              <a
+                href={`https://maps.google.com/?q=${mapSearchQuery}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-xs font-semibold tracking-wide text-slate-700 transition-all duration-300 hover:border-slate-300 hover:bg-white hover:-translate-y-0.5"
+              >
+                Open in Maps ↗
+              </a>
+            </div>
           </motion.div>
 
-          {/* Right Column: Google Maps iFrame Container */}
+          {/* ========================================================= */}
+          {/* Right Column: Google Maps Interactive Glass Container     */}
+          {/* ========================================================= */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-2 shadow-xl shadow-slate-200/50"
+            variants={itemVariants}
+            className="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-white p-2.5 shadow-[0_4px_24px_rgb(0,0,0,0.03)] lg:col-span-6"
           >
-            <div className="relative overflow-hidden rounded-2xl h-[380px] sm:h-[440px] w-full bg-slate-100">
+            <div className="relative h-[320px] sm:h-[380px] lg:h-full min-h-[320px] w-full overflow-hidden rounded-2xl bg-slate-100">
               <iframe
                 title={`Map of ${event.venue.name}, ${event.venue.city}`}
                 src={event.venue.mapEmbedUrl}
@@ -122,16 +161,19 @@ export function VenueSection() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
-              
-              {/* Overlay Glass Badge on Top Corner */}
-              <div className="absolute top-4 left-4 rounded-xl border border-white/40 bg-white/80 p-3 backdrop-blur-md shadow-md">
-                <p className="text-xs font-bold text-slate-900">{event.venue.name}</p>
-                <p className="text-[11px] font-medium text-slate-500">{event.venue.city}, Tanzania</p>
+
+              {/* Frosted Floating Overlay Tag */}
+              <div className="pointer-events-none absolute bottom-4 left-4 rounded-xl border border-white/60 bg-white/85 px-4 py-2.5 backdrop-blur-md shadow-lg shadow-black/5">
+                <p className="text-xs font-bold text-brand-dark">
+                  {event.venue.name}
+                </p>
+                <p className="text-[10px] font-medium text-slate-500">
+                  {event.venue.city}, Tanzania
+                </p>
               </div>
             </div>
           </motion.div>
-
-        </div>
+        </motion.div>
       </Container>
     </section>
   );

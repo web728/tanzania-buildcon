@@ -4,18 +4,17 @@ import "./globals.css";
 import { event } from "@/config/event";
 import { CookieConsent } from "@/components/ui/CookieConsent";
 import { Analytics } from "@/components/ui/Analytics";
+import { InitialSiteLoader } from "@/components/ui/InitialSiteLoader";
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -86,7 +85,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="min-h-full flex flex-col bg-white text-brand-dark"
+        className="min-h-full flex flex-col bg-white text-brand-dark font-sans"
         suppressHydrationWarning
       >
         <script
@@ -97,9 +96,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <a href="#main-content" className="skip-link">
-          Skip to content
-        </a>
+        
+        {/* Initial First-Load Experience Preloader */}
+        <InitialSiteLoader />
+
         {children}
         <CookieConsent />
         <Analytics />

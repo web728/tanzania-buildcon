@@ -1,48 +1,28 @@
 import type { Metadata } from "next";
 import { event } from "@/config/event";
 import { PageHero } from "@/components/ui/PageHero";
-import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
-import { whoShouldExhibit } from "@/data/visitorProfile";
+import { WhoShouldExhibitClientView } from "@/components/exhibit/WhoShouldExhibitClientView";
 
 export const metadata: Metadata = {
-  title: "Who Should Exhibit",
+  title: "Who Should Exhibit | Tanzania Buildcon 2027",
   description:
-    "Manufacturers, exporters, importers and distributors of building materials, machinery and construction technologies relevant to Tanzania Buildcon International Expo.",
+    "Explore target exhibitor profiles — from international manufacturers and machinery suppliers to local Tanzanian producers and technology providers.",
   alternates: { canonical: "/who-should-exhibit" },
 };
 
 export default function WhoShouldExhibitPage() {
   return (
-    <>
+    <main className="min-h-screen bg-[#fafbfd] selection:bg-brand-blue selection:text-white">
       <PageHero
-        title={`${event.shortName} is Relevant For`}
-        intro="From international manufacturers to Tanzanian producers, distributors and technology providers — companies across the building and construction supply chain."
+        title="Who Should Exhibit at Tanzania Buildcon"
+        intro="Connecting the full commercial value chain — international manufacturers, regional equipment suppliers, and Tanzanian producers meeting key buyers across East Africa."
+        image={{
+          src: "/images/sectors/crane-machinery.jpg",
+          alt: "Industrial machinery and construction equipment display",
+        }}
       />
 
-      <section className="bg-white py-20 sm:py-24">
-        <Container>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-            {whoShouldExhibit.map((item) => (
-              <div
-                key={item}
-                className="flex min-h-[88px] items-center rounded-xl border border-brand-border bg-brand-light px-5 py-4"
-              >
-                <span className="text-sm font-bold text-brand-dark">{item}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-12 flex flex-wrap gap-4">
-            <Button href={event.cta.bookStand} size="lg">
-              Book Your Stand
-            </Button>
-            <Button href="/exhibition-profile" variant="ghost" size="lg">
-              View Exhibition Profile
-            </Button>
-          </div>
-        </Container>
-      </section>
-    </>
+      <WhoShouldExhibitClientView />
+    </main>
   );
 }

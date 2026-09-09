@@ -1,90 +1,28 @@
 import type { Metadata } from "next";
 import { event } from "@/config/event";
 import { PageHero } from "@/components/ui/PageHero";
-import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { BenefitCard } from "@/components/ui/BenefitCard";
-import { Button } from "@/components/ui/Button";
-import {
-  TargetIcon,
-  HandshakeIcon,
-  GrowthIcon,
-  CompassIcon,
-  BlueprintIcon,
-  PresentationIcon,
-  LinkIcon,
-} from "@/components/icons/MiscIcons";
+import { VisitClientView } from "@/components/visit/VisitClientView";
 
 export const metadata: Metadata = {
-  title: "Why Visit",
+  title: "Why Visit | Tanzania Buildcon 2027",
   description:
-    "Meet construction suppliers Tanzania and building product suppliers Tanzania trust, source new products directly and develop business relationships at this construction trade fair Tanzania hosts in Dar es Salaam.",
+    "Source products directly from global manufacturers, compare building suppliers, and develop business partnerships at Tanzania Buildcon International Expo 2027 in Dar es Salaam.",
   alternates: { canonical: "/visit" },
 };
 
-const BENEFITS = [
-  {
-    title: "Source New Products",
-    Icon: TargetIcon,
-    body: "Discover building materials, machinery, equipment and technologies from participating suppliers.",
-  },
-  {
-    title: "Meet Manufacturers Directly",
-    Icon: HandshakeIcon,
-    body: "Discuss products, specifications, pricing and supply requirements directly with manufacturers and authorised suppliers.",
-  },
-  {
-    title: "Compare Products & Suppliers",
-    Icon: CompassIcon,
-    body: "Evaluate alternative products, technologies and suppliers efficiently in one location.",
-  },
-  {
-    title: "Discover New Brands",
-    Icon: PresentationIcon,
-    body: "Identify manufacturers and products seeking business opportunities in the Tanzanian market.",
-  },
-  {
-    title: "Discuss Technical Requirements",
-    Icon: BlueprintIcon,
-    body: "Get direct technical guidance from manufacturers and suppliers on your specific project needs.",
-  },
-  {
-    title: "Develop Business Relationships",
-    Icon: LinkIcon,
-    body: "Build direct business contacts for current requirements and future projects.",
-  },
-];
-
 export default function VisitPage() {
   return (
-    <>
-      <PageHero title="Visit Tanzania Buildcon" intro={event.brandLines.visitor} />
+    <main className="min-h-screen bg-[#fafbfd] selection:bg-brand-blue selection:text-white">
+      <PageHero
+        title="Source Products. Meet Suppliers. Develop Business."
+        intro="Three focused exhibition days connecting architects, contractors, developers, and trade buyers directly with leading international and regional building material manufacturers."
+        image={{
+          src: "/images/sectors/architects-engineers.jpg",
+          alt: "Trade visitors and buyers sourcing building materials",
+        }}
+      />
 
-      <section className="bg-white py-20 sm:py-24">
-        <Container>
-          <SectionHeading title="Source Products. Meet Suppliers. Develop Business." />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {BENEFITS.map((b) => (
-              <BenefitCard
-                key={b.title}
-                title={b.title}
-                description={b.body}
-                icon={<b.Icon className="h-6 w-6 text-brand-blue" />}
-              />
-            ))}
-          </div>
-
-          <div className="mt-12 flex flex-wrap gap-4">
-            <Button href={event.cta.registerVisit} size="lg">
-              Register to Visit
-            </Button>
-            <Button href="/who-should-visit" variant="ghost" size="lg">
-              <GrowthIcon className="h-4 w-4" />
-              Who Should Visit
-            </Button>
-          </div>
-        </Container>
-      </section>
-    </>
+      <VisitClientView />
+    </main>
   );
 }

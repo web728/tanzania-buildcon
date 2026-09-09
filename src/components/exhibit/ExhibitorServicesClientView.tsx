@@ -1,0 +1,282 @@
+"use client";
+
+import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
+import { event } from "@/config/event";
+import { Container } from "@/components/ui/Container";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.07,
+      delayChildren: 0.04,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.5,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
+
+const SERVICES = [
+  {
+    id: "visa",
+    title: "Visa Information & Entry Requirements",
+    tag: "Travel Guidance",
+    body: "International exhibitors and delegates travelling to Tanzania must confirm their individual entry requirements. While many nationalities are eligible for an online e-Visa, delegates should consult the official Tanzania Immigration Department portal prior to booking flights.",
+    link: { label: "Official Tanzania Immigration Portal", href: "https://www.immigration.go.tz/" },
+    isAvailable: true,
+  },
+  {
+    id: "invitation-letter",
+    title: "Official Visa Invitation Letters",
+    tag: "Delegation Support",
+    body: "Confirmed exhibitors requiring an official organizer invitation letter for consular processing can request one upon confirmation of their booth space booking. Our secretariat coordinates with the relevant trade ministries to support your application.",
+    cta: { label: "Request Invitation Letter →", href: "/contact" },
+    isAvailable: true,
+  },
+  {
+    id: "stand-construction",
+    title: "Stand Construction & Space Options",
+    tag: "Hall Setup",
+    body: "Exhibitors can select between a turnkey Shell Scheme package (complete with branded fascia board, standard carpet, spotlights, power points, and furniture) or Raw Bare Space for custom-fabricated pavilions and heavy machinery displays.",
+    cta: { label: "Explore Booth Options →", href: "/exhibit" },
+    isAvailable: true,
+  },
+  {
+    id: "freight-logistics",
+    title: "Customs Clearance & Freight Logistics",
+    tag: "Port & Transport",
+    body: "Dar es Salaam Port handles approximately 95% of Tanzania's international trade. Official on-site freight forwarding partners, bonded warehouse options, and temporary customs clearance procedures will be released to all confirmed exhibitors.",
+    isAvailable: false,
+  },
+  {
+    id: "hotels",
+    title: "Hospitality & Corporate Hotel Bookings",
+    tag: "Accommodation",
+    body: "Special corporate tariffs with vetted partner hotels in central Dar es Salaam — featuring airport shuttle services and direct connectivity to Diamond Jubilee Hall — will be published shortly.",
+    isAvailable: false,
+  },
+  {
+    id: "exhibitor-manual",
+    title: "Technical Exhibitor Manual",
+    tag: "Operations",
+    body: "The definitive show manual containing move-in schedules, technical electrical load allowances, heavy plant offloading schedules, and security protocols will be distributed directly to registered booth holders.",
+    isAvailable: false,
+  },
+  {
+    id: "on-site-services",
+    title: "On-Site Hall Services & Utilities",
+    tag: "Trade Floor",
+    body: "Comprehensive hall infrastructure including dedicated high-voltage power lines, continuous compressed air supply, high-speed Wi-Fi, and material handling gear will be available during all setup and show days.",
+    isAvailable: false,
+  },
+];
+
+export function ExhibitorServicesClientView() {
+  const cleanPhone = event.contact.exhibitorEnquiries.phone.replace(/[^0-9+]/g, "");
+
+  return (
+    <div className="relative overflow-hidden py-14 sm:py-20 text-brand-dark">
+      {/* Background Architectural Vector Grid */}
+      <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.035]">
+        <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="services-grid" width="36" height="36" patternUnits="userSpaceOnUse">
+              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#services-grid)" />
+        </svg>
+      </div>
+
+      <Container className="relative z-10 w-full">
+        {/* Top Header: Balanced Titles & CTA */}
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between pb-8 border-b border-slate-200/80">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/[0.06] px-4 py-1">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-blue opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue" />
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
+                Operational Excellence
+              </span>
+            </div>
+
+            <h2 className="mt-4 text-2xl sm:text-4xl font-extrabold tracking-[-0.03em] leading-[1.15] text-brand-dark">
+              Exhibition Services &amp;{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-500 to-brand-green">
+                On-Site Facilities
+              </span>
+            </h2>
+
+            <p className="mt-2.5 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
+              Essential operational resources, visa facilitation, freight logistics, and booth delivery specifications for participants at {event.name}.
+            </p>
+          </div>
+
+          <div className="shrink-0">
+            <Link
+              href={event.cta.bookStand}
+              className="inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(2,163,220,0.25)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_22px_rgba(2,163,220,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+            >
+              Book Exhibition Space →
+            </Link>
+          </div>
+        </div>
+
+        {/* Spacious Services Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-40px" }}
+          className="mt-8 sm:mt-10 grid grid-cols-1 gap-6 md:grid-cols-2"
+        >
+          {SERVICES.map((item) => (
+            <motion.div
+              key={item.id}
+              id={item.id}
+              variants={itemVariants}
+              className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white/95 p-6 sm:p-7 shadow-[0_2px_12px_rgb(0,0,0,0.02)] backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-xl hover:shadow-brand-blue/5"
+            >
+              <div>
+                {/* Header Tag Bar */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                  <span className="rounded-full border border-slate-200/80 bg-slate-50 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                    {item.tag}
+                  </span>
+
+                  {item.isAvailable ? (
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-brand-green">
+                      <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
+                      Active Service
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                      Release Pending
+                    </span>
+                  )}
+                </div>
+
+                {/* Service Title */}
+                <h3 className="mt-5 text-base sm:text-lg font-bold tracking-tight text-brand-dark group-hover:text-brand-blue transition-colors">
+                  {item.title}
+                </h3>
+
+                {/* Service Description */}
+                <p className="mt-2.5 text-xs sm:text-[13.5px] leading-[1.75] text-slate-600 font-normal">
+                  {item.body}
+                </p>
+              </div>
+
+              {/* Action Buttons & Links */}
+              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                {item.link ? (
+                  <a
+                    href={item.link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-brand-blue transition-colors hover:text-brand-blue-dark hover:underline"
+                  >
+                    {item.link.label} ↗
+                  </a>
+                ) : item.cta ? (
+                  <Link
+                    href={item.cta.href}
+                    className="font-semibold text-brand-blue transition-colors hover:text-brand-blue-dark hover:underline"
+                  >
+                    {item.cta.label}
+                  </Link>
+                ) : (
+                  <span className="text-[11px] text-slate-400 font-medium">
+                    Manual release with booth confirmation
+                  </span>
+                )}
+
+                <span className="text-slate-300 transition-transform group-hover:translate-x-1">→</span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Direct Organizer Helpdesk Card (Brochure Match) */}
+        <div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-xl">
+              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
+                Dedicated Operations Desk
+              </span>
+              <h3 className="mt-1 text-lg sm:text-xl font-bold tracking-tight text-brand-dark">
+                Require Custom Technical Assistance?
+              </h3>
+              <p className="mt-2 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
+                For custom machinery weight allowances, compressed air installation, or special stand fabrication inquiries, connect directly with the secretariat.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+              <a
+                href={`tel:${cleanPhone}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-blue hover:text-brand-blue hover:bg-white"
+              >
+                <svg className="h-4 w-4 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                {event.contact.exhibitorEnquiries.phone}
+              </a>
+
+              <a
+                href={`mailto:${event.contact.exhibitorEnquiries.email}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-blue px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all"
+              >
+                <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Email Technical Desk
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Booking Ribbon */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-brand-blue/20 bg-gradient-to-r from-brand-blue/[0.04] via-white to-brand-green/[0.04] p-5 sm:p-6 shadow-sm">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-xs sm:text-sm font-bold text-brand-dark">
+                Planning your exhibition presence in Dar es Salaam?
+              </h4>
+              <p className="text-[11px] text-slate-500 font-normal mt-0.5">
+                Held from 25–27 August 2027 at Diamond Jubilee Hall. Prime locations allocated on first-come basis.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href={event.cta.bookStand}
+            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all duration-200"
+          >
+            Apply for Stand Space
+          </Link>
+        </div>
+      </Container>
+    </div>
+  );
+}

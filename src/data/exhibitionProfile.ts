@@ -1,203 +1,83 @@
-export type SectorCategory = {
-  slug: string;
+export interface SectorItem {
   name: string;
+  slug: string;
   subcategories: string[];
-};
+}
 
-export const exhibitionSectors: SectorCategory[] = [
+export const exhibitionSectors: SectorItem[] = [
   {
-    slug: "building-materials",
     name: "Building Materials",
-    subcategories: [
-      "Cement",
-      "Concrete",
-      "Blocks",
-      "Bricks",
-      "Gypsum",
-      "Boards",
-      "Roofing",
-      "Cladding",
-      "Insulation",
-      "Waterproofing",
-      "Construction Chemicals",
-    ],
+    slug: "building-materials",
+    subcategories: ["Cement & Concrete", "Blocks & Bricks", "Gypsum Boards", "Roofing & Cladding", "Waterproofing", "Construction Chemicals"]
   },
   {
-    slug: "construction-machinery-equipment",
     name: "Construction Machinery & Equipment",
-    subcategories: [
-      "Earthmoving Equipment",
-      "Excavators",
-      "Loaders",
-      "Concrete Machinery",
-      "Batching Equipment",
-      "Cranes",
-      "Lifting Equipment",
-      "Scaffolding",
-      "Formwork",
-      "Compaction & Site Equipment",
-    ],
+    slug: "construction-machinery",
+    subcategories: ["Earthmoving Equipment", "Excavators & Loaders", "Concrete & Batching Plants", "Cranes & Lifting", "Scaffolding & Formwork"]
   },
   {
-    slug: "hardware-tools-fasteners",
-    name: "Hardware, Tools & Fasteners",
-    subcategories: [
-      "Hand Tools",
-      "Power Tools",
-      "Cutting Tools",
-      "Drilling Equipment",
-      "Fasteners",
-      "Abrasives",
-      "Industrial Hardware",
-      "Workshop Equipment",
-    ],
+    name: "Steel, Metal & Structural Products",
+    slug: "steel-metal-structural",
+    subcategories: ["Structural & Rebar Steel", "Pipes & Tubes", "Metal Sheets", "Pre-Engineered Structures"]
   },
   {
-    slug: "steel-metal-structural-products",
-    name: "Steel & Metal Products",
-    subcategories: [
-      "Structural Steel",
-      "Reinforcement Steel",
-      "Pipes",
-      "Tubes",
-      "Profiles",
-      "Metal Sheets",
-      "Fabricated Products",
-      "Pre-Engineered Structures",
-    ],
-  },
-  {
-    slug: "doors-windows-glass-aluminium",
-    name: "Doors, Windows, Glass & Aluminium",
-    subcategories: [
-      "Doors",
-      "Windows",
-      "Aluminium Profiles",
-      "uPVC Systems",
-      "Architectural Glass",
-      "Façade Systems",
-      "Shutters",
-      "Architectural Hardware",
-    ],
-  },
-  {
-    slug: "electrical-power-lighting",
     name: "Electrical, Power & Lighting",
-    subcategories: [
-      "Cables & Wires",
-      "Switchgear",
-      "Transformers",
-      "Generators",
-      "Distribution Equipment",
-      "LED Lighting",
-      "Industrial Lighting",
-      "Electrical Accessories",
-    ],
+    slug: "electrical-power-lighting",
+    subcategories: ["Cables & Wires", "Switchgear & Transformers", "Generators", "LED & Industrial Lighting"]
   },
   {
-    slug: "water-plumbing-pumps",
-    name: "Water, Plumbing & Pumps",
-    subcategories: [
-      "Pipes & Fittings",
-      "Pumps",
-      "Valves",
-      "Water Tanks",
-      "Drainage Systems",
-      "Plumbing Products",
-      "Water Treatment & Management",
-    ],
+    name: "Doors, Windows, Glass & Aluminium",
+    slug: "doors-windows-glass-aluminium",
+    subcategories: ["Aluminium Profiles", "uPVC Systems", "Architectural Glass", "Façade Systems", "Shutters & Hardware"]
   },
   {
-    slug: "hvac",
-    name: "HVAC",
-    subcategories: [
-      "Air Conditioning",
-      "Ventilation",
-      "Refrigeration",
-      "Mechanical Systems",
-      "Building Services Equipment",
-    ],
+    name: "HVAC & Building Services",
+    slug: "hvac-building-services",
+    subcategories: ["Air Conditioning", "Ventilation", "Refrigeration", "Mechanical & Building Services"]
   },
   {
-    slug: "tiles-marble-stone-surfaces",
+    name: "Prefab, Precast & Modular Buildings",
+    slug: "prefab-precast-modular",
+    subcategories: ["Precast Products", "Prefabricated Structures", "Modular Buildings", "PEB Systems"]
+  },
+  {
     name: "Tiles, Marble, Stone & Surfaces",
-    subcategories: [
-      "Ceramic & Porcelain Tiles",
-      "Marble",
-      "Granite",
-      "Natural Stone",
-      "Flooring",
-      "Decorative & Architectural Surfaces",
-    ],
+    slug: "tiles-marble-stone",
+    subcategories: ["Ceramic & Porcelain Tile", "Marble & Granite", "Natural Stone", "Flooring & Architectural Surfaces"]
   },
   {
-    slug: "paints-coatings-construction-chemicals",
-    name: "Paints, Coatings & Construction Chemicals",
-    subcategories: [
-      "Decorative Paints",
-      "Industrial Coatings",
-      "Waterproofing",
-      "Adhesives",
-      "Sealants",
-      "Concrete Admixtures",
-      "Protective Coatings",
-    ],
+    name: "Water, Plumbing & Pumps",
+    slug: "water-plumbing-pumps",
+    subcategories: ["Pipes & Fittings", "Industrial Pumps & Valves", "Water Tanks", "Water Treatment Systems"]
   },
   {
-    slug: "sanitaryware-bathroom",
-    name: "Sanitaryware & Bathroom",
-    subcategories: [
-      "Sanitaryware",
-      "Faucets",
-      "Showers",
-      "Bathroom Fittings",
-      "Bathroom Furniture",
-      "Plumbing Fixtures",
-    ],
-  },
-  {
-    slug: "interiors-finishing-materials",
-    name: "Interiors & Finishing Materials",
-    subcategories: [
-      "Flooring",
-      "Ceilings",
-      "Wall Panels",
-      "Decorative Materials",
-      "Interior Finishes",
-      "Architectural Products",
-    ],
-  },
-  {
-    slug: "fire-safety-security",
-    name: "Fire, Safety & Security",
-    subcategories: [
-      "Fire Detection & Protection",
-      "PPE",
-      "Site Safety",
-      "CCTV",
-      "Access Control",
-      "Security Systems",
-    ],
-  },
-  {
-    slug: "prefab-precast-pre-engineered-buildings",
-    name: "Prefab, Precast & Pre-Engineered Buildings",
-    subcategories: [
-      "Precast Products",
-      "Prefabricated Structures",
-      "Modular Buildings",
-      "Structural Systems",
-      "Pre-Engineered Buildings",
-    ],
-  },
-  {
-    slug: "solar-energy-power-solutions",
     name: "Solar, Energy & Power Solutions",
-    subcategories: [
-      "Solar Systems",
-      "Backup Power",
-      "Energy Solutions",
-      "Energy-Efficient Building Products",
-    ],
+    slug: "solar-energy-power",
+    subcategories: ["Solar Systems", "Backup Power", "Energy-Efficient Building Products"]
   },
+  {
+    name: "Hardware, Tools & Fasteners",
+    slug: "hardware-tools-fasteners",
+    subcategories: ["Hand & Power Tools", "Cutting & Drilling Equipment", "Fasteners & Abrasives", "Workshop Hardware"]
+  },
+  {
+    name: "Paints, Coatings & Chemicals",
+    slug: "paints-coatings-chemicals",
+    subcategories: ["Decorative Paints", "Industrial Coatings", "Adhesives & Sealants", "Concrete Admixtures"]
+  },
+  {
+    name: "Sanitaryware & Bathroom",
+    slug: "sanitaryware-bathroom",
+    subcategories: ["Sanitaryware & Faucets", "Showers & Fittings", "Bathroom Furniture & Fixtures"]
+  },
+  {
+    name: "Fire, Safety & Security",
+    slug: "fire-safety-security",
+    subcategories: ["Fire Detection & Protection", "Site Safety Equipment", "CCTV & Access Control"]
+  },
+  {
+    name: "Interiors & Finishing Materials",
+    slug: "interiors-finishing-materials",
+    subcategories: ["Ceilings & Wall Panels", "Decorative Materials", "Interior Finishes"]
+  }
 ];

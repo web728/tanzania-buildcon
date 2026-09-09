@@ -25,7 +25,7 @@ export function PartnerEnquiryForm() {
     return (
       <SuccessPanel
         title="Partnership Enquiry Received"
-        message="Thank you for your interest in partnering with Tanzania Buildcon International Expo. Our team will review your enquiry and respond shortly."
+        message="Thank you for your interest in partnering with Tanzania Buildcon International Expo 2027. Our secretariat will review your enquiry and get in touch shortly."
         referenceId={referenceId}
       />
     );
@@ -36,67 +36,145 @@ export function PartnerEnquiryForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-4">
+      {/* Honeypot Spam Guard */}
       <div className="hidden" aria-hidden="true">
         <label htmlFor="p-website_hp">Website</label>
         <input id="p-website_hp" type="text" tabIndex={-1} autoComplete="off" {...register("website_hp")} />
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <FieldWrapper label="Organisation" htmlFor="organisation" required error={errors.organisation}>
-          <input id="organisation" className={inputClasses(!!errors.organisation)} {...register("organisation")} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FieldWrapper label="Organisation Name" htmlFor="organisation" required error={errors.organisation}>
+          <input
+            id="organisation"
+            placeholder="e.g. Tanzania Chamber of Commerce"
+            className={inputClasses(!!errors.organisation)}
+            {...register("organisation")}
+          />
         </FieldWrapper>
+
         <FieldWrapper label="Organisation Type" htmlFor="organisationType" required error={errors.organisationType}>
-          <input id="organisationType" className={inputClasses(!!errors.organisationType)} {...register("organisationType")} />
+          <input
+            id="organisationType"
+            placeholder="e.g. Trade Association, Ministry, Media"
+            className={inputClasses(!!errors.organisationType)}
+            {...register("organisationType")}
+          />
         </FieldWrapper>
+
         <FieldWrapper label="Country" htmlFor="country" required error={errors.country}>
           <select id="country" className={inputClasses(!!errors.country)} {...register("country")} defaultValue="">
-            <option value="" disabled>Select country</option>
+            <option value="" disabled>Select base country</option>
             {countries.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
         </FieldWrapper>
-        <FieldWrapper label="Website" htmlFor="website" error={errors.website}>
-          <input id="website" placeholder="https://" className={inputClasses(!!errors.website)} {...register("website")} />
+
+        <FieldWrapper label="Website URL" htmlFor="website" error={errors.website}>
+          <input
+            id="website"
+            placeholder="https://example.org"
+            className={inputClasses(!!errors.website)}
+            {...register("website")}
+          />
         </FieldWrapper>
+
         <FieldWrapper label="Contact Person" htmlFor="contactPerson" required error={errors.contactPerson}>
-          <input id="contactPerson" className={inputClasses(!!errors.contactPerson)} {...register("contactPerson")} />
+          <input
+            id="contactPerson"
+            placeholder="Full Name"
+            className={inputClasses(!!errors.contactPerson)}
+            {...register("contactPerson")}
+          />
         </FieldWrapper>
-        <FieldWrapper label="Designation" htmlFor="designation" error={errors.designation}>
-          <input id="designation" className={inputClasses(!!errors.designation)} {...register("designation")} />
+
+        <FieldWrapper label="Designation / Role" htmlFor="designation" error={errors.designation}>
+          <input
+            id="designation"
+            placeholder="e.g. Secretary General, Director"
+            className={inputClasses(!!errors.designation)}
+            {...register("designation")}
+          />
         </FieldWrapper>
-        <FieldWrapper label="Email" htmlFor="email" required error={errors.email}>
-          <input id="email" type="email" className={inputClasses(!!errors.email)} {...register("email")} />
+
+        <FieldWrapper label="Corporate Email" htmlFor="email" required error={errors.email}>
+          <input
+            id="email"
+            type="email"
+            placeholder="partner@organisation.org"
+            className={inputClasses(!!errors.email)}
+            {...register("email")}
+          />
         </FieldWrapper>
-        <FieldWrapper label="Phone" htmlFor="phone" required error={errors.phone}>
-          <input id="phone" type="tel" className={inputClasses(!!errors.phone)} {...register("phone")} />
+
+        <FieldWrapper label="Phone / Mobile" htmlFor="phone" required error={errors.phone}>
+          <input
+            id="phone"
+            type="tel"
+            placeholder="+255 / +91 ..."
+            className={inputClasses(!!errors.phone)}
+            {...register("phone")}
+          />
         </FieldWrapper>
+
         <FieldWrapper label="Approximate Membership" htmlFor="approximateMembership" error={errors.approximateMembership}>
-          <input id="approximateMembership" className={inputClasses()} {...register("approximateMembership")} />
+          <input
+            id="approximateMembership"
+            placeholder="e.g. 500+ Corporate Members"
+            className={inputClasses()}
+            {...register("approximateMembership")}
+          />
         </FieldWrapper>
-        <FieldWrapper label="Industry Represented" htmlFor="industryRepresented" error={errors.industryRepresented}>
-          <input id="industryRepresented" className={inputClasses()} {...register("industryRepresented")} />
+
+        <FieldWrapper label="Industry Sector Represented" htmlFor="industryRepresented" error={errors.industryRepresented}>
+          <input
+            id="industryRepresented"
+            placeholder="e.g. Architecture, Civil Contractors"
+            className={inputClasses()}
+            {...register("industryRepresented")}
+          />
         </FieldWrapper>
-        <FieldWrapper label="Nature of Enquiry" htmlFor="natureOfEnquiry" required error={errors.natureOfEnquiry} className="sm:col-span-2">
-          <input id="natureOfEnquiry" className={inputClasses(!!errors.natureOfEnquiry)} {...register("natureOfEnquiry")} />
+
+        <FieldWrapper label="Nature of Partnership" htmlFor="natureOfEnquiry" required error={errors.natureOfEnquiry} className="sm:col-span-2">
+          <input
+            id="natureOfEnquiry"
+            placeholder="e.g. Trade Delegation Hosting, Media Coverage, Institutional Support"
+            className={inputClasses(!!errors.natureOfEnquiry)}
+            {...register("natureOfEnquiry")}
+          />
         </FieldWrapper>
-        <FieldWrapper label="Message" htmlFor="message" error={errors.message} className="sm:col-span-2">
-          <textarea id="message" rows={3} className={inputClasses()} {...register("message")} />
+
+        <FieldWrapper label="Proposed Collaboration Message" htmlFor="message" error={errors.message} className="sm:col-span-2">
+          <textarea
+            id="message"
+            rows={3}
+            placeholder="Outline how your organization would like to collaborate with Tanzania Buildcon 2027..."
+            className={inputClasses()}
+            {...register("message")}
+          />
         </FieldWrapper>
       </div>
 
-      {status === "error" && errorMessage ? (
-        <p role="alert" className="translate-y-0 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 opacity-100 transition-[transform,opacity] duration-200 ease-out starting:translate-y-1 starting:opacity-0">{errorMessage}</p>
-      ) : null}
+      {status === "error" && errorMessage && (
+        <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
+          {errorMessage}
+        </p>
+      )}
 
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center rounded-md bg-brand-blue px-7 py-3.5 text-base font-semibold uppercase tracking-wide text-white transition-[background-color,transform] duration-150 ease-out active:scale-[0.97] disabled:active:scale-100 hover:bg-brand-blue-dark disabled:opacity-60 sm:w-auto"
-      >
-        {status === "submitting" ? "Submitting…" : "Partnership Enquiry"}
-      </button>
+      <div className="mt-2 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-200">
+        <span className="text-[11px] text-slate-400 font-medium">
+          Official secretariat will respond within 24–48 business hours.
+        </span>
+
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-blue px-7 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(2,163,220,0.25)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_22px_rgba(2,163,220,0.35)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 cursor-pointer"
+        >
+          {status === "submitting" ? "Submitting Application..." : "Submit Partnership Application →"}
+        </button>
+      </div>
     </form>
   );
 }

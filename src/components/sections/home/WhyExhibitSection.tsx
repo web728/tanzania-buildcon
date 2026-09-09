@@ -1,136 +1,261 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import Link from "next/link";
+import { motion, type Variants } from "framer-motion";
 import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Button } from "@/components/ui/Button";
-import { BenefitCard } from "@/components/ui/BenefitCard";
-import { BrandMotif } from "@/components/brand/BrandMotif";
 
-const BENEFITS = [
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.45,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
+};
+
+// Official 5 Pillars from Brochure Page 2 ("WHY PARTICIPATE?")
+const EXHIBIT_PILLARS = [
   {
-    title: "Meet New Buyers",
-    description: "Connect directly with high-volume buyers actively seeking structural and finishing materials.",
+    num: "01",
+    title: "Access New Buyers",
+    desc: "Present products directly to companies involved in construction, procurement, and major distribution.",
+    icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
   },
   {
-    title: "Find Distributors & Agents",
-    description: "Expand your footprint across East Africa by appointing reliable regional distribution partners.",
+    num: "02",
+    title: "Develop Distribution",
+    desc: "Meet potential importers, distributors, wholesalers, dealers, and regional trade representatives.",
+    icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
   },
   {
+    num: "03",
+    title: "Enter the Tanzanian Market",
+    desc: "Introduce your brand to an expanding construction audience and establish direct relationships.",
+    icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
+  {
+    num: "04",
     title: "Generate Business Enquiries",
-    description: "Capture qualified B2B leads and immediate RFQs during 3 high-intensity business days.",
+    desc: "Connect with contractors, developers, and corporate buyers searching for direct material suppliers.",
+    icon: "M13 10V3L4 14h7v7l9-11h-7z",
   },
   {
-    title: "Introduce Your Brand",
-    description: "Establish strong market visibility as Tanzania's construction boom accelerates.",
-  },
-  {
-    title: "Reach Contractors & Developers",
-    description: "Present solutions straight to key decision-makers driving mega infrastructure projects.",
-  },
-  {
-    title: "Meet Architects & Engineers",
-    description: "Get your building materials and smart tech specified in upcoming architectural blueprints.",
-  },
-  {
-    title: "Showcase Products & Technologies",
-    description: "Run live equipment demos and showcase premium building technologies on the exhibition floor.",
-  },
-  {
-    title: "Strengthen Market Presence",
-    description: "Position your company alongside industry leaders shaping East Africa's skyline.",
+    num: "05",
+    title: "Reach Specifiers",
+    desc: "Engage architects, civil engineers, and consultants who influence specification & product selection.",
+    icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
   },
 ];
 
+// Official Profiles from Brochure Page 2 ("WHO SHOULD EXHIBIT?")
+const EXHIBITOR_PROFILES = [
+  "Manufacturers & Exporters",
+  "International Suppliers",
+  "Construction Machinery Companies",
+  "Building Material Suppliers",
+  "Engineering Product Manufacturers",
+  "Building Technology Providers",
+];
+
 export function WhyExhibitSection() {
+  const [activeTab, setActiveTab] = useState<"reasons" | "who">("reasons");
+
   return (
-    <section className="relative overflow-hidden bg-slate-950 py-24 text-white sm:py-32 selection:bg-teal-500 selection:text-black">
-      {/* Background Image with Dark Gradient Overlays */}
-      <Image
-        src="/images/sectors/crane-machinery.jpg"
-        alt=""
+    <section className="relative overflow-hidden bg-[#071118] py-14 sm:py-20 text-white border-b border-white/10 selection:bg-brand-blue selection:text-white">
+      {/* Dynamic Ambient Background Blur */}
+      <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-96 w-full max-w-7xl -translate-x-1/2 bg-gradient-to-b from-brand-blue/15 via-sky-500/5 to-transparent blur-3xl opacity-60" />
+
+      {/* Blueprint Grid Texture Overlay */}
+      <div
         aria-hidden="true"
-        fill
-        sizes="100vw"
-        className="object-cover opacity-[0.15]"
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.035] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_50%,#000_50%,transparent_100%)]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
+          backgroundSize: "32px 32px",
+        }}
       />
-      <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950/90 to-slate-950" />
 
-      {/* Ambient Lighting Glows */}
-      <div className="absolute -left-48 top-1/3 h-[500px] w-[500px] rounded-full bg-brand-blue/20 blur-[160px] pointer-events-none" />
-      <div className="absolute -right-48 bottom-1/4 h-[500px] w-[500px] rounded-full bg-teal-500/15 blur-[160px] pointer-events-none" />
+      <Container className="relative z-10 w-full">
+        {/* ========================================================= */}
+        {/* Balanced Dual-Column Header                               */}
+        {/* ========================================================= */}
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between pb-8 border-b border-white/[0.08]">
+          
+          {/* Left Column: Heading & Mode Toggle */}
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+              <span className="text-[11px] font-semibold tracking-wider text-slate-300 uppercase">
+                Exhibitor Intelligence
+              </span>
+            </div>
 
-      {/* Brand Motif Element */}
-      <div className="pointer-events-none absolute -left-32 top-0 h-full w-[520px] opacity-30">
-        <BrandMotif variant="half" position="left" opacity={0.18} rotation={-6} className="h-full w-full" />
-      </div>
+            <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white">
+              Expand Your Reach in{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-300 to-brand-green">
+                East Africa&apos;s Construction Hub
+              </span>
+            </h2>
 
-      <Container className="relative z-10">
-        
-        {/* Header Block */}
-        <div className="max-w-3xl">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-3.5 py-1 text-xs font-bold uppercase tracking-widest text-teal-300 backdrop-blur-md"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-teal-400"></span>
-            </span>
-            Why Exhibit
-          </motion.div>
-
-          <SectionHeading
-            title="Take Your Business to the Tanzanian Construction Market"
-            intro="Three focused business days to present your products directly to contractors, developers, architects, and high-volume buyers driving Tanzania's infrastructure growth."
-            light
-            className="mt-4 text-white font-extrabold [&>h2]:text-white [&>h2]:text-3xl sm:[&>h2]:text-5xl [&>p]:text-slate-300"
-          />
-        </div>
-
-        {/* Responsive Benefits Grid */}
-        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {BENEFITS.map((item, index) => (
-            <BenefitCard
-              key={item.title}
-              title={item.title}
-              description={item.description}
-              light
-              index={index}
-            />
-          ))}
-        </div>
-
-        {/* Bottom Call To Action Banner */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-16 flex flex-col sm:flex-row items-center justify-between gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl"
-        >
-          <div>
-            <h3 className="text-xl sm:text-2xl font-bold text-white">
-              Ready to Expand Your Reach in East Africa?
-            </h3>
-            <p className="mt-1 text-sm text-slate-300">
-              Prime booth spaces are limited. Reserve your location early for maximum exposure.
-            </p>
+            {/* Segment Control Switch */}
+            <div className="mt-5 inline-flex items-center gap-1 rounded-2xl border border-white/10 bg-white/[0.03] p-1 backdrop-blur-lg">
+              <button
+                type="button"
+                onClick={() => setActiveTab("reasons")}
+                className={`rounded-xl px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                  activeTab === "reasons"
+                    ? "bg-brand-blue text-white shadow-md shadow-brand-blue/30"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                5 Core Pillars
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("who")}
+                className={`rounded-xl px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                  activeTab === "who"
+                    ? "bg-brand-blue text-white shadow-md shadow-brand-blue/30"
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Who Should Exhibit?
+              </button>
+            </div>
           </div>
 
-          <Button
-            href="/book-a-stand"
-            size="lg"
-            className="shrink-0 w-full sm:w-auto bg-gradient-to-r from-teal-400 to-teal-500 text-slate-950 font-bold hover:from-teal-300 hover:to-teal-400 hover:scale-105 shadow-xl shadow-teal-500/20 transition-all duration-300"
-          >
-            Book Your Stand Now →
-          </Button>
-        </motion.div>
+          {/* Right Column: Verified Market Pulse Stats & Primary CTA */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6">
+            
+            {/* Stat Pill 1 */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 backdrop-blur-md">
+              <div className="text-base font-extrabold text-brand-green tracking-tight">+6.5%</div>
+              <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+                Sector Growth (Q3 2025)
+              </div>
+            </div>
 
+            {/* Stat Pill 2 */}
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 backdrop-blur-md">
+              <div className="text-base font-extrabold text-sky-400 tracking-tight">95% Trade</div>
+              <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+                Handled via Dar Es Salaam
+              </div>
+            </div>
+
+            {/* Primary Action Button */}
+            <Link
+              href="/book-stand"
+              className="group inline-flex items-center gap-2 rounded-xl bg-brand-blue px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-brand-blue/25 transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-brand-blue/40 active:scale-95 shrink-0"
+            >
+              <span>Book Stand</span>
+              <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* ========================================================= */}
+        {/* Dynamic Pillar Grid Display                               */}
+        {/* ========================================================= */}
+        {activeTab === "reasons" ? (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
+          >
+            {EXHIBIT_PILLARS.map((item, idx) => {
+              const isAccent = idx % 2 === 0;
+
+              return (
+                <motion.div
+                  key={item.num}
+                  variants={itemVariants}
+                  className="group relative flex flex-col justify-between rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 backdrop-blur-xl transition-all duration-300 hover:border-brand-blue/50 hover:bg-white/[0.05] hover:-translate-y-1.5 shadow-lg shadow-black/20"
+                >
+                  <div>
+                    <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                      <div
+                        className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors duration-300 ${
+                          isAccent
+                            ? "bg-brand-blue/15 text-brand-blue group-hover:bg-brand-blue group-hover:text-white"
+                            : "bg-brand-green/15 text-brand-green group-hover:bg-brand-green group-hover:text-white"
+                        }`}
+                      >
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={item.icon} />
+                        </svg>
+                      </div>
+
+                      <span className="text-[10px] font-mono font-bold tracking-widest text-slate-500 group-hover:text-slate-300 transition-colors">
+                        PILLAR {item.num}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-3.5 text-xs sm:text-sm font-bold tracking-tight text-white group-hover:text-sky-300 transition-colors">
+                      {item.title}
+                    </h3>
+
+                    <p className="mt-2 text-[11px] font-normal leading-relaxed text-slate-400 group-hover:text-slate-300 transition-colors">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between text-[11px] font-semibold text-brand-blue">
+                    <Link href="/exhibit" className="hover:underline">
+                      Read Guide
+                    </Link>
+                    <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {EXHIBITOR_PROFILES.map((profile, i) => (
+              <div
+                key={profile}
+                className="group flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 backdrop-blur-xl transition-all duration-300 hover:border-brand-blue/50 hover:bg-white/[0.05]"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-blue/15 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                  <span className="text-xs font-mono font-bold">0{i + 1}</span>
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-sky-300 transition-colors">
+                    {profile}
+                  </h4>
+                  <p className="mt-0.5 text-[11px] font-normal text-slate-400">
+                    Connect directly with East Africa&apos;s construction procurement decision-makers.
+                  </p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        )}
       </Container>
     </section>
   );

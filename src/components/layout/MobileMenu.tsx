@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { mainNav } from "@/config/navigation";
 import { event } from "@/config/event";
-import { Button } from "@/components/ui/Button";
 import { clsx } from "@/lib/utils/clsx";
 
 interface MobileMenuProps {
@@ -13,183 +13,193 @@ interface MobileMenuProps {
   onClose: () => void;
 }
 
+// Variants ko explicitly typing di gayi hai taaki TypeScript error na de
+const drawerVariants: Variants = {
+  closed: {
+    x: "100%",
+    transition: {
+      type: "spring",
+      stiffness: 400,
+      damping: 40,
+    },
+  },
+  open: {
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 32,
+    },
+  },
+};
+
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
-  const [expanded, setExpanded] = useState<string | null>(null);
   const pathname = usePathname();
+  const [expandedSubmenu, setExpandedSubmenu] = useState<string | null>(null);
 
-  // Route change par drawer close ho jayega
-  useEffect(() => {
-    onClose();
-  }, [pathname, onClose]);
+  const toggleSubmenu = (label: string) => {
+    setExpandedSubmenu((prev) => (prev === label ? null : label));
+  };
 
-  // ESC key press Handler
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && open) {
-        onClose();
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
+  const cleanPhone = event.contact.general.phone.replace(/[^0-9+]/g, "");
 
   return (
-    <>
-      {/* Semi-transparent Overlay Background */}
-      <div
-        className={clsx(
-          "fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
-          open ? "opacity-100" : "opacity-0 pointer-events-none"
-        )}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
-      {/* Main Drawer Menu (Full height slide-over panel) */}
-      <div
-        id="mobile-menu"
-        className={clsx(
-          "fixed inset-y-0 right-0 z-50 w-full max-w-xs sm:max-w-sm bg-white dark:bg-slate-900 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden flex flex-col justify-between",
-          open ? "translate-x-0" : "translate-x-full"
-        )}
-        aria-hidden={!open}
-      >
-        {/* Top Header inside Drawer */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200/80 dark:border-slate-800">
-          <span className="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            Navigation Menu
-          </span>
-          <button
-            type="button"
+    <AnimatePresence mode="wait">
+      {open && (
+        <div className="fixed inset-0 z-[100] h-[100dvh] w-screen overflow-hidden lg:hidden">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
             onClick={onClose}
-            aria-label="Close menu"
-            className="rounded-full p-1.5 text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:hover:bg-slate-800 dark:hover:text-slate-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
+            className="absolute inset-0 bg-[#020617]/85 backdrop-blur-xl"
+          />
+
+          {/* Drawer Panel */}
+          <motion.aside
+            variants={drawerVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            className="absolute bottom-0 right-0 top-0 flex h-[100dvh] w-full max-w-xs flex-col justify-between border-l border-white/10 bg-[#030712] p-6 text-white shadow-[0_0_50px_rgba(0,0,0,0.8)] sm:max-w-sm"
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path d="M18 6L6 18M6 6l12 12" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
+            {/* Header / Close */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-emerald-300">
+                  {event.dates?.display || "2027 Edition"}
+                </span>
+              </div>
 
-        {/* Scrollable Navigation Body */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
-          <nav aria-label="Mobile Navigation">
-            <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
-              {mainNav.map((item) => {
-                const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
-                const isExpanded = expanded === item.href;
-                const hasChildren = Boolean(item.children?.length);
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Close menu"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-400 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white active:scale-90"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-                return (
-                  <li key={item.href} className="py-2">
-                    {hasChildren ? (
-                      <div>
-                        <div className="flex items-center justify-between py-1.5">
-                          <Link
-                            href={item.href}
-                            onClick={onClose}
-                            className={clsx(
-                              "text-base font-semibold transition-colors",
-                              isActive
-                                ? "text-brand-blue font-bold"
-                                : "text-slate-800 dark:text-slate-100 hover:text-brand-blue"
-                            )}
-                          >
-                            {item.label}
-                          </Link>
-                          <button
-                            type="button"
-                            className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                            aria-expanded={isExpanded}
-                            aria-controls={`submenu-${item.href}`}
-                            onClick={() => setExpanded((e) => (e === item.href ? null : item.href))}
-                            aria-label={`Toggle ${item.label} submenu`}
-                          >
-                            <svg
-                              className={clsx("h-4 w-4 transition-transform duration-200", isExpanded && "rotate-180 text-brand-blue")}
-                              viewBox="0 0 12 12"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path d="M2.5 4.5L6 8L9.5 4.5" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                          </button>
-                        </div>
+            {/* Navigation */}
+            <nav className="my-auto flex-1 overflow-y-auto py-6 pr-1">
+              <ul className="flex flex-col gap-1.5">
+                {mainNav.map((item) => {
+                  const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`);
+                  const hasChildren = Boolean(item.children?.length);
+                  const isExpanded = expandedSubmenu === item.label;
 
-                        {/* Accordion Submenu */}
-                        <div
-                          id={`submenu-${item.href}`}
-                          className={clsx(
-                            "grid overflow-hidden transition-[grid-template-rows] duration-200 ease-out",
-                            isExpanded ? "grid-rows-[1fr] pt-1 pb-2" : "grid-rows-[0fr]"
-                          )}
-                        >
-                          <div className="min-h-0">
-                            <ul className="flex flex-col gap-1 pl-3 border-l-2 border-slate-200 dark:border-slate-800 ml-1">
-                              {item.children?.map((child) => {
-                                const isChildActive = pathname === child.href;
-                                return (
-                                  <li key={child.href}>
-                                    <Link
-                                      href={child.href}
-                                      onClick={onClose}
-                                      className={clsx(
-                                        "block rounded-lg px-3 py-2 text-sm transition-colors",
-                                        isChildActive
-                                          ? "bg-brand-blue/10 text-brand-blue font-semibold"
-                                          : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-brand-blue"
-                                      )}
-                                    >
-                                      {child.label}
-                                    </Link>
-                                  </li>
-                                );
-                              })}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        onClick={onClose}
+                  return (
+                    <li key={item.href} className="flex flex-col">
+                      <div
                         className={clsx(
-                          "block py-2 text-base font-semibold transition-colors",
+                          "group flex items-center justify-between rounded-xl px-3.5 py-3 transition-all duration-200",
                           isActive
-                            ? "text-brand-blue font-bold"
-                            : "text-slate-800 dark:text-slate-100 hover:text-brand-blue"
+                            ? "bg-white/10 font-medium text-white"
+                            : "text-slate-300 hover:bg-white/5 hover:text-white"
                         )}
                       >
-                        {item.label}
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
+                        <Link
+                          href={item.href}
+                          onClick={onClose}
+                          className="flex-1 text-sm font-medium tracking-wide"
+                        >
+                          {item.label}
+                        </Link>
 
-        {/* Sticky Action Footer */}
-        <div className="p-6 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex flex-col gap-3">
-          <Button
-            href={event.cta.bookStand}
-            variant="primary"
-            size="md"
-            className="w-full justify-center shadow-md active:scale-[0.98] transition-transform text-sm py-2.5"
-          >
-            Book a Stand
-          </Button>
-          <Button
-            href={event.cta.registerVisit}
-            variant="secondary"
-            size="md"
-            className="w-full justify-center active:scale-[0.98] transition-transform text-sm py-2.5"
-          >
-            Register to Visit
-          </Button>
+                        {hasChildren && (
+                          <button
+                            type="button"
+                            onClick={() => toggleSubmenu(item.label)}
+                            aria-label={`Toggle ${item.label} submenu`}
+                            className="flex h-7 w-7 items-center justify-center rounded-lg text-slate-400 transition-colors hover:text-white"
+                          >
+                            <svg
+                              className={clsx(
+                                "h-4 w-4 transition-transform duration-300 ease-out",
+                                isExpanded && "rotate-180 text-sky-400"
+                              )}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+
+                      {hasChildren && isExpanded && (
+                        <motion.ul
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.25, ease: "easeInOut" }}
+                          className="ml-4 mt-1 flex flex-col gap-0.5 border-l border-white/10 py-1 pl-3.5"
+                        >
+                          {item.children?.map((child) => {
+                            const isChildActive = pathname === child.href;
+                            return (
+                              <li key={child.href}>
+                                <Link
+                                  href={child.href}
+                                  onClick={onClose}
+                                  className={clsx(
+                                    "block rounded-lg px-3 py-2 text-xs font-normal transition-all duration-200",
+                                    isChildActive
+                                      ? "bg-sky-500/15 font-medium text-sky-400"
+                                      : "text-slate-400 hover:translate-x-0.5 hover:text-white"
+                                  )}
+                                >
+                                  {child.label}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </motion.ul>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+
+            {/* CTAs */}
+            <div className="flex flex-col gap-3 border-t border-white/10 pt-5">
+              <Link
+                href={event.cta.bookStand}
+                onClick={onClose}
+                className="inline-flex w-full items-center justify-center rounded-xl bg-sky-500 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md shadow-sky-500/20 transition-all hover:bg-sky-400 active:scale-[0.98]"
+              >
+                Book a Stand
+              </Link>
+
+              <Link
+                href={event.cta.registerVisit}
+                onClick={onClose}
+                className="inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-200 transition-all hover:border-white/25 hover:bg-white/10 hover:text-white active:scale-[0.98]"
+              >
+                Visitor Registration
+              </Link>
+
+              <div className="mt-2 flex items-center justify-between px-1 text-[11px] text-slate-400">
+                <span className="truncate">Dar es Salaam Port Hub</span>
+                <a
+                  href={`tel:${cleanPhone}`}
+                  className="font-mono font-medium text-emerald-400 transition-colors hover:text-emerald-300 hover:underline"
+                >
+                  {event.contact.general.phone}
+                </a>
+              </div>
+            </div>
+          </motion.aside>
         </div>
-      </div>
-    </>
+      )}
+    </AnimatePresence>
   );
 }

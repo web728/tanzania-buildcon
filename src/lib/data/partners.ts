@@ -1,7 +1,10 @@
 import { connectToDatabase } from "@/lib/db/mongodb";
 import { Partner, type PartnerDoc } from "@/models/Partner";
 
-export type PartnerSummary = PartnerDoc & { _id: string };
+export type PartnerSummary = PartnerDoc & { 
+  _id: string;
+  tier?: string;
+};
 
 function serialize(doc: Record<string, unknown>): PartnerSummary {
   return JSON.parse(JSON.stringify(doc));

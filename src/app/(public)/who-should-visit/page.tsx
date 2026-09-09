@@ -1,60 +1,28 @@
 import type { Metadata } from "next";
 import { event } from "@/config/event";
 import { PageHero } from "@/components/ui/PageHero";
-import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
-import { visitorGroupIconMap } from "@/components/icons/MiscIcons";
-import { visitorGroups } from "@/data/visitorProfile";
+import { WhoShouldVisitClientView } from "@/components/visit/WhoShouldVisitClientView";
 
 export const metadata: Metadata = {
-  title: "Who Should Visit",
+  title: "Who Should Visit | Tanzania Buildcon 2027",
   description:
-    "Contractors, developers, architects, engineers, importers, distributors and procurement professionals — the trade visitor profile for Tanzania Buildcon International Expo.",
+    "Meet the people who buy, build, specify, and source — architects, civil contractors, developers, and wholesale importers at Tanzania Buildcon International Expo 2027.",
   alternates: { canonical: "/who-should-visit" },
 };
 
 export default function WhoShouldVisitPage() {
   return (
-    <>
+    <main className="min-h-screen bg-[#fafbfd] selection:bg-brand-blue selection:text-white">
       <PageHero
         title="The People Who Buy, Build, Specify & Source"
-        intro={`${event.name} is designed for professionals involved in construction, procurement, project development, distribution and product specification.`}
+        intro="Engineered specifically for professionals responsible for procurement, structural design, commercial distribution, and project specification across East Africa."
+        image={{
+          src: "/images/sectors/architects-engineers.jpg",
+          alt: "Engineers and trade visitors at building expo",
+        }}
       />
 
-      <section className="bg-white py-20 sm:py-24">
-        <Container>
-          <div className="grid gap-6 lg:grid-cols-2">
-            {visitorGroups.map((group) => {
-              const Icon = visitorGroupIconMap[group.slug];
-              return (
-                <div key={group.slug} className="rounded-xl border border-brand-border bg-brand-light p-7">
-                  <div className="flex items-center gap-3">
-                    {Icon ? (
-                      <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg bg-brand-blue text-white">
-                        <Icon className="h-5 w-5" />
-                      </span>
-                    ) : null}
-                    <h2 className="text-lg font-extrabold text-brand-dark">{group.name}</h2>
-                  </div>
-                  <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5">
-                    {group.roles.map((role) => (
-                      <li key={role} className="text-sm text-brand-body">
-                        {role}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-12">
-            <Button href={event.cta.registerVisit} size="lg">
-              Register to Visit
-            </Button>
-          </div>
-        </Container>
-      </section>
-    </>
+      <WhoShouldVisitClientView />
+    </main>
   );
 }
