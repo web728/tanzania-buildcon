@@ -3,65 +3,85 @@ import { event } from "@/config/event";
 import { getPublishedExhibitors } from "@/lib/data/exhibitors";
 import { getPublishedNews } from "@/lib/data/news";
 
-// Includes MongoDB-backed exhibitor/news URLs. `revalidate` alone still
-// bakes in whatever the build environment saw (e.g. no MONGODB_URI at
-// build time, which is a common real deployment setup) and then serves
-// that stale result — including an empty dynamic-entries list — for the
-// full revalidate window. force-dynamic guarantees every request reflects
-// the current published state, matching the other MongoDB-backed routes.
 export const dynamic = "force-dynamic";
 
-const STATIC_ROUTES = [
-  "",
-  "/about",
-  "/why-tanzania",
-  "/venue",
-  "/organisers",
-  "/exhibit",
-  "/who-should-exhibit",
-  "/exhibition-profile",
-  "/exhibitor-services",
-  "/book-a-stand",
-  "/visit",
-  "/who-should-visit",
-  "/register-to-visit",
-  "/plan-your-visit",
-  "/exhibitors",
-  "/partners",
-  "/news",
-  "/gallery",
-  "/downloads",
-  "/contact",
-  "/privacy-policy",
-  "/terms-and-conditions",
-  "/cookie-policy",
+// High-Priority Pages for Google Sitelinks (Priority 0.9 - 0.8)
+const CORE_CONVERSION_ROUTES = [
+  { path: "/exhibit", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/book-a-stand", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/register-to-visit", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/exhibition-profile", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/who-should-exhibit", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/who-should-visit", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/about", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/venue", priority: 0.8, changeFrequency: "monthly" },
+];
+
+// Secondary Informational Pages (Priority 0.6 - 0.7)
+const SECONDARY_ROUTES = [
+  { path: "/why-tanzania", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/organisers", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/exhibitor-services", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/visit", priority: 0.7, changeFrequency: "weekly" },
+  { path: "/plan-your-visit", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/exhibitors", priority: 0.7, changeFrequency: "daily" },
+  { path: "/partners", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/news", priority: 0.7, changeFrequency: "daily" },
+  { path: "/gallery", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/downloads", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/contact", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/terms-and-conditions", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/cookie-policy", priority: 0.3, changeFrequency: "yearly" },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || event.website;
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || event.website).replace(/\/$/, "");
 
-  const [exhibitors, news] = await Promise.all([getPublishedExhibitors(), getPublishedNews()]);
+  const [exhibitors, news] = await Promise.all([
+    getPublishedExhibitors().catch(() => []),
+    getPublishedNews().catch(() => []),
+  ]);
 
-  const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
-    url: `${siteUrl}${route}`,
+  // 1. Homepage (Top Priority for Sitelinks generation)
+  const homeEntry: MetadataRoute.Sitemap[number] = {
+    url: `${baseUrl}/`,
     lastModified: new Date(),
-    changeFrequency: route === "" ? "daily" : "weekly",
-    priority: route === "" ? 1 : 0.7,
+    changeFrequency: "daily",
+    priority: 1.0,
+  };
+
+  // 2. Core Navigation Routes
+  const coreEntries: MetadataRoute.Sitemap = CORE_CONVERSION_ROUTES.map((route) => ({
+    url: `${baseUrl}${route.path}`,
+    lastModified: new Date(),
+    changeFrequency: route.changeFrequency as "weekly" | "monthly",
+    priority: route.priority,
   }));
 
+  // 3. Secondary Routes
+  const secondaryEntries: MetadataRoute.Sitemap = SECONDARY_ROUTES.map((route) => ({
+    url: `${baseUrl}${route.path}`,
+    lastModified: new Date(),
+    changeFrequency: route.changeFrequency as "weekly" | "monthly" | "yearly" | "daily",
+    priority: route.priority,
+  }));
+
+  // 4. Dynamic Exhibitors Pages
   const exhibitorEntries: MetadataRoute.Sitemap = exhibitors.map((e) => ({
-    url: `${siteUrl}/exhibitors/${e.slug}`,
+    url: `${baseUrl}/exhibitors/${e.slug}`,
     lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.5,
+    changeFrequency: "weekly",
+    priority: 0.6,
   }));
 
+  // 5. Dynamic News Pages
   const newsEntries: MetadataRoute.Sitemap = news.map((n) => ({
-    url: `${siteUrl}/news/${n.slug}`,
-    lastModified: new Date(n.publishedAt as unknown as string),
+    url: `${baseUrl}/news/${n.slug}`,
+    lastModified: new Date(n.publishedAt as unknown as string || new Date()),
     changeFrequency: "monthly",
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...exhibitorEntries, ...newsEntries];
+  return [homeEntry, ...coreEntries, ...secondaryEntries, ...exhibitorEntries, ...newsEntries];
 }
