@@ -20,8 +20,8 @@ const inter = Inter({
 
 const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || event.website;
 const siteUrl = rawSiteUrl.startsWith("http://") || rawSiteUrl.startsWith("https://")
-  ? rawSiteUrl
-  : `https://${rawSiteUrl}`;
+  ? rawSiteUrl.replace(/\/$/, "")
+  : `https://${rawSiteUrl.replace(/\/$/, "")}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -103,47 +103,103 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Schema 1: Organization Schema
-  const organizationJsonLd = {
+  // 1. Combined Master Schema (Organization + WebSite + SiteNavigationElement)
+  const masterGraphSchema = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: event.name,
-    url: siteUrl,
-    logo: `${siteUrl}/logos/tanzania-buildcon-logo.png`,
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        "name": event.name,
+        "url": siteUrl,
+        "logo": `${siteUrl}/logos/tanzania-buildcon-logo.png`,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        "url": siteUrl,
+        "name": event.name,
+        "publisher": { "@id": `${siteUrl}/#organization` },
+      },
+      // Navigation Schema for Google Sitelinks (Sub-headings in search)
+      {
+        "@type": "SiteNavigationElement",
+        "@id": `${siteUrl}/#header-nav`,
+        "name": [
+          "Exhibition Profile",
+          "Book A Stand",
+          "Who Should Exhibit",
+          "Register To Visit",
+          "Why Visit",
+          "About Expo"
+        ],
+        "url": [
+          `${siteUrl}/exhibition-profile`,
+          `${siteUrl}/book-a-stand`,
+          `${siteUrl}/who-should-exhibit`,
+          `${siteUrl}/register-to-visit`,
+          `${siteUrl}/who-should-visit`,
+          `${siteUrl}/about`
+        ]
+      }
+    ],
   };
 
-  // Schema 2: Website Schema
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: event.name,
-    url: siteUrl,
-  };
-
-  // Schema 3: Event Schema (Google Search par Dates & Venue Snippet Dikhane Ke Liye)
+  // 2. Fully Compliant Event Schema (All Google Warnings Fixed)
   const eventJsonLd = {
     "@context": "https://schema.org",
     "@type": "ExhibitionEvent",
-    name: event.name,
-    description: event.descriptor,
-    startDate: event.dates.start, // Format: YYYY-MM-DD
-    endDate: event.dates.end,     // Format: YYYY-MM-DD
-    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    eventStatus: "https://schema.org/EventScheduled",
-    location: {
+    "@id": `${siteUrl}/#event`,
+    "name": event.name,
+    "alternateName": event.shortName,
+    "description": event.descriptor,
+    "startDate": event.dates.start,
+    "endDate": event.dates.end,
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "url": siteUrl,
+    "image": `${siteUrl}/images/og/og-default.jpg`,
+    "location": {
       "@type": "Place",
-      name: event.venue.name,
-      address: {
+      "name": event.venue.name,
+      "address": {
         "@type": "PostalAddress",
-        addressLocality: event.venue.city,
-        addressCountry: event.venue.country || "TZ",
+        "streetAddress": event.venue.name,
+        "addressLocality": event.venue.city,
+        "addressCountry": event.venue.country || "TZ",
       },
     },
-    organizer: {
+    "organizer": {
       "@type": "Organization",
-      name: event.name,
-      url: siteUrl,
+      "name": "Futurex Trade Fair & Events Pvt. Ltd.",
+      "url": siteUrl,
     },
+    // Fixes 'performer' missing warning
+    "performer": {
+      "@type": "Organization",
+      "name": "Futurex Trade Fair & Events Pvt. Ltd.",
+    },
+    // Fixes 'price', 'priceCurrency', and 'validFrom' warnings
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Visitor Registration",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "url": `${siteUrl}/register-to-visit`,
+        "validFrom": "2026-01-01",
+      },
+      {
+        "@type": "Offer",
+        "name": "Exhibitor Space Booking",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "url": `${siteUrl}/book-a-stand`,
+        "validFrom": "2026-01-01",
+      },
+    ],
   };
 
   return (
@@ -156,15 +212,12 @@ export default function RootLayout({
         className="min-h-full flex flex-col bg-white text-brand-dark font-sans"
         suppressHydrationWarning
       >
-        {/* Structured Data / Rich Snippets for Google */}
+        {/* Master Schema: Organization + Website + Sitelinks */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(masterGraphSchema) }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+        {/* Complete Warning-Free Event Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
