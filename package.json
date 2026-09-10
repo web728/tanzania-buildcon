@@ -26,6 +26,7 @@
     "nodemailer": "^8.0.11",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "^7.85.0",
     "zod": "^4.4.3"
   },
@@ -37,6 +38,7 @@
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-google-recaptcha": "^2.1.9",
     "eslint": "^9",
     "eslint-config-next": "16.3.1",
     "eslint-config-prettier": "^10.1.8",

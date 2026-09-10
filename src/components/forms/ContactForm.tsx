@@ -2,7 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   contactEnquirySchema,
   type ContactEnquiryInput,
@@ -19,6 +20,9 @@ export function ContactForm({
   defaultInterest?: (typeof contactInterestOptions)[number];
 }) {
   const [startedAt] = useState(() => Date.now());
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   const { submit, status, referenceId, errorMessage } = useLeadSubmit("/api/contact");
 
   const {
@@ -41,12 +45,24 @@ export function ContactForm({
   }
 
   const onSubmit = (data: ContactEnquiryInput) => {
+    // 1. ReCAPTCHA Validation Check
+    if (!recaptchaToken) {
+      alert("Please verify that you are not a robot.");
+      return;
+    }
+
+    // 2. Submit Payload with token
     submit({
       ...data,
+      recaptchaToken, // Route API handling token
       startedAt,
       utm: getUtmFromLocation(),
       landingPage: window.location.pathname,
     });
+  };
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
   };
 
   return (
@@ -179,6 +195,15 @@ export function ContactForm({
           )}
         </div>
 
+        {/* UI Widget reCAPTCHA Container */}
+        <div className="my-2">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+            onChange={handleRecaptchaChange}
+          />
+        </div>
+
         {/* Error Alert */}
         {status === "error" && errorMessage && (
           <div role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-700 border border-red-100">
@@ -189,8 +214,8 @@ export function ContactForm({
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={status === "submitting"}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue px-8 py-4 text-base font-semibold text-white shadow-lg shadow-brand-blue/20 transition-all duration-200 hover:bg-brand-blue-dark hover:shadow-xl active:scale-[0.98] disabled:opacity-70 sm:w-auto self-start"
+          disabled={status === "submitting" || !recaptchaToken}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-blue px-8 py-4 text-base font-semibold text-white shadow-lg shadow-brand-blue/20 transition-all duration-200 hover:bg-brand-blue-dark hover:shadow-xl active:scale-[0.98] disabled:opacity-50 sm:w-auto self-start"
         >
           {status === "submitting" ? (
             <>

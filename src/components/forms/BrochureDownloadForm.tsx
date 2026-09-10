@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useRef, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { brochureDownloadSchema, type BrochureDownloadInput } from "@/lib/validation/brochureDownload";
 import { FieldWrapper, inputClasses } from "./fields";
 import { useLeadSubmit, getUtmFromLocation } from "@/hooks/useLeadSubmit";
@@ -13,6 +14,9 @@ const BROCHURE_FILE_NAME = "Tanzania-Buildcon-Expo-Brochure-2027.pdf";
 
 export function BrochureDownloadForm() {
   const [startedAt] = useState(() => Date.now());
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   const { submit, status, referenceId, errorMessage } = useLeadSubmit("/api/brochure-download");
   const downloadLinkRef = useRef<HTMLAnchorElement>(null);
 
@@ -31,8 +35,23 @@ export function BrochureDownloadForm() {
     }
   }, [status, referenceId]);
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
+
   const onSubmit = (data: BrochureDownloadInput) => {
-    submit({ ...data, startedAt, utm: getUtmFromLocation(), landingPage: window.location.pathname });
+    if (!recaptchaToken) {
+      alert("Please check the 'I'm not a robot' box.");
+      return;
+    }
+
+    submit({
+      ...data,
+      recaptchaToken,
+      startedAt,
+      utm: getUtmFromLocation(),
+      landingPage: window.location.pathname,
+    });
   };
 
   if (status === "success" && referenceId) {
@@ -94,14 +113,23 @@ export function BrochureDownloadForm() {
         {errors.consent ? <p className="mt-1.5 opacity-100 text-xs font-medium text-red-600 transition-opacity duration-150 ease-out starting:opacity-0">{errors.consent.message}</p> : null}
       </div>
 
+      {/* reCAPTCHA v2 Checkbox Widget */}
+      <div className="py-1">
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+          onChange={handleRecaptchaChange}
+        />
+      </div>
+
       {status === "error" && errorMessage ? (
         <p role="alert" className="translate-y-0 rounded-md bg-red-50 px-4 py-3 text-sm text-red-700 opacity-100 transition-[transform,opacity] duration-200 ease-out starting:translate-y-1 starting:opacity-0">{errorMessage}</p>
       ) : null}
 
       <button
         type="submit"
-        disabled={status === "submitting"}
-        className="inline-flex w-full items-center justify-center rounded-md bg-brand-blue px-7 py-3.5 text-base font-semibold uppercase tracking-wide text-white transition-[background-color,transform] duration-150 ease-out active:scale-[0.97] disabled:active:scale-100 hover:bg-brand-blue-dark disabled:opacity-60 sm:w-auto"
+        disabled={status === "submitting" || !recaptchaToken}
+        className="inline-flex w-full items-center justify-center rounded-md bg-brand-blue px-7 py-3.5 text-base font-semibold uppercase tracking-wide text-white transition-[background-color,transform] duration-150 ease-out active:scale-[0.97] disabled:active:scale-100 hover:bg-brand-blue-dark disabled:opacity-50 sm:w-auto"
       >
         {status === "submitting" ? "Submitting…" : "Download Brochure"}
       </button>

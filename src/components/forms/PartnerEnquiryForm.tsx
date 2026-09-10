@@ -2,7 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { partnerEnquirySchema, type PartnerEnquiryInput } from "@/lib/validation/partnerEnquiry";
 import { FieldWrapper, inputClasses } from "./fields";
 import { SuccessPanel } from "./SuccessPanel";
@@ -11,6 +12,9 @@ import { countries } from "@/data/countries";
 
 export function PartnerEnquiryForm() {
   const [startedAt] = useState(() => Date.now());
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   const { submit, status, referenceId, errorMessage } = useLeadSubmit("/api/partner-enquiry");
 
   const {
@@ -31,8 +35,23 @@ export function PartnerEnquiryForm() {
     );
   }
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
+
   const onSubmit = (data: PartnerEnquiryInput) => {
-    submit({ ...data, startedAt, utm: getUtmFromLocation(), landingPage: window.location.pathname });
+    if (!recaptchaToken) {
+      alert("Please check the 'I'm not a robot' box.");
+      return;
+    }
+
+    submit({
+      ...data,
+      recaptchaToken,
+      startedAt,
+      utm: getUtmFromLocation(),
+      landingPage: window.location.pathname,
+    });
   };
 
   return (
@@ -156,6 +175,15 @@ export function PartnerEnquiryForm() {
         </FieldWrapper>
       </div>
 
+      {/* reCAPTCHA v2 Checkbox Widget */}
+      <div className="py-2">
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+          onChange={handleRecaptchaChange}
+        />
+      </div>
+
       {status === "error" && errorMessage && (
         <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-xs font-semibold text-red-700">
           {errorMessage}
@@ -169,8 +197,8 @@ export function PartnerEnquiryForm() {
 
         <button
           type="submit"
-          disabled={status === "submitting"}
-          className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-blue px-7 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(2,163,220,0.25)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_22px_rgba(2,163,220,0.35)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-60 cursor-pointer"
+          disabled={status === "submitting" || !recaptchaToken}
+          className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-blue px-7 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(2,163,220,0.25)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_22px_rgba(2,163,220,0.35)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {status === "submitting" ? "Submitting Application..." : "Submit Partnership Application →"}
         </button>

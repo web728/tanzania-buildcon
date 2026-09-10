@@ -2,7 +2,8 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import {
   visitorRegistrationSchema,
   type VisitorRegistrationInput,
@@ -18,6 +19,9 @@ import { exhibitionSectors } from "@/data/exhibitionProfile";
 
 export function VisitorRegistrationForm() {
   const [startedAt] = useState(() => Date.now());
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
   const { submit, status, referenceId, errorMessage } = useLeadSubmit("/api/visitor-registration");
 
   const {
@@ -40,8 +44,23 @@ export function VisitorRegistrationForm() {
     );
   }
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
+
   const onSubmit = (data: VisitorRegistrationInput) => {
-    submit({ ...data, startedAt, utm: getUtmFromLocation(), landingPage: window.location.pathname });
+    if (!recaptchaToken) {
+      alert("Please check the 'I'm not a robot' box.");
+      return;
+    }
+
+    submit({
+      ...data,
+      recaptchaToken,
+      startedAt,
+      utm: getUtmFromLocation(),
+      landingPage: window.location.pathname,
+    });
   };
 
   return (
@@ -198,7 +217,7 @@ export function VisitorRegistrationForm() {
         </div>
       </section>
 
-      {/* SECTION 4: CONSENT & SUBMIT */}
+      {/* SECTION 4: CONSENT, RECAPTCHA & SUBMIT */}
       <div className="space-y-6 pt-2">
         <label className="flex items-start gap-3 text-sm text-slate-600">
           <input 
@@ -217,6 +236,15 @@ export function VisitorRegistrationForm() {
           <p className="text-xs font-medium text-red-600">{errors.consent.message}</p>
         )}
 
+        {/* reCAPTCHA v2 Checkbox Widget */}
+        <div className="py-2">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+            onChange={handleRecaptchaChange}
+          />
+        </div>
+
         {status === "error" && errorMessage && (
           <div role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
             {errorMessage}
@@ -225,8 +253,8 @@ export function VisitorRegistrationForm() {
 
         <button
           type="submit"
-          disabled={status === "submitting"}
-          className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+          disabled={status === "submitting" || !recaptchaToken}
+          className="inline-flex w-full items-center justify-center rounded-xl bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {status === "submitting" ? (
             <span className="flex items-center gap-2">
