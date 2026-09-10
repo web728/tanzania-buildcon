@@ -35,8 +35,22 @@ const SECONDARY_ROUTES = [
   { path: "/cookie-policy", priority: 0.3, changeFrequency: "yearly" },
 ];
 
+/**
+ * Ensures a valid absolute URL string with 'https://' protocol and no trailing slash
+ */
+function getAbsoluteBaseUrl(): string {
+  const rawUrl = process.env.NEXT_PUBLIC_SITE_URL || event.website || "https://tanzaniabuildcon.com";
+  let formatted = rawUrl.trim();
+
+  if (!formatted.startsWith("http://") && !formatted.startsWith("https://")) {
+    formatted = `https://${formatted}`;
+  }
+
+  return formatted.replace(/\/$/, "");
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || event.website).replace(/\/$/, "");
+  const baseUrl = getAbsoluteBaseUrl();
 
   const [exhibitors, news] = await Promise.all([
     getPublishedExhibitors().catch(() => []),
@@ -78,7 +92,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 5. Dynamic News Pages
   const newsEntries: MetadataRoute.Sitemap = news.map((n) => ({
     url: `${baseUrl}/news/${n.slug}`,
-    lastModified: new Date(n.publishedAt as unknown as string || new Date()),
+    lastModified: new Date((n.publishedAt as unknown as string) || new Date()),
     changeFrequency: "monthly",
     priority: 0.5,
   }));
