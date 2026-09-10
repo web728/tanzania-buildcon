@@ -11,84 +11,92 @@ const containerVariants: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.08,
+      staggerChildren: 0.1,
       delayChildren: 0.05,
     },
   },
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 18, filter: "blur(4px)" },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
     transition: {
-      duration: 0.55,
+      duration: 0.6,
       ease: [0.16, 1, 0.3, 1],
     },
   },
 };
 
-// Exact data and stats directly from Brochure Page 04
 const ORGANISERS_DATA = [
   {
     name: "FUTUREX TRADE FAIR & EVENTS PVT. LTD.",
-    tagline: "Let's Build the Future Together",
+    shortBadge: "Futurex Group",
+    badgeTheme: "blue",
     hq: "New Delhi, India",
-    established: "Est. 2011",
+    established: "Operating Since 2011",
     url: "https://www.futurextrade.com/",
     logo: "/logos/futurex-logo.png",
-    description:
-      "An international exhibition organiser headquartered in New Delhi, India. Operating since 2011, Futurex's portfolio spans 220+ international trade exhibitions across industrial sectors including building, infrastructure, agriculture, and power.",
-    pills: ["220+ Expos", "16,500+ Exhibitors", "25,800+ Brands", "950K+ Visitors"],
+    paragraphs: [
+      "FUTUREX TRADE FAIR & EVENTS PVT. LTD. is an international exhibition and corporate-events organiser headquartered in New Delhi, India. Operating since 2011, Futurex's portfolio spans 220+ international trade exhibitions and conferences across industrial sectors including garments, building and infrastructure, agriculture, wood and woodworking, power, education, printing, plastics, and packaging.",
+      "Futurex's portfolio represents 16,500+ exhibitors, 25,800+ brands on display, and 950,000+ visitors, reflecting its experience in building B2B platforms that connect manufacturers, suppliers, buyers, distributors, and industry decision-makers.",
+    ],
+    stats: [
+      { label: "Trade Exhibitions", val: "220+" },
+      { label: "Exhibitors Hosted", val: "16,500+" },
+      { label: "Brands on Display", val: "25,800+" },
+      { label: "Global Trade Visitors", val: "950K+" },
+    ],
   },
   {
     name: "EXHIBITIONS & TRADE SERVICES INDIA PVT. LTD.",
-    tagline: "ETSIPL • Global Trade Facilitation",
+    shortBadge: "ETSIPL",
+    badgeTheme: "green",
     hq: "Navi Mumbai, India",
-    established: "ISO 9001:2015",
+    established: "ISO 9001:2015 Certified",
     url: "https://www.etsipl.in/",
     logo: "/logos/etsipl-logo.png",
-    description:
-      "Based out of Navi Mumbai, India, ETSIPL is an ISO 9001:2015 Certified organisation with 12+ years of global expertise in trade fair promotion, operating worldwide partner networks to bridge international suppliers with East Africa.",
-    pills: ["12+ Years Track Record", "ISO 9001:2015 Certified", "Global Network", "East Africa Focus"],
+    paragraphs: [
+      "EXHIBITIONS & TRADE SERVICES INDIA PRIVATE LIMITED (ETSIPL), based out of Navi Mumbai, India, is an ISO 9001:2015 Certified Organization with more than 12 years of experience in the promotion and organizing of trade exhibitions across the globe.",
+      "Through its extensive global network, ETSIPL maintains a worldwide presence with strategic local partners stationed across major trade continents. Dedicated to delivering best-in-class trade facilitation, ETSIPL focuses on unlocking high-potential emerging markets across Tanzania and the broader East African trade corridors.",
+    ],
+    stats: [
+      { label: "Global Track Record", val: "12+ Yrs" },
+      { label: "Quality Certification", val: "ISO 9001" },
+      { label: "Partner Network", val: "Worldwide" },
+      { label: "Regional Target", val: "East Africa" },
+    ],
   },
 ];
 
 const CONTACT_DESKS = [
   {
-    title: "Exhibition & Stand Enquiries",
-    name: event.contact.exhibitorEnquiries.name,
-    role: "Head of International Trade Fair Operations",
-    phone: event.contact.exhibitorEnquiries.phone,
-    email: event.contact.exhibitorEnquiries.email,
+    company: "Futurex Group",
+    name: event.contact.futurex.name,
+    phone: event.contact.futurex.phone,
+    email: event.contact.futurex.email,
+    location: "New Delhi Secretariat",
   },
   {
-    title: "International Participation",
-    name: event.contact.internationalParticipation.name,
-    role: "ETSIPL Global Representation",
-    phone: event.contact.internationalParticipation.phone,
-    email: event.contact.internationalParticipation.email,
-  },
-  {
-    title: "Trade Visitor & Delegation Desk",
-    name: event.contact.visitorEnquiries.name,
-    role: "Visitor Services & B2B Matchmaking",
-    phone: event.contact.visitorEnquiries.phone,
-    email: event.contact.visitorEnquiries.email,
+    company: "ETSIPL",
+    name: event.contact.etsipl.name,
+    phone: event.contact.etsipl.phone,
+    email: event.contact.etsipl.email,
+    location: "Navi Mumbai Desk",
   },
 ];
 
 export function OrganisersClientView() {
   return (
-    <div className="relative overflow-hidden py-10 sm:py-14 text-brand-dark">
+    <div className="relative overflow-hidden py-14 sm:py-20 text-brand-dark selection:bg-brand-blue selection:text-white">
       {/* Background Architectural Vector Pattern */}
       <div className="pointer-events-none absolute inset-0 -z-10 select-none opacity-[0.035]">
         <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <pattern id="organisers-grid" width="36" height="36" patternUnits="userSpaceOnUse">
-              <path d="M 36 0 L 0 0 0 36" fill="none" stroke="#0b1720" strokeWidth="0.8" />
+            <pattern id="organisers-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#071118" strokeWidth="0.85" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#organisers-grid)" />
@@ -96,71 +104,76 @@ export function OrganisersClientView() {
       </div>
 
       <Container className="relative z-10 w-full">
-        {/* Top Header: Balanced Titles & CTA */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between pb-5 border-b border-slate-200/80">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/[0.06] px-3.5 py-1">
+        {/* ========================================================= */}
+        {/* Header Block                                              */}
+        {/* ========================================================= */}
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between pb-8 border-b border-slate-200/80">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/[0.06] px-4 py-1">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-blue opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue" />
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
-                Verified Global Trade Promoters
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-blue">
+                Joint Global Organisers
               </span>
             </div>
 
-            <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-[-0.03em] leading-tight text-brand-dark">
-              International Leadership &amp;{" "}
+            <h2 className="mt-3.5 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-brand-dark">
+              About the{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-500 to-brand-green">
-                Exhibition Pioneers
+                Organisers
               </span>
             </h2>
 
-            <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-slate-500 font-normal">
-              {event.name} is delivered jointly by Futurex and ETSIPL, uniting global industrial networks with deep regional trade facilitation.
+            <p className="mt-2.5 text-sm sm:text-base leading-relaxed text-slate-600 font-normal">
+              {event.name} is jointly convened by Futurex Trade Fair &amp; Events and ETSIPL—combining decades of industrial trade fair experience, thousands of global exhibitors, and high-impact East African trade networks.
             </p>
           </div>
 
           <div className="shrink-0">
             <Link
               href={event.cta.bookStand}
-              className="inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-[0_4px_16px_rgba(2,163,220,0.25)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_22px_rgba(2,163,220,0.35)] hover:-translate-y-0.5 active:translate-y-0"
+              className="inline-flex items-center justify-center rounded-full bg-brand-blue px-7 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-[0_4px_20px_rgba(2,163,220,0.3)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_6px_28px_rgba(2,163,220,0.45)] hover:-translate-y-0.5 active:translate-y-0"
             >
-              Book Exhibition Space →
+              Book Exhibition Stand →
             </Link>
           </div>
         </div>
 
-        {/* Organiser Profile Cards (Futurex & ETSIPL) */}
+        {/* ========================================================= */}
+        {/* Deep Dive Organiser Showcase Cards                        */}
+        {/* ========================================================= */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-40px" }}
-          className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-2"
+          className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2"
         >
-          {ORGANISERS_DATA.map((org, index) => {
-            const isFirst = index === 0;
+          {ORGANISERS_DATA.map((org) => {
+            const isBlue = org.badgeTheme === "blue";
+
             return (
               <motion.div
                 key={org.name}
                 variants={itemVariants}
-                className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-[0_2px_12px_rgb(0,0,0,0.02)] transition-all duration-300 hover:border-brand-blue/40 hover:shadow-xl hover:-translate-y-1"
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 sm:p-9 shadow-[0_4px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-brand-blue/50 hover:shadow-2xl hover:shadow-brand-blue/[0.08]"
               >
                 <div>
-                  {/* Top Header Row: Logo & Visit Link */}
-                  <div className="flex items-center justify-between gap-4 pb-4 border-b border-slate-100">
+                  {/* Top Bar: Large Logo Container + External Link */}
+                  <div className="flex items-center justify-between gap-4 pb-6 border-b border-slate-100">
                     <a
                       href={org.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative block h-11 w-36 sm:h-12 sm:w-40 transition-transform group-hover:scale-[1.02]"
+                      className="relative block h-16 w-48 sm:h-20 sm:w-56 transition-transform duration-300 group-hover:scale-105"
                     >
                       <Image
                         src={org.logo}
                         alt={org.name}
                         fill
-                        sizes="180px"
+                        sizes="240px"
                         className="object-contain object-left"
                       />
                     </a>
@@ -169,47 +182,67 @@ export function OrganisersClientView() {
                       href={org.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[11px] font-semibold text-slate-600 transition-colors hover:border-brand-blue hover:text-brand-blue hover:bg-white"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50/80 px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition-all hover:border-brand-blue hover:text-brand-blue hover:bg-white"
                     >
-                      <span>Website</span>
+                      <span>Official Site</span>
                       <span className="text-slate-400 group-hover:text-brand-blue">↗</span>
                     </a>
                   </div>
 
-                  {/* Metadata Chips */}
-                  <div className="mt-3.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    <span>{org.hq}</span>
-                    <span>&bull;</span>
-                    <span className={isFirst ? "text-brand-blue" : "text-brand-green"}>
-                      {org.established}
+                  {/* Operational Meta Badge */}
+                  <div className="mt-5 flex flex-wrap items-center gap-2.5 text-xs font-semibold">
+                    <span
+                      className={`rounded-full px-3 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
+                        isBlue
+                          ? "bg-brand-blue/10 text-brand-blue"
+                          : "bg-brand-green/10 text-brand-green"
+                      }`}
+                    >
+                      {org.shortBadge}
                     </span>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-500">{org.hq}</span>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-slate-700 font-medium">{org.established}</span>
                   </div>
 
-                  <h3 className="mt-1 text-sm sm:text-base font-bold tracking-tight text-brand-dark group-hover:text-brand-blue transition-colors">
+                  {/* Company Name */}
+                  <h3 className="mt-3 text-lg sm:text-xl font-extrabold tracking-tight text-brand-dark group-hover:text-brand-blue transition-colors">
                     {org.name}
                   </h3>
 
-                  <p className="mt-2 text-xs leading-[1.65] text-slate-500 font-normal">
-                    {org.description}
-                  </p>
+                  {/* Paragraphs */}
+                  <div className="mt-3.5 space-y-3 text-xs sm:text-sm leading-relaxed text-slate-600 font-normal">
+                    {org.paragraphs.map((p, pIdx) => (
+                      <p key={pIdx}>{p}</p>
+                    ))}
+                  </div>
 
-                  {/* Minimalist Micro Badges Strip (Replaces bulky stats) */}
-                  <div className="mt-4 flex flex-wrap items-center gap-1.5">
-                    {org.pills.map((pill) => (
-                      <span
-                        key={pill}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200/70 bg-slate-50/80 px-2.5 py-1 text-[11px] font-medium text-slate-700 transition-colors group-hover:border-slate-300"
+                  {/* Metric Highlights 4-Box Grid */}
+                  <div className="mt-7 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    {org.stats.map((st) => (
+                      <div
+                        key={st.label}
+                        className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3 text-center transition-colors group-hover:bg-slate-50"
                       >
-                        <span className={`h-1.5 w-1.5 rounded-full ${isFirst ? "bg-brand-blue" : "bg-brand-green"}`} />
-                        {pill}
-                      </span>
+                        <div
+                          className={`text-base sm:text-lg font-black tracking-tight ${
+                            isBlue ? "text-brand-blue" : "text-brand-green"
+                          }`}
+                        >
+                          {st.val}
+                        </div>
+                        <div className="mt-0.5 text-[10px] font-semibold text-slate-500 uppercase tracking-tight">
+                          {st.label}
+                        </div>
+                      </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Micro Footer Indicator */}
-                <div className="mt-5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] font-semibold text-brand-blue">
-                  <span>Official Joint Secretariat</span>
+                {/* Card Micro Footer */}
+                <div className="mt-7 pt-4 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-brand-blue">
+                  <span>Authorized International Secretariat</span>
                   <span className="transition-transform group-hover:translate-x-1">→</span>
                 </div>
               </motion.div>
@@ -217,86 +250,162 @@ export function OrganisersClientView() {
           })}
         </motion.div>
 
-        {/* Direct Verified Contact Desks */}
-        <div className="mt-12 sm:mt-14">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between pb-4 border-b border-slate-200/80">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
-                Direct Communication Desks
+    {/* ========================================================= */}
+{/* Unified Contact Hub (3 Identical Balanced Cards)          */}
+{/* ========================================================= */}
+<div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-9 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+  
+  {/* Hub Header */}
+  <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between pb-6 border-b border-slate-100">
+    <div>
+      <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-brand-blue">
+        Official Directory
+      </span>
+      <h3 className="mt-1 text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-dark">
+        Reach the Organising Secretariat
+      </h3>
+    </div>
+    <p className="text-xs text-slate-500 font-normal max-w-sm">
+      Direct official desks for stall bookings, international pavilions, and sponsorship inquiries.
+    </p>
+  </div>
+
+  {/* 3 Identical Cards Grid */}
+  <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3 items-stretch">
+    
+    {/* Card 1 & 2: Contact Desks */}
+    {CONTACT_DESKS.map((desk) => {
+      const cleanPhone = desk.phone.replace(/[^0-9+]/g, "");
+      const isFuturex = desk.company === "Futurex Group";
+
+      return (
+        <div
+          key={desk.company}
+          className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/50 p-5 transition-all duration-200 hover:border-brand-blue/40 hover:bg-white hover:shadow-lg hover:shadow-slate-200/50"
+        >
+          <div>
+            {/* Header: Badge + Location */}
+            <div className="flex items-center justify-between gap-2">
+              <span
+                className={`inline-block rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
+                  isFuturex
+                    ? "bg-brand-blue/10 text-brand-blue"
+                    : "bg-brand-green/10 text-brand-green"
+                }`}
+              >
+                {desk.company}
               </span>
-              <h3 className="mt-1 text-lg sm:text-2xl font-extrabold tracking-tight text-brand-dark">
-                Official Organiser Representation
-              </h3>
+              <span className="text-[11px] font-medium text-slate-400">
+                {desk.location}
+              </span>
             </div>
-            <p className="text-xs text-slate-500 font-normal">
-              Direct contacts for domestic and international participation enquiries.
-            </p>
+
+            {/* Representative Name */}
+            <div className="mt-4">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                Official Representative
+              </div>
+              <h4 className="mt-0.5 text-base font-bold text-brand-dark group-hover:text-brand-blue transition-colors">
+                {desk.name}
+              </h4>
+            </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-1 gap-3.5 md:grid-cols-3">
-            {CONTACT_DESKS.map((desk) => {
-              const cleanPhone = desk.phone.replace(/[^0-9+]/g, "");
-              return (
-                <div
-                  key={desk.title}
-                  className="flex flex-col justify-between rounded-xl border border-slate-200/80 bg-white p-4 shadow-[0_2px_8px_rgb(0,0,0,0.02)] transition-all hover:border-brand-blue/40 hover:shadow-md"
-                >
-                  <div>
-                    <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-brand-blue">
-                      {desk.title}
-                    </span>
+          {/* Contact Links */}
+          <div className="mt-5 pt-3.5 border-t border-slate-200/70 flex flex-col gap-2 text-xs">
+            <a
+              href={`tel:${cleanPhone}`}
+              className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-white px-3 py-2 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:text-brand-green hover:shadow-sm"
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-emerald-50 text-brand-green">
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </span>
+              <span className="tabular-nums">{desk.phone}</span>
+            </a>
 
-                    <h4 className="mt-2.5 text-xs sm:text-sm font-bold text-brand-dark">
-                      {desk.name}
-                    </h4>
-                    <p className="text-[10px] text-slate-500 mt-0.5 font-normal">
-                      {desk.role}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-2.5 border-t border-slate-100 flex flex-col gap-1.5 text-xs">
-                    <a
-                      href={`tel:${cleanPhone}`}
-                      className="inline-flex items-center gap-1.5 font-medium text-slate-700 transition-colors hover:text-brand-green"
-                    >
-                      <svg className="h-3.5 w-3.5 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      {desk.phone}
-                    </a>
-
-                    <a
-                      href={`mailto:${desk.email}`}
-                      className="inline-flex items-center gap-1.5 font-medium text-slate-700 transition-colors hover:text-brand-blue"
-                    >
-                      <svg className="h-3.5 w-3.5 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      {desk.email}
-                    </a>
-                  </div>
-                </div>
-              );
-            })}
+            <a
+              href={`mailto:${desk.email}`}
+              className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-white px-3 py-2 font-semibold text-slate-700 transition-all hover:border-brand-blue/50 hover:text-brand-blue hover:shadow-sm"
+            >
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-sky-50 text-brand-blue">
+                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </span>
+              <span className="truncate">{desk.email}</span>
+            </a>
           </div>
         </div>
+      );
+    })}
 
-        {/* Bottom Booking Action Ribbon */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-brand-blue/20 bg-gradient-to-r from-brand-blue/[0.04] via-white to-brand-green/[0.04] p-4 shadow-sm">
-          <div className="flex items-center gap-2.5 text-xs text-slate-600">
-            <span className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+    {/* Card 3: Reserve Stand (Exact Match in Size & Alignment) */}
+    <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#071118] p-5 text-white shadow-md transition-all hover:shadow-xl">
+      {/* Subtle Glow */}
+      <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-brand-blue/20 blur-xl" />
+
+      <div className="relative z-10">
+        <div className="flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.06] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-green animate-pulse" />
+            Active
+          </span>
+          <span className="text-[11px] font-medium text-slate-400">
+            Expo 2027
+          </span>
+        </div>
+
+        <div className="mt-5">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Booth Allocation
+          </div>
+          <h4 className="mt-0.5 text-base font-bold text-white">
+            Reserve Your Prime Stand
+          </h4>
+        </div>
+      </div>
+
+      {/* Buttons matching contact pills layout height */}
+      <div className="relative z-10 mt-5 pt-3.5 border-t border-white/10 flex flex-col gap-2 text-xs">
+        <Link
+          href={event.cta.bookStand}
+          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-blue px-3 py-2 font-bold uppercase tracking-wider text-white shadow-[0_2px_10px_rgba(2,163,220,0.35)] transition-all hover:bg-brand-blue-dark active:scale-[0.99]"
+        >
+          <span>Book Stand Space</span>
+          <span>→</span>
+        </Link>
+
+        <Link
+          href="/contact"
+          className="inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/[0.04] px-3 py-2 font-semibold text-slate-200 transition-all hover:bg-white/10"
+        >
+          General Helpdesk
+        </Link>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+        {/* Bottom Booking Ribbon */}
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-brand-blue/20 bg-gradient-to-r from-brand-blue/[0.05] via-white to-brand-green/[0.05] p-4 sm:p-5 shadow-sm">
+          <div className="flex items-center gap-3 text-xs text-slate-700">
+            <span className="flex h-2.5 w-2.5 rounded-full bg-brand-green animate-pulse shrink-0" />
             <span>
-              Looking to participate or discuss commercial partnership? Stand allocation is currently active.
+              Official joint representation from India to Tanzania for the 2027 edition at Diamond Jubilee Hall.
             </span>
           </div>
 
           <Link
             href={event.cta.bookStand}
-            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-blue px-5 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all duration-200"
+            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all duration-200"
           >
             Inquire for Space
           </Link>
         </div>
+
       </Container>
     </div>
   );

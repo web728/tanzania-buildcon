@@ -3,6 +3,9 @@ import { z } from "zod";
 import { connectToDatabase, safeDbErrorMessage } from "@/lib/db/mongodb";
 import { NewsletterSubscriber } from "@/models/NewsletterSubscriber";
 import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
+import { sendNewsletterSubscriptionEmails } from "@/lib/email/sendLeadEmails";
+import { isEmailConfigured } from "@/lib/email/mailer";
+import { isRateLimited, getClientIp } from "@/lib/utils/rateLimit";
 
 const NewsletterSchema = z.object({
   email: z.string().trim().email().max(200),
@@ -10,11 +13,39 @@ const NewsletterSchema = z.object({
   startedAt: z.number().optional(),
   country: z.string().max(100).optional(),
   interest: z.array(z.string().max(50)).max(5).optional(),
+  recaptchaToken: z.string().optional(),
 });
 
 const MIN_SUBMIT_MS = 1200;
 
+// Google reCAPTCHA v2 Server Verification
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) return true;
+
+  try {
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch (err) {
+    console.error("Recaptcha verification failed:", err);
+    return false;
+  }
+}
+
 export async function POST(req: NextRequest) {
+  const ip = getClientIp(req.headers);
+  if (isRateLimited(`newsletter:${ip}`)) {
+    return NextResponse.json(
+      { error: "Too many attempts. Please try again later." },
+      { status: 429 }
+    );
+  }
+
   let body: unknown;
   try {
     body = await req.json();
@@ -27,48 +58,61 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid submission" }, { status: 400 });
   }
 
-  const { email, website, startedAt, country, interest } = parsed.data;
+  const { email, website, startedAt, country, interest, recaptchaToken } = parsed.data;
 
-  // Honeypot: bots fill hidden fields.
+  // 1. Optional reCAPTCHA check if token passed from client
+  if (process.env.RECAPTCHA_SECRET_KEY && recaptchaToken) {
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
+  }
+
+  // Honeypot: bots fill hidden fields
   if (website) {
     return NextResponse.json({ success: true });
   }
 
-  // Reject submissions completed implausibly fast (bot behaviour).
+  // Reject submissions completed implausibly fast
   if (startedAt && Date.now() - startedAt < MIN_SUBMIT_MS) {
     return NextResponse.json({ success: true });
   }
 
   const normalizedEmail = email.toLowerCase();
 
-  // MongoDB is the source of truth: a submission is only "accepted" once it
-  // is durably saved. A missing/unreachable database must never be silently
-  // treated as success.
+  // 2. Save to MongoDB (Source of Truth)
   try {
     const conn = await connectToDatabase();
     if (!conn) throw new Error("Database connection unavailable");
 
     await NewsletterSubscriber.updateOne(
       { email: normalizedEmail },
-      { $set: { email: normalizedEmail, country, interest } },
-      { upsert: true },
+      { 
+        $set: { 
+          email: normalizedEmail, 
+          country, 
+          interest,
+          updatedAt: new Date()
+        } 
+      },
+      { upsert: true }
     );
   } catch (err) {
     console.error("NewsletterSubscriber save failed:", safeDbErrorMessage(err));
     return NextResponse.json(
       { error: "We couldn't process your subscription right now. Please try again in a moment." },
-      { status: 503 },
+      { status: 503 }
     );
   }
 
-  // MongoDB save has already succeeded at this point — Sheets sync is
-  // secondary and must never cause the (already-accepted) request to fail.
-  // Skipped entirely (status stays "pending") when Sheets isn't configured,
-  // rather than marking a no-op as "synced".
+  // 3. Append to Same Google Sheet (Tab: "Newsletter")
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Newsletter", {
-        referenceId: "",
+        referenceId: "NEWSLETTER",
         name: "",
         company: "",
         designation: "",
@@ -88,8 +132,23 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error("Newsletter Sheets sync failed", err);
       await NewsletterSubscriber.updateOne({ email: normalizedEmail }, { sheetsSyncStatus: "failed" }).catch(
-        () => {},
+        () => {}
       );
+    }
+  }
+
+  // 4. Send Email Alert to BOTH Organisers (Futurex & ETSIPL) + User Acknowledgement
+  if (isEmailConfigured()) {
+    try {
+      await sendNewsletterSubscriptionEmails({
+        email: normalizedEmail,
+        country,
+        interest,
+      });
+      await NewsletterSubscriber.updateOne({ email: normalizedEmail }, { emailStatus: "sent" }).catch(() => {});
+    } catch (err) {
+      console.error("Newsletter email dispatch failed", err);
+      await NewsletterSubscriber.updateOne({ email: normalizedEmail }, { emailStatus: "failed" }).catch(() => {});
     }
   }
 

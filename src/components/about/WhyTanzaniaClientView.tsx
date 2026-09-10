@@ -255,31 +255,74 @@ export function WhyTanzaniaClientView() {
           </div>
         </div>
 
-        {/* Bottom Booking Ribbon */}
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-brand-blue/20 bg-gradient-to-r from-brand-blue/[0.04] via-white to-brand-green/[0.04] p-5 shadow-sm">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-green/10 text-brand-green">
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <div>
-              <h4 className="text-xs sm:text-sm font-bold text-brand-dark">
-                Position your business in East Africa&apos;s growing building market
-              </h4>
-              <p className="text-[11px] text-slate-500 font-normal">
-                Exhibit from 25–27 August 2027 at Diamond Jubilee Hall, Dar es Salaam.
-              </p>
-            </div>
-          </div>
+      {/* ========================================================= */}
+{/* High-Impact Expo Conversion Card (Replaces Weak Ribbon)    */}
+{/* ========================================================= */}
+<motion.div
+  initial={{ opacity: 0, y: 24 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6 }}
+  className="relative mt-12 sm:mt-16 overflow-hidden rounded-3xl bg-[#071118] p-8 sm:p-12 text-white shadow-2xl shadow-black/25"
+>
+  {/* Ambient Mesh Glows */}
+  <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-brand-blue/20 blur-[90px]" />
+  <div className="pointer-events-none absolute -bottom-16 -left-16 h-72 w-72 rounded-full bg-brand-green/20 blur-[90px]" />
 
-          <Link
-            href={event.cta.bookStand}
-            className="shrink-0 inline-flex items-center justify-center rounded-full bg-brand-blue px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all duration-200"
-          >
-            Book a Stand
-          </Link>
-        </div>
+  {/* Subtle Blueprint Wireframe Grid Background */}
+  <div
+    aria-hidden="true"
+    className="pointer-events-none absolute inset-0 opacity-[0.05] [mask-image:radial-gradient(ellipse_at_center,#fff_30%,transparent_80%)]"
+    style={{
+      backgroundImage:
+        "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
+      backgroundSize: "32px 32px",
+    }}
+  />
+
+  <div className="relative z-10 flex flex-col items-center justify-between gap-8 lg:flex-row text-center lg:text-left">
+    {/* Left Column: Heading + Event Meta Pill */}
+    <div className="max-w-2xl">
+      {/* Event Date & Location Micro-Pill */}
+      <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1 text-xs font-medium text-slate-300 backdrop-blur-md">
+        <span className="flex h-2 w-2 rounded-full bg-brand-green animate-pulse" />
+        <span className="text-white font-semibold">{event.dates.display}</span>
+        <span className="text-white/30">•</span>
+        <span>{event.venue.name}, {event.venue.city}</span>
+      </div>
+
+      <h3 className="mt-4 text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight text-white">
+        Position Your Brand in{" "}
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-300 to-brand-green">
+          East Africa&apos;s Fastest-Growing
+        </span>{" "}
+        Construction Hub
+      </h3>
+
+      <p className="mt-3 text-xs sm:text-sm text-slate-300/90 leading-relaxed max-w-xl">
+        Connect face-to-face with key contractors, government specifiers, importers, and regional distributors ready for direct supply agreements.
+      </p>
+    </div>
+
+    {/* Right Column: High-Conversion Dual CTAs */}
+    <div className="flex flex-col sm:flex-row items-center gap-3.5 shrink-0 w-full sm:w-auto">
+      <Link
+        href={event.cta.bookStand}
+        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-brand-blue px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-[0_0_24px_rgba(2,163,220,0.4)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_0_32px_rgba(2,163,220,0.55)] hover:-translate-y-0.5 active:translate-y-0"
+      >
+        <span>Book Your Stand</span>
+        <span>→</span>
+      </Link>
+
+      <Link
+        href={event.cta.registerVisit}
+        className="w-full sm:w-auto inline-flex items-center justify-center rounded-xl border border-white/20 bg-white/[0.08] px-7 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white backdrop-blur-md transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:-translate-y-0.5 active:translate-y-0"
+      >
+        Register to Visit
+      </Link>
+    </div>
+  </div>
+</motion.div>
       </Container>
     </div>
   );

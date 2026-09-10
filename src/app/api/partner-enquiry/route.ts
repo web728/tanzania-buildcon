@@ -9,19 +9,57 @@ import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
 import { sendPartnerEnquiryEmails } from "@/lib/email/sendLeadEmails";
 import { isEmailConfigured } from "@/lib/email/mailer";
 
+// Google reCAPTCHA v2 Server Verification
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) return true;
+
+  try {
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch (err) {
+    console.error("Recaptcha verification failed:", err);
+    return false;
+  }
+}
+
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers);
   if (isRateLimited(`partner:${ip}`)) {
     return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
   }
 
-  let body: unknown;
+  let body: any;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
+  // 1. Google reCAPTCHA v2 Verification
+  const recaptchaToken = body.recaptchaToken || body["g-recaptcha-response"];
+  if (process.env.RECAPTCHA_SECRET_KEY) {
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { error: "Please verify that you are not a robot." },
+        { status: 400 }
+      );
+    }
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
+  }
+
+  // 2. Schema Validation
   const parsed = partnerEnquirySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
@@ -32,15 +70,14 @@ export async function POST(req: NextRequest) {
 
   const data = parsed.data;
 
+  // Bot Trap Check
   if (data.website_hp || (data.startedAt && Date.now() - data.startedAt < MIN_SUBMIT_MS)) {
     return NextResponse.json({ success: true, referenceId: generateReferenceId("TBPT") });
   }
 
   const referenceId = generateReferenceId("TBPT");
 
-  // MongoDB is the source of truth: a submission is only "accepted" once it
-  // is durably saved. A missing/unreachable database must never be silently
-  // treated as success.
+  // 3. MongoDB (Source of Truth)
   try {
     const conn = await connectToDatabase();
     if (!conn) throw new Error("Database connection unavailable");
@@ -71,8 +108,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // MongoDB save has already succeeded at this point — Sheets/email are
-  // secondary and must never cause the (already-accepted) request to fail.
+  // 4. Same Google Sheet (Tab: "Partner Enquiries")
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Partner Enquiries", {
@@ -86,7 +122,7 @@ export async function POST(req: NextRequest) {
         phone: data.phone,
         type: data.organisationType,
         productInterest: data.industryRepresented ?? "",
-        message: data.natureOfEnquiry,
+        message: `${data.natureOfEnquiry}: ${data.message || ""}`.trim(),
         utmSource: data.utm?.source ?? "",
         utmMedium: data.utm?.medium ?? "",
         utmCampaign: data.utm?.campaign ?? "",
@@ -99,6 +135,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // 5. Send Notification to BOTH Organisers (Futurex & ETSIPL) + User Acknowledgement
   if (isEmailConfigured()) {
     try {
       await sendPartnerEnquiryEmails({ ...data, referenceId });

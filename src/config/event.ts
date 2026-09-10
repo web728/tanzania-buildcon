@@ -16,8 +16,6 @@ export const event = {
     end: "2027-08-27",
     display: "25–27 August 2027",
     displayShort: "25–27 AUG 2027",
-    // Opening time not supplied by organiser yet — editable placeholder.
-    // Countdown targets 09:00 local time on the opening day until confirmed.
     openingTimeConfirmed: false,
     countdownTargetIso: "2027-08-25T09:00:00+03:00", // Africa/Dar_es_Salaam (EAT, UTC+3)
     timezone: "Africa/Dar_es_Salaam",
@@ -50,36 +48,43 @@ export const event = {
     {
       name: "Futurex Trade Fair & Events Pvt. Ltd.",
       logo: "/logos/futurex-logo.png",
-      url: "",
+      url: "https://www.futurextrade.com/",
     },
     {
       name: "Exhibitions & Trade Services India Pvt. Ltd. (ETSIPL)",
       logo: "/logos/etsipl-logo.png",
-      url: "",
+      url: "https://www.etsipl.in/",
     },
   ],
 
   contact: {
+    futurex: {
+      company: "Futurex Group",
+      name: "Mr. Namit Gupta",
+      email: "namit@futurextrade.com",
+      phone: "(+91) 9810855697",
+    },
+    etsipl: {
+      company: "ETSIPL",
+      name: "Mr. Vijayanka Brighuvanshi",
+      email: "vijayanka@etsipl.in",
+      phone: "(+91) 9324232529",
+    },
+    // Backwards-compatible aliases (jahan pehle se import ho)
     exhibitorEnquiries: {
-      label: "Exhibition Enquiries",
+      company: "Futurex Group",
       name: "Mr. Namit Gupta",
       email: "namit@futurextrade.com",
       phone: "(+91) 9810855697",
     },
     internationalParticipation: {
-      label: "International Participation",
+      company: "ETSIPL",
       name: "Mr. Vijayanka Brighuvanshi",
       email: "vijayanka@etsipl.in",
       phone: "(+91) 9324232529",
     },
-    visitorEnquiries: {
-      label: "Visitor Enquiries",
-      name: "Mr. Vaibhav Srivastava",
-      email: "vaibhav@futurextrade.com",
-      phone: "(+91) 9807169880",
-    },
     general: {
-      label: "General Enquiries",
+      company: "Futurex Group",
       name: "Mr. Namit Gupta",
       email: "namit@futurextrade.com",
       phone: "(+91) 9810855697",

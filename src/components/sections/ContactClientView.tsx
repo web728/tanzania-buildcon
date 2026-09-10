@@ -18,13 +18,13 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20, filter: "blur(6px)" },
+  hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
     transition: {
-      duration: 0.6,
+      duration: 0.5,
       ease: [0.16, 1, 0.3, 1],
     },
   },
@@ -32,22 +32,16 @@ const itemVariants: Variants = {
 
 const CONTACT_PERSONS = [
   {
-    role: "Exhibition & Stand Enquiries",
-    person: event.contact.exhibitorEnquiries,
-    tag: "Futurex Trade Fair",
-    icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
+    company: "Futurex Group",
+    location: "New Delhi",
+    person: event.contact.futurex,
+    isBlue: true,
   },
   {
-    role: "International Participation",
-    person: event.contact.internationalParticipation,
-    tag: "ETSIPL Global Desk",
-    icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-  },
-  {
-    role: "Trade Visitor & Delegation Desk",
-    person: event.contact.visitorEnquiries,
-    tag: "Visitor Facilitation",
-    icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
+    company: "ETSIPL",
+    location: "Navi Mumbai",
+    person: event.contact.etsipl,
+    isBlue: false,
   },
 ];
 
@@ -80,19 +74,19 @@ export function ContactClientView() {
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-blue" />
               </span>
               <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-blue">
-                Official Organizing Committee
+                Contact Directory
               </span>
             </div>
 
-            <h2 className="mt-5 text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-brand-dark">
+            <h2 className="mt-4 text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-brand-dark">
               Connect with Our{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-500 to-brand-green">
-                Secretariat Team
+                Team
               </span>
             </h2>
 
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-slate-600 font-normal">
-              For stand reservations, technical specifications, bilateral trade delegation hosting, or general show enquiries.
+              For exhibition space bookings, country pavilions, sponsorship packages, or general event enquiries.
             </p>
           </div>
 
@@ -110,99 +104,99 @@ export function ContactClientView() {
           </div>
         </div>
 
-        {/* Section 1: Direct Communication Desks */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-40px" }}
-          className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3"
-        >
-          {CONTACT_PERSONS.map((item, idx) => {
-            const cleanPhone = item.person.phone.replace(/[^0-9+]/g, "");
-            const isBlue = idx === 0;
-
-            return (
-              <motion.div
-                key={item.role}
-                variants={itemVariants}
-                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-blue/30 hover:shadow-2xl hover:shadow-brand-blue/10"
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-5 border-b border-slate-100">
-                    <div
-                      className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-all duration-300 ${
-                        isBlue
-                          ? "bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white group-hover:shadow-lg group-hover:shadow-brand-blue/20"
-                          : "bg-brand-green/10 text-brand-green group-hover:bg-brand-green group-hover:text-white group-hover:shadow-lg group-hover:shadow-brand-green/20"
-                      }`}
-                    >
-                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d={item.icon} />
-                      </svg>
-                    </div>
-
-                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-600">
-                      {item.tag}
-                    </span>
-                  </div>
-
-                  <span className="mt-6 block text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    {item.role}
-                  </span>
-
-                  <h3 className="mt-1 text-lg font-bold tracking-tight text-brand-dark group-hover:text-brand-blue transition-colors">
-                    {item.person.name}
-                  </h3>
-
-                  <p className="mt-1 text-xs text-slate-500 font-medium">
-                    {item.person.label}
-                  </p>
-                </div>
-
-                <div className="mt-8 pt-5 border-t border-slate-100 flex flex-col gap-3 text-xs">
-                  <a
-                    href={`tel:${cleanPhone}`}
-                    className="inline-flex items-center gap-2.5 font-semibold text-slate-700 transition-colors hover:text-brand-green"
-                  >
-                    <svg className="h-4 w-4 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                    {item.person.phone}
-                  </a>
-
-                  <a
-                    href={`mailto:${item.person.email}`}
-                    className="inline-flex items-center gap-2.5 font-semibold text-slate-700 transition-colors hover:text-brand-blue truncate"
-                  >
-                    <svg className="h-4 w-4 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    {item.person.email}
-                  </a>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-
-        {/* Section 2: Contact Form Glass Container */}
-        <div className="mt-16 sm:mt-20 rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 shadow-xl shadow-slate-200/50 max-w-4xl mx-auto">
+        {/* Section 1: Contact Form (Now on Top) */}
+        <div className="mt-12 sm:mt-16 rounded-3xl border border-slate-200/90 bg-white p-8 sm:p-12 shadow-xl shadow-slate-200/50 max-w-4xl mx-auto">
           <div className="text-center pb-8 border-b border-slate-100 max-w-xl mx-auto">
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-blue">
-              Electronic Dispatch
-            </span>
-            <h3 className="mt-2 text-2xl sm:text-4xl font-extrabold tracking-tight text-brand-dark">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-brand-dark">
               Send Us a Message
             </h3>
-            <p className="mt-2.5 text-xs sm:text-sm text-slate-500 font-normal leading-relaxed">
-              Complete the enquiry form below. Your request will be directed to the corresponding department head immediately.
+            <p className="mt-2 text-xs sm:text-sm text-slate-500 font-normal leading-relaxed">
+              Fill out the enquiry form below and our team will get back to you shortly.
             </p>
           </div>
 
           <div className="mt-8">
             <ContactForm />
           </div>
+        </div>
+
+        {/* Section 2: Direct Team Contact Cards (Below Form) */}
+        <div className="mt-16 sm:mt-20 max-w-3xl mx-auto">
+          <div className="text-center pb-6">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-blue">
+              Direct Assistance
+            </span>
+            <h3 className="mt-1.5 text-xl sm:text-2xl font-extrabold tracking-tight text-brand-dark">
+              Or Speak Directly with Our Organising Team
+            </h3>
+          </div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-40px" }}
+            className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+          >
+            {CONTACT_PERSONS.map((item) => {
+              const cleanPhone = item.person.phone.replace(/[^0-9+]/g, "");
+
+              return (
+                <motion.div
+                  key={item.company}
+                  variants={itemVariants}
+                  className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/90 bg-white p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-xl"
+                >
+                  <div>
+                    <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+                      <span
+                        className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${
+                          item.isBlue
+                            ? "bg-brand-blue/10 text-brand-blue"
+                            : "bg-brand-green/10 text-brand-green"
+                        }`}
+                      >
+                        {item.company}
+                      </span>
+                      <span className="text-xs font-medium text-slate-400">
+                        {item.location}
+                      </span>
+                    </div>
+
+                    <h3 className="mt-5 text-xl font-bold tracking-tight text-brand-dark group-hover:text-brand-blue transition-colors">
+                      {item.person.name}
+                    </h3>
+                  </div>
+
+                  <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col gap-2.5 text-xs">
+                    <a
+                      href={`tel:${cleanPhone}`}
+                      className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:bg-white hover:text-brand-green hover:shadow-sm"
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-brand-green">
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                      </span>
+                      <span className="tabular-nums">{item.person.phone}</span>
+                    </a>
+
+                    <a
+                      href={`mailto:${item.person.email}`}
+                      className="inline-flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 font-semibold text-slate-700 transition-all hover:border-brand-blue/50 hover:bg-white hover:text-brand-blue hover:shadow-sm"
+                    >
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-sky-50 text-brand-blue">
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                      </span>
+                      <span className="truncate">{item.person.email}</span>
+                    </a>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
         </div>
 
         {/* Bottom Booking Action Ribbon */}

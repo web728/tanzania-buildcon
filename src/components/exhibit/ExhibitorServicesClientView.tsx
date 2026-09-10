@@ -212,44 +212,51 @@ export function ExhibitorServicesClientView() {
           ))}
         </motion.div>
 
-        {/* Direct Organizer Helpdesk Card (Brochure Match) */}
-        <div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl">
-              <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
-                Dedicated Operations Desk
-              </span>
-              <h3 className="mt-1 text-lg sm:text-xl font-bold tracking-tight text-brand-dark">
-                Require Custom Technical Assistance?
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
-                For custom machinery weight allowances, compressed air installation, or special stand fabrication inquiries, connect directly with the secretariat.
-              </p>
-            </div>
+     {/* Direct Organizer Helpdesk Card (Brochure Match - Dual Organisers) */}
+<div className="mt-14 sm:mt-18 rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
+  <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+    <div className="max-w-xl">
+      <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-blue">
+        Dedicated Operations Desk
+      </span>
+      <h3 className="mt-1 text-lg sm:text-xl font-bold tracking-tight text-brand-dark">
+        Require Custom Technical Assistance?
+      </h3>
+      <p className="mt-2 text-xs sm:text-sm leading-[1.7] text-slate-500 font-normal">
+        For custom machinery weight allowances, compressed air installation, or special stand fabrication inquiries, connect directly with the organizing secretariat.
+      </p>
+    </div>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
-              <a
-                href={`tel:${cleanPhone}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-5 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-blue hover:text-brand-blue hover:bg-white"
-              >
-                <svg className="h-4 w-4 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                {event.contact.exhibitorEnquiries.phone}
-              </a>
+    {/* Dual Helpline Actions (Futurex & ETSIPL) */}
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+      {/* Futurex Desk */}
+      <a
+        href={`tel:${event.contact.futurex.phone.replace(/[^0-9+]/g, "")}`}
+        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-blue hover:text-brand-blue hover:bg-white hover:shadow-sm"
+      >
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-sky-50 text-brand-blue">
+          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+        </span>
+        <span>Futurex: {event.contact.futurex.phone}</span>
+      </a>
 
-              <a
-                href={`mailto:${event.contact.exhibitorEnquiries.email}`}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-blue px-6 py-3 text-xs font-semibold uppercase tracking-wider text-white shadow-md hover:bg-brand-blue-dark transition-all"
-              >
-                <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Email Technical Desk
-              </a>
-            </div>
-          </div>
-        </div>
+      {/* ETSIPL Desk */}
+      <a
+        href={`tel:${event.contact.etsipl.phone.replace(/[^0-9+]/g, "")}`}
+        className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3 text-xs font-semibold text-slate-700 transition-all hover:border-brand-green hover:text-brand-green hover:bg-white hover:shadow-sm"
+      >
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-emerald-50 text-brand-green">
+          <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+        </span>
+        <span>ETSIPL: {event.contact.etsipl.phone}</span>
+      </a>
+    </div>
+  </div>
+</div>
 
         {/* Bottom Booking Ribbon */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-brand-blue/20 bg-gradient-to-r from-brand-blue/[0.04] via-white to-brand-green/[0.04] p-5 sm:p-6 shadow-sm">

@@ -8,39 +8,82 @@ import { isRateLimited, getClientIp } from "@/lib/utils/rateLimit";
 import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
 import { sendContactEnquiryEmails } from "@/lib/email/sendLeadEmails";
 import { isEmailConfigured } from "@/lib/email/mailer";
+import { event } from "@/config/event";
+
+// Helper to verify Google reCAPTCHA v2
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) {
+    console.warn("RECAPTCHA_SECRET_KEY is not defined. Skipping verification.");
+    return true; // dev fallback
+  }
+
+  try {
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch (err) {
+    console.error("Recaptcha verification failed:", err);
+    return false;
+  }
+}
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers);
   if (isRateLimited(`contact:${ip}`)) {
-    return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many submissions. Please try again later." },
+      { status: 429 }
+    );
   }
 
-  let body: unknown;
+  let body: any;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
+  // 1. Verify reCAPTCHA token if provided in body
+  const recaptchaToken = body.recaptchaToken || body["g-recaptcha-response"];
+  if (process.env.RECAPTCHA_SECRET_KEY) {
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { error: "Please complete the reCAPTCHA verification." },
+        { status: 400 }
+      );
+    }
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
+  }
+
   const parsed = contactEnquirySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Please check the highlighted fields.", issues: parsed.error.issues },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   const data = parsed.data;
 
+  // Honeypot & bot speed check
   if (data.website_hp || (data.startedAt && Date.now() - data.startedAt < MIN_SUBMIT_MS)) {
     return NextResponse.json({ success: true, referenceId: generateReferenceId("TBCN") });
   }
 
   const referenceId = generateReferenceId("TBCN");
 
-  // MongoDB is the source of truth: a submission is only "accepted" once it
-  // is durably saved. A missing/unreachable database must never be silently
-  // treated as success.
+  // Save to MongoDB
   try {
     const conn = await connectToDatabase();
     if (!conn) throw new Error("Database connection unavailable");
@@ -63,12 +106,11 @@ export async function POST(req: NextRequest) {
     console.error("ContactEnquiry save failed:", safeDbErrorMessage(err));
     return NextResponse.json(
       { error: "We couldn't send your message right now. Please try again in a moment." },
-      { status: 503 },
+      { status: 503 }
     );
   }
 
-  // MongoDB save has already succeeded at this point — Sheets/email are
-  // secondary and must never cause the (already-accepted) request to fail.
+  // 2. Google Sheets sync check
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Contact Enquiries", {
@@ -95,6 +137,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // 3. Send Emails to BOTH organisers: Namit (Futurex) + Vijayanka (ETSIPL)
   if (isEmailConfigured()) {
     try {
       await sendContactEnquiryEmails({ ...data, referenceId });

@@ -1,97 +1,184 @@
 import { google } from "googleapis";
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const CLIENT_EMAIL = process.env.GOOGLE_CLIENT_EMAIL;
-// Service-account private keys are stored in env as a single line with
-// literal "\n" sequences — they must be converted back to real newlines.
-const PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+const BASE64_CREDENTIALS = process.env.GOOGLE_CREDENTIALS_BASE64;
 
+export const TARGET_TAB_NAME = "Website Enquiries";
+
+// Exact 25 columns strictly matching your operational Google Sheet
 export const SHEET_COLUMNS = [
-  "Reference ID",
-  "Date",
-  "Time",
-  "Name",
-  "Company",
+  "Date & Time",
+  "Platform",
+  "Register As",
+  "Company Name",
+  "Contact Person",
   "Designation",
+  "Email Id",
+  "Mobile No.",
+  "Website",
+  "Address",
   "Country",
-  "City",
-  "Email",
-  "Phone",
-  "Type",
-  "Product Interest",
+  "Booth Size Requirement",
+  "Area of Interest",
+  "Info. Get From",
   "Message",
-  "UTM Source",
-  "UTM Medium",
-  "UTM Campaign",
-  "Landing Page",
-  "Status",
+  "Correction",
+  "STATUS 1",
+  "STATUS 2",
+  "STATUS 3",
+  "STATUS 4",
+  "STATUS 5",
+  "STATUS 6",
+  "STATUS 7",
+  "STATUS 8",
+  "STATUS 9",
 ] as const;
 
 export type SheetRow = {
-  referenceId: string;
-  name: string;
-  company: string;
-  designation: string;
-  country: string;
-  city: string;
-  email: string;
-  phone: string;
-  type: string;
-  productInterest: string;
-  message: string;
-  utmSource: string;
-  utmMedium: string;
-  utmCampaign: string;
-  landingPage: string;
+  // Primary identifier & category
+  referenceId?: string;
+  type?: string;
+  registerAs?: string;
+
+  // Contact & Organisation details
+  name?: string;
+  contactPerson?: string;
+  company?: string;
+  companyName?: string;
+  designation?: string;
+  email?: string;
+  emailId?: string;
+  phone?: string;
+  mobile?: string;
+  mobileNo?: string;
+  website?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+
+  // Trade Expo specifics
+  boothSizeRequirement?: string;
+  productInterest?: string;
+  areaOfInterest?: string;
+  message?: string;
+
+  // Source & Attribution
+  infoGetFrom?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  landingPage?: string;
 };
 
+/**
+ * Safely decodes base64 Google Credentials JSON string from environment variables
+ */
+function getDecodedCredentials() {
+  if (!BASE64_CREDENTIALS) return null;
+
+  try {
+    const jsonString = Buffer.from(BASE64_CREDENTIALS, "base64").toString("utf-8");
+    return JSON.parse(jsonString);
+  } catch (err) {
+    console.error("Failed to parse GOOGLE_CREDENTIALS_BASE64:", err);
+    return null;
+  }
+}
+
 function isConfigured(): boolean {
-  return Boolean(SHEET_ID && CLIENT_EMAIL && PRIVATE_KEY);
+  return Boolean(SHEET_ID && BASE64_CREDENTIALS);
+}
+
+function formatCurrentDateTime(): string {
+  // Formats to Expo Local / East Africa Time (EAT, UTC+3)
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZone: "Africa/Dar_es_Salaam",
+  }).format(new Date());
 }
 
 function toRowValues(row: SheetRow): string[] {
-  const now = new Date();
+  // Mapping values strictly in order of your Google Sheet columns
+  const registerAs = row.registerAs || row.type || "Website Enquiry";
+  const companyName = row.companyName || row.company || "-";
+  const contactPerson = row.contactPerson || row.name || "-";
+  const designation = row.designation || "-";
+  const emailId = row.emailId || row.email || "-";
+  const mobileNo = row.mobileNo || row.mobile || row.phone || "-";
+  const website = row.website || "-";
+  const address = row.address || row.city || "-";
+  const country = row.country || "-";
+  const boothSizeRequirement = row.boothSizeRequirement || "-";
+  const areaOfInterest = row.areaOfInterest || row.productInterest || "-";
+  const infoGetFrom =
+    row.infoGetFrom ||
+    (row.utmSource ? `UTM: ${row.utmSource}` : "") ||
+    row.landingPage ||
+    "Direct Website";
+  const message = row.message || "-";
+
   return [
-    row.referenceId,
-    now.toISOString().slice(0, 10),
-    now.toISOString().slice(11, 19),
-    row.name,
-    row.company,
-    row.designation,
-    row.country,
-    row.city,
-    row.email,
-    row.phone,
-    row.type,
-    row.productInterest,
-    row.message,
-    row.utmSource,
-    row.utmMedium,
-    row.utmCampaign,
-    row.landingPage,
-    "New",
+    formatCurrentDateTime(), // Date & Time
+    "Website",               // Platform
+    registerAs,              // Register As (Cookies, Contact, Brochure, Visitor, etc.)
+    companyName,             // Company Name
+    contactPerson,           // Contact Person
+    designation,             // Designation
+    emailId,                 // Email Id
+    mobileNo,                // Mobile No.
+    website,                 // Website
+    address,                 // Address
+    country,                 // Country
+    boothSizeRequirement,    // Booth Size Requirement
+    areaOfInterest,          // Area of Interest
+    infoGetFrom,             // Info. Get From
+    message,                 // Message
+    "",                      // Correction (Blank)
+    "",                      // STATUS 1 (Blank)
+    "",                      // STATUS 2 (Blank)
+    "",                      // STATUS 3 (Blank)
+    "",                      // STATUS 4 (Blank)
+    "",                      // STATUS 5 (Blank)
+    "",                      // STATUS 6 (Blank)
+    "",                      // STATUS 7 (Blank)
+    "",                      // STATUS 8 (Blank)
+    "",                      // STATUS 9 (Blank)
   ];
 }
 
 /**
- * Appends a lead row to the given tab of the operational Google Sheet.
- * No-ops when Google credentials are not configured (local/dev). Throws on
- * failure so callers can mark the lead's sync status accordingly — this
- * function never touches MongoDB, which remains the source of truth.
+ * Appends a lead row directly to the 'Website Enquiries' tab of your Google Sheet.
+ * Regardless of what tab name caller passes, it securely routes to 'Website Enquiries'.
  */
-export async function appendLeadRow(tab: string, row: SheetRow): Promise<void> {
-  if (!isConfigured()) return;
+export async function appendLeadRow(_tabIgnored: string, row: SheetRow): Promise<void> {
+  if (!isConfigured()) {
+    console.warn("Google Sheets credentials not configured. Skipping append.");
+    return;
+  }
+
+  const credentials = getDecodedCredentials();
+  if (!credentials) {
+    console.warn("Invalid Base64 Google credentials. Skipping append.");
+    return;
+  }
 
   const auth = new google.auth.GoogleAuth({
-    credentials: { client_email: CLIENT_EMAIL, private_key: PRIVATE_KEY },
+    credentials,
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
 
   const sheets = google.sheets({ version: "v4", auth });
 
+  // Always append to 'Website Enquiries' tab from Column A to Y (25 columns)
   await sheets.spreadsheets.values.append({
     spreadsheetId: SHEET_ID,
-    range: `${tab}!A:R`,
+    range: `'${TARGET_TAB_NAME}'!A:Y`,
     valueInputOption: "USER_ENTERED",
     insertDataOption: "INSERT_ROWS",
     requestBody: { values: [toRowValues(row)] },

@@ -8,41 +8,83 @@ import { isRateLimited, getClientIp } from "@/lib/utils/rateLimit";
 import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
 import { sendExhibitorEnquiryEmails } from "@/lib/email/sendLeadEmails";
 import { isEmailConfigured } from "@/lib/email/mailer";
+import { event } from "@/config/event";
+
+// Google reCAPTCHA v2 Server Verification
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) {
+    console.warn("RECAPTCHA_SECRET_KEY missing. Skipping recaptcha verification.");
+    return true;
+  }
+
+  try {
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch (err) {
+    console.error("Recaptcha verification failed:", err);
+    return false;
+  }
+}
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers);
   if (isRateLimited(`exhibitor:${ip}`)) {
-    return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many submissions. Please try again later." },
+      { status: 429 }
+    );
   }
 
-  let body: unknown;
+  let body: any;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
+  // 1. Verify Google reCAPTCHA v2
+  const recaptchaToken = body.recaptchaToken || body["g-recaptcha-response"];
+  if (process.env.RECAPTCHA_SECRET_KEY) {
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { error: "Please verify that you are not a robot." },
+        { status: 400 }
+      );
+    }
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
+  }
+
+  // 2. Validate incoming data
   const parsed = exhibitorEnquirySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Please check the highlighted fields.", issues: parsed.error.issues },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   const data = parsed.data;
 
-  // Honeypot + minimum-time bot checks — silently accept without persisting.
+  // Honeypot + speed check
   if (data.website_hp || (data.startedAt && Date.now() - data.startedAt < MIN_SUBMIT_MS)) {
     return NextResponse.json({ success: true, referenceId: generateReferenceId("TBEX") });
   }
 
   const referenceId = generateReferenceId("TBEX");
 
-  // MongoDB is the source of truth: a submission is only "accepted" once it
-  // is durably saved. A missing/unreachable database must never be silently
-  // treated as success — that would tell a visitor their enquiry was
-  // received when nothing was persisted anywhere.
+  // 3. Save to MongoDB
   try {
     const conn = await connectToDatabase();
     if (!conn) throw new Error("Database connection unavailable");
@@ -74,16 +116,11 @@ export async function POST(req: NextRequest) {
     console.error("ExhibitorEnquiry save failed:", safeDbErrorMessage(err));
     return NextResponse.json(
       { error: "We couldn't save your enquiry right now. Please try again in a moment." },
-      { status: 503 },
+      { status: 503 }
     );
   }
 
-  // MongoDB save has already succeeded at this point — Sheets/email are
-  // secondary and must never cause the (already-accepted) request to fail.
-  // Await them (rather than fire-and-forget) since serverless functions may
-  // be frozen once a response ships. Skip entirely (leaving status
-  // "pending") when not configured, rather than marking a no-op as
-  // "synced"/"sent".
+  // 4. Save to Same Google Sheet (Tab: "Exhibitor Enquiries")
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Exhibitor Enquiries", {
@@ -110,9 +147,17 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // 5. Send Notification Email to BOTH Organisers (Futurex & ETSIPL)
   if (isEmailConfigured()) {
     try {
-      await sendExhibitorEnquiryEmails({ ...data, referenceId });
+      await sendExhibitorEnquiryEmails({
+        ...data,
+        referenceId,
+        notifyEmails: [
+          event.contact.futurex.email, // namit@futurextrade.com
+          event.contact.etsipl.email,  // vijayanka@etsipl.in
+        ],
+      } as any);
       await ExhibitorEnquiry.updateOne({ referenceId }, { emailStatus: "sent" });
     } catch (err) {
       console.error("Exhibitor enquiry email failed", err);

@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { mainNav } from "@/config/navigation";
 import { event } from "@/config/event";
 import { Button } from "@/components/ui/Button";
@@ -83,10 +84,23 @@ export function Header() {
     };
   }, [handleKeyDown]);
 
+  // Clean, eye-catchy essential highlights (Dates, Venue & Allocation only)
   const marqueeItems = [
-    { label: "DATE", value: event.dates?.display || "2027 Edition" },
-    { label: "VENUE", value: event.venue?.name || "Diamond Jubilee Hall" },
-    { label: "LOCATION", value: `${event.venue?.city || "Dar es Salaam"}, ${event.venue?.country || "Tanzania"}` },
+    {
+      badge: "EVENT DATES",
+      text: event.dates?.display || "25–27 August 2027",
+      glow: "blue",
+    },
+    {
+      badge: "EXPO VENUE",
+      text: `${event.venue?.name}, ${event.venue?.city}`,
+      glow: "green",
+    },
+    {
+      badge: "SPACE ALLOCATION",
+      text: "Country Pavilions & Booths Open for 2027",
+      glow: "blue",
+    },
   ];
 
   return (
@@ -96,60 +110,73 @@ export function Header() {
         isVisible ? "translate-y-0" : "-translate-y-full shadow-none"
       )}
     >
-      {/* Top Announcement Bar */}
-      <div className="relative overflow-hidden border-b border-white/10 bg-[#030712]/90 backdrop-blur-md py-2.5 text-white select-none">
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-brand-blue/10 via-transparent to-brand-green/10 opacity-50" />
+      {/* Top Eye-Catchy Marquee Ribbon */}
+      <div className="relative overflow-hidden border-b border-white/[0.12] bg-[#050b11]/95 py-2.5 text-white select-none backdrop-blur-xl">
+        {/* Ambient Top Glow Line */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-brand-blue/60 to-transparent opacity-80" />
 
-        <div className="relative flex whitespace-nowrap overflow-hidden">
-          <div className="flex animate-marquee items-center gap-8 shrink-0">
-            {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, index) => (
-              <div key={index} className="inline-flex items-center gap-2 text-[15px] font-medium tracking-wide">
-                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] font-bold font-mono uppercase tracking-widest text-brand-blue">
-                  {item.label}
-                </span>
-                <span className="text-slate-200">{item.value}</span>
-                <span className="text-white/20 ml-4">&bull;</span>
-              </div>
-            ))}
-          </div>
+        {/* Side Edge Fade Masks */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#050b11] to-transparent sm:w-28" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#050b11] to-transparent sm:w-28" />
 
-          <div className="flex animate-marquee items-center gap-8 shrink-0" aria-hidden="true">
-            {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, index) => (
-              <div key={`dup-${index}`} className="inline-flex items-center gap-2 text-[11px] font-medium tracking-wide">
-                <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] font-bold font-mono uppercase tracking-widest text-brand-blue">
-                  {item.label}
-                </span>
-                <span className="text-slate-200">{item.value}</span>
-                <span className="text-white/20 ml-4">&bull;</span>
-              </div>
-            ))}
-          </div>
+        {/* Smooth Seamless Infinite Motion */}
+        <div className="flex overflow-hidden">
+          <motion.div
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{
+              repeat: Infinity,
+              ease: "linear",
+              duration: 22,
+            }}
+            className="flex shrink-0 items-center gap-10 pr-10"
+          >
+            {[...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, index) => {
+              const isBlue = item.glow === "blue";
+              return (
+                <div
+                  key={index}
+                  className="inline-flex items-center gap-3 text-xs sm:text-sm font-semibold tracking-wide whitespace-nowrap"
+                >
+                  {/* Badge with Star Icon */}
+                 
+
+                  {/* Main Bold Text */}
+                  <span className="text-white font-bold tracking-tight text-xs sm:text-[13px] drop-shadow-sm">
+                    {item.text}
+                  </span>
+
+                  {/* Divider Star */}
+                  <span className="ml-5 text-sm font-bold text-white/30">✦</span>
+                </div>
+              );
+            })}
+          </motion.div>
         </div>
       </div>
 
-      {/* Main Navigation Area */}
+      {/* Main Navigation Bar */}
       <div
         className={clsx(
           "w-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
           isScrolled
-            ? "border-b border-white/10 bg-[#071118]/85 py-2.5 backdrop-blur-2xl shadow-2xl shadow-black/40"
-            : "border-b border-white/10 bg-transparent py-4 sm:py-5 backdrop-blur-sm"
+            ? "border-b border-white/10 bg-[#071118]/90 py-2 backdrop-blur-2xl shadow-2xl shadow-black/50"
+            : "border-b border-white/10 bg-[#071118]/40 py-3 sm:py-3.5 backdrop-blur-md"
         )}
       >
-        <Container className="flex items-center justify-between gap-2 lg:gap-4 max-w-7xl">
-          {/* Brand Logo Container (Unchanged Size) */}
-          <div className="flex shrink-0 items-center justify-start">
+        <Container className="flex items-center justify-between gap-4 max-w-7xl">
+          {/* Brand Logo */}
+          <div className="flex shrink-0 items-center">
             <Link
               href="/"
-              className="group relative z-10 -ml-1 flex items-center transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue sm:-ml-2"
+              className="group relative z-10 flex items-center transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue"
             >
               <Image
                 src="/logos/Tanzania-Logo.png"
                 alt={event.name}
-                width={560}
-                height={200}
+                width={580}
+                height={220}
                 priority
-                className="h-16 w-auto object-contain object-left drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition-all duration-300 sm:h-20 md:h-24 lg:h-28"
+                className="h-14 sm:h-14 md:h-18 lg:h-20 w-auto object-contain object-left drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)] transition-all duration-300"
               />
             </Link>
           </div>
@@ -160,7 +187,7 @@ export function Header() {
             ref={navRef}
             className="hidden items-center justify-center lg:flex"
           >
-            <ul className="flex items-center gap-0.5 xl:gap-1 rounded-full border border-white/15 bg-white/[0.05] p-1.5 backdrop-blur-2xl shadow-lg shadow-black/20 transition-colors duration-300 hover:border-white/25">
+            <ul className="flex items-center gap-1 rounded-full border border-white/15 bg-white/[0.05] p-1.5 backdrop-blur-2xl shadow-lg shadow-black/20 transition-colors duration-300 hover:border-white/25">
               {mainNav.map((item) => {
                 const isActive =
                   pathname === item.href || pathname?.startsWith(`${item.href}/`);
@@ -177,7 +204,7 @@ export function Header() {
                     <Link
                       href={item.href}
                       className={clsx(
-                        "relative flex items-center gap-1 rounded-full px-2.5 xl:px-3.5 py-1.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300 xl:text-[13px]",
+                        "relative flex items-center gap-1 rounded-full px-3 xl:px-4 py-1.5 text-xs font-semibold tracking-wide whitespace-nowrap transition-all duration-300 xl:text-[13px]",
                         isActive
                           ? "bg-white/20 text-white shadow-inner shadow-white/20"
                           : "text-slate-200 hover:bg-white/10 hover:text-white",
@@ -258,17 +285,17 @@ export function Header() {
           </nav>
 
           {/* Action CTAs */}
-          <div className="hidden shrink-0 items-center justify-end gap-2 xl:gap-3 lg:flex">
+          <div className="hidden shrink-0 items-center justify-end gap-2.5 lg:flex">
             <Button
               href={event.cta.bookStand}
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand-blue to-sky-500 px-4 xl:px-6 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[0_0_20px_rgba(2,163,220,0.35)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(2,163,220,0.6)] hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-brand-blue to-sky-500 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[0_0_20px_rgba(2,163,220,0.35)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(2,163,220,0.6)] hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
             >
               Book a Stand
             </Button>
             <Button
               href={event.cta.registerVisit}
               variant="secondary"
-              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-4 xl:px-6 py-2 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-xl transition-all duration-300 hover:border-brand-green/60 hover:bg-white/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 bg-white/10 px-5 py-2 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-xl transition-all duration-300 hover:border-brand-green/60 hover:bg-white/20 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 active:translate-y-0 whitespace-nowrap"
             >
               Register to Visit
             </Button>

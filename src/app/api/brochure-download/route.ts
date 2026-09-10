@@ -6,39 +6,87 @@ import { BrochureDownload } from "@/models/BrochureDownload";
 import { generateReferenceId } from "@/lib/utils/referenceId";
 import { isRateLimited, getClientIp } from "@/lib/utils/rateLimit";
 import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
+import { sendBrochureDownloadEmails } from "@/lib/email/sendLeadEmails";
+import { isEmailConfigured } from "@/lib/email/mailer";
+import { event } from "@/config/event";
 
 const BROCHURE_FILE_URL = "/downloads/Tanzania-Buildcon-Expo-Brochure-2027.pdf";
+
+// Google reCAPTCHA v2 Server Verification
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) {
+    console.warn("RECAPTCHA_SECRET_KEY missing. Skipping recaptcha verification.");
+    return true;
+  }
+
+  try {
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch (err) {
+    console.error("Recaptcha verification failed:", err);
+    return false;
+  }
+}
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers);
   if (isRateLimited(`brochure:${ip}`)) {
-    return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many submissions. Please try again later." },
+      { status: 429 }
+    );
   }
 
-  let body: unknown;
+  let body: any;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
+  // 1. Verify Google reCAPTCHA v2
+  const recaptchaToken = body.recaptchaToken || body["g-recaptcha-response"];
+  if (process.env.RECAPTCHA_SECRET_KEY) {
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { error: "Please verify that you are not a robot." },
+        { status: 400 }
+      );
+    }
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
+  }
+
+  // 2. Form Schema Validation
   const parsed = brochureDownloadSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Please check the highlighted fields.", issues: parsed.error.issues },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   const data = parsed.data;
 
+  // Bot Trap Check
   if (data.website_hp || (data.startedAt && Date.now() - data.startedAt < MIN_SUBMIT_MS)) {
-    // Bot: pretend success but don't actually give the file URL.
     return NextResponse.json({ success: true, referenceId: generateReferenceId("BRCH") });
   }
 
   const referenceId = generateReferenceId("BRCH");
 
+  // 3. Save to MongoDB
   try {
     const conn = await connectToDatabase();
     if (!conn) throw new Error("Database connection unavailable");
@@ -58,10 +106,11 @@ export async function POST(req: NextRequest) {
     console.error("BrochureDownload save failed:", safeDbErrorMessage(err));
     return NextResponse.json(
       { error: "We couldn't process your request right now. Please try again in a moment." },
-      { status: 503 },
+      { status: 503 }
     );
   }
 
+  // 4. Save to Same Google Sheet (Sheet Tab: "Brochure Downloads")
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Brochure Downloads", {
@@ -85,6 +134,20 @@ export async function POST(req: NextRequest) {
     } catch (err) {
       console.error("Sheets sync failed", err);
       await BrochureDownload.updateOne({ referenceId }, { sheetsSyncStatus: "failed" }).catch(() => {});
+    }
+  }
+
+// 5. Send Notification Email
+  if (isEmailConfigured()) {
+    try {
+      await sendBrochureDownloadEmails({
+        ...data,
+        referenceId,
+      });
+      await BrochureDownload.updateOne({ referenceId }, { emailStatus: "sent" });
+    } catch (err) {
+      console.error("Brochure download email notification failed", err);
+      await BrochureDownload.updateOne({ referenceId }, { emailStatus: "failed" }).catch(() => {});
     }
   }
 

@@ -29,7 +29,6 @@ const itemVariants: Variants = {
   },
 };
 
-// Official 5 Pillars from Brochure Page 2 ("WHY PARTICIPATE?")
 const EXHIBIT_PILLARS = [
   {
     num: "01",
@@ -63,7 +62,6 @@ const EXHIBIT_PILLARS = [
   },
 ];
 
-// Official Profiles from Brochure Page 2 ("WHO SHOULD EXHIBIT?")
 const EXHIBITOR_PROFILES = [
   "Manufacturers & Exporters",
   "International Suppliers",
@@ -77,7 +75,7 @@ export function WhyExhibitSection() {
   const [activeTab, setActiveTab] = useState<"reasons" | "who">("reasons");
 
   return (
-    <section className="relative overflow-hidden bg-[#071118] py-14 sm:py-20 text-white border-b border-white/10 selection:bg-brand-blue selection:text-white">
+    <section className="relative overflow-hidden bg-[#071118] py-16 sm:py-24 text-white border-b border-white/10 selection:bg-brand-blue selection:text-white">
       {/* Dynamic Ambient Background Blur */}
       <div className="pointer-events-none absolute -top-24 left-1/2 -z-10 h-96 w-full max-w-7xl -translate-x-1/2 bg-gradient-to-b from-brand-blue/15 via-sky-500/5 to-transparent blur-3xl opacity-60" />
 
@@ -94,11 +92,11 @@ export function WhyExhibitSection() {
 
       <Container className="relative z-10 w-full">
         {/* ========================================================= */}
-        {/* Balanced Dual-Column Header                               */}
+        {/* Clean & Spacious Header: Title (Left) + Actions (Right)    */}
         {/* ========================================================= */}
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between pb-8 border-b border-white/[0.08]">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between pb-8 border-b border-white/[0.08]">
           
-          {/* Left Column: Heading & Mode Toggle */}
+          {/* Left Column */}
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1 backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-brand-green animate-pulse" />
@@ -107,21 +105,28 @@ export function WhyExhibitSection() {
               </span>
             </div>
 
-            <h2 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white">
+            <h2 className="mt-3.5 text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight text-white">
               Expand Your Reach in{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-blue via-sky-300 to-brand-green">
                 East Africa&apos;s Construction Hub
               </span>
             </h2>
 
-            {/* Segment Control Switch */}
-            <div className="mt-5 inline-flex items-center gap-1 rounded-2xl border border-white/10 bg-white/[0.03] p-1 backdrop-blur-lg">
+            <p className="mt-2.5 text-xs sm:text-sm text-slate-400 font-normal leading-relaxed">
+              Connect directly with qualified contractors, developers, specifiers, and procurement leaders across Tanzania and neighboring trade corridors.
+            </p>
+          </div>
+
+          {/* Right Column: Toggle + CTA Button with Proper Breathing Room */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 shrink-0">
+            {/* Segment Tab Switch */}
+            <div className="inline-flex items-center rounded-xl border border-white/10 bg-white/[0.03] p-1 backdrop-blur-lg">
               <button
                 type="button"
                 onClick={() => setActiveTab("reasons")}
-                className={`rounded-xl px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   activeTab === "reasons"
-                    ? "bg-brand-blue text-white shadow-md shadow-brand-blue/30"
+                    ? "bg-white/10 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
@@ -130,40 +135,20 @@ export function WhyExhibitSection() {
               <button
                 type="button"
                 onClick={() => setActiveTab("who")}
-                className={`rounded-xl px-4 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                className={`rounded-lg px-3.5 py-2 text-xs font-semibold transition-all duration-200 cursor-pointer ${
                   activeTab === "who"
-                    ? "bg-brand-blue text-white shadow-md shadow-brand-blue/30"
+                    ? "bg-white/10 text-white shadow-sm"
                     : "text-slate-400 hover:text-white"
                 }`}
               >
                 Who Should Exhibit?
               </button>
             </div>
-          </div>
 
-          {/* Right Column: Verified Market Pulse Stats & Primary CTA */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6">
-            
-            {/* Stat Pill 1 */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 backdrop-blur-md">
-              <div className="text-base font-extrabold text-brand-green tracking-tight">+6.5%</div>
-              <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                Sector Growth 
-              </div>
-            </div>
-
-            {/* Stat Pill 2 */}
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-2.5 backdrop-blur-md">
-              <div className="text-base font-extrabold text-sky-400 tracking-tight">95% Trade</div>
-              <div className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
-                Handled via Dar Es Salaam
-              </div>
-            </div>
-
-            {/* Primary Action Button */}
+            {/* Standout Primary Action */}
             <Link
               href="/book-stand"
-              className="group inline-flex items-center gap-2 rounded-xl bg-brand-blue px-5 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-brand-blue/25 transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-brand-blue/40 active:scale-95 shrink-0"
+              className="group inline-flex items-center gap-2 rounded-xl bg-brand-blue px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-white shadow-[0_0_20px_rgba(2,163,220,0.35)] transition-all duration-300 hover:bg-brand-blue-dark hover:shadow-[0_0_28px_rgba(2,163,220,0.5)] active:scale-95"
             >
               <span>Book Stand</span>
               <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
@@ -256,6 +241,31 @@ export function WhyExhibitSection() {
             ))}
           </motion.div>
         )}
+
+        {/* ========================================================= */}
+        {/* Bottom Market Context Bar (Natural & Non-cluttered)        */}
+        {/* ========================================================= */}
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 rounded-2xl border border-white/[0.06] bg-white/[0.015] px-6 py-4 backdrop-blur-md">
+          <div className="flex items-center gap-3">
+            <span className="flex h-2 w-2 rounded-full bg-brand-green" />
+            <span className="text-xs font-medium text-slate-300">
+              East Africa Regional Gateway Metrics
+            </span>
+          </div>
+
+          <div className="flex items-center gap-6 sm:gap-8">
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm sm:text-base font-extrabold text-brand-green">+6.5%</span>
+              <span className="text-[11px] text-slate-400">Annual Sector Growth</span>
+            </div>
+            <div className="h-3.5 w-px bg-white/10" aria-hidden="true" />
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm sm:text-base font-extrabold text-sky-400">95%</span>
+              <span className="text-[11px] text-slate-400">Trade Handled via Dar Es Salaam</span>
+            </div>
+          </div>
+        </div>
+
       </Container>
     </section>
   );

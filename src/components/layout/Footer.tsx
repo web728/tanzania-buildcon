@@ -48,6 +48,23 @@ const SOCIAL_LINKS = [
   },
 ].filter((link) => Boolean(link.href));
 
+const FOOTER_CONTACTS = [
+  {
+    company: "Futurex Group",
+    name: event.contact.futurex.name,
+    phone: event.contact.futurex.phone,
+    email: event.contact.futurex.email,
+    isBlue: true,
+  },
+  {
+    company: "ETSIPL",
+    name: event.contact.etsipl.name,
+    phone: event.contact.etsipl.phone,
+    email: event.contact.etsipl.email,
+    isBlue: false,
+  },
+];
+
 export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-[#071118] text-white selection:bg-brand-blue selection:text-white pt-16 pb-10 border-t border-white/10">
@@ -71,18 +88,18 @@ export function Footer() {
       />
 
       <Container className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Top Header: Enlarged Logo, Description & Contact Desk */}
+        {/* Top Header: Enlarged Logo, Description & Both Organiser Contacts */}
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between pb-12 border-b border-white/10">
           <div className="max-w-xl">
-            {/* Prominent Logo */}
+            {/* Prominent Large Logo */}
             <Link href="/" className="inline-block transition-transform hover:scale-[1.02]">
               <Image
                 src="/logos/Tanzania-Logo.png"
                 alt={event.name}
-                width={580}
-                height={220}
+                width={680}
+                height={260}
                 priority
-                className="h-22 sm:h-20 w-auto object-contain object-left"
+                className="h-16 sm:h-20 md:h-24 w-auto object-contain object-left"
               />
             </Link>
 
@@ -99,38 +116,53 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Official Contact Card */}
-          <div className="flex flex-col gap-3.5 rounded-2xl border border-white/10 bg-white/[0.04] p-5 sm:p-6 backdrop-blur-xl lg:min-w-[360px] shadow-xl">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-brand-blue">
-              Exhibition Contact Desk
-            </span>
+          {/* Clean Dual Organiser Contacts (Futurex & ETSIPL) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 backdrop-blur-xl lg:max-w-lg w-full shadow-2xl">
+            {FOOTER_CONTACTS.map((c) => {
+              const cleanPhone = c.phone.replace(/[^0-9+]/g, "");
 
-            <div>
-              <p className="text-base font-bold text-white">{event.contact.exhibitorEnquiries.name}</p>
-              <p className="text-xs text-slate-400 font-medium">Head of International Trade Fair Operations</p>
-            </div>
+              return (
+                <div
+                  key={c.company}
+                  className="flex flex-col justify-between rounded-xl border border-white/[0.06] bg-white/[0.02] p-3.5 transition-colors hover:border-white/15"
+                >
+                  <div>
+                    <span
+                      className={`inline-block rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                        c.isBlue
+                          ? "bg-brand-blue/15 text-brand-blue"
+                          : "bg-brand-green/15 text-brand-green"
+                      }`}
+                    >
+                      {c.company}
+                    </span>
+                    <p className="mt-2 text-sm font-bold text-white">{c.name}</p>
+                  </div>
 
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 pt-3 border-t border-white/10">
-              <a
-                href={`tel:${event.contact.exhibitorEnquiries.phone.replace(/[^0-9+]/g, "")}`}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-200 transition-colors hover:text-brand-green"
-              >
-                <svg className="h-4 w-4 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                {event.contact.exhibitorEnquiries.phone}
-              </a>
+                  <div className="mt-3 pt-2.5 border-t border-white/10 flex flex-col gap-1.5 text-xs">
+                    <a
+                      href={`tel:${cleanPhone}`}
+                      className="inline-flex items-center gap-2 font-medium text-slate-300 hover:text-brand-green transition-colors"
+                    >
+                      <svg className="h-3.5 w-3.5 text-brand-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      <span className="tabular-nums">{c.phone}</span>
+                    </a>
 
-              <a
-                href={`mailto:${event.contact.exhibitorEnquiries.email}`}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-slate-200 transition-colors hover:text-brand-blue"
-              >
-                <svg className="h-4 w-4 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                {event.contact.exhibitorEnquiries.email}
-              </a>
-            </div>
+                    <a
+                      href={`mailto:${c.email}`}
+                      className="inline-flex items-center gap-2 font-medium text-slate-300 hover:text-brand-blue transition-colors truncate"
+                    >
+                      <svg className="h-3.5 w-3.5 text-brand-blue shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      <span className="truncate">{c.email}</span>
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -202,24 +234,63 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Joint Organisers Section */}
-        <div className="mt-10 flex flex-col gap-6 rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-              Joint Event Organisers
-            </span>
-            <h4 className="mt-1 text-sm sm:text-base font-bold text-white">
-              Futurex Trade Fair &amp; Events Pvt. Ltd. &bull; ETSIPL
-            </h4>
-            <p className="text-xs text-slate-400 font-normal mt-0.5">
-              New Delhi, India &bull; Navi Mumbai, India
-            </p>
-          </div>
+    {/* Joint Organisers Section */}
+<div className="mt-12 flex flex-col gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
+  <div>
+    <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1">
+      <span className="h-1.5 w-1.5 rounded-full bg-brand-green animate-pulse" />
+      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">
+        Joint Event Organisers
+      </span>
+    </div>
 
-          <div className="rounded-xl border border-white/20 bg-white p-3 shadow-lg shrink-0">
-            <OrganiserLogos boxClassName="h-10 w-36 sm:h-12 sm:w-40" />
-          </div>
-        </div>
+    <h4 className="mt-3 text-base sm:text-lg font-bold text-white tracking-tight">
+      Futurex Trade Fair &amp; Events Pvt. Ltd. &bull; ETSIPL
+    </h4>
+    <p className="mt-1 text-xs text-slate-400 font-normal">
+      Direct bilateral trade facilitation bridging India &amp; East Africa
+    </p>
+  </div>
+
+  {/* Visually Balanced Logo Containers */}
+  <div className="flex items-center gap-4 shrink-0">
+    {/* Left Logo: Futurex (Wide Rectangle - controlled with px-3.5) */}
+    <a
+      href="https://www.futurextrade.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex h-14 sm:h-16 w-40 sm:w-44 items-center justify-center rounded-2xl border border-white/15 bg-white px-3.5 py-2.5 shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-xl"
+    >
+      <div className="relative h-full w-full">
+        <Image
+          src="/logos/futurex-logo.png"
+          alt="Futurex Trade Fair & Events"
+          fill
+          sizes="180px"
+          className="object-contain object-center"
+        />
+      </div>
+    </a>
+
+    {/* Right Logo: ETSIPL (Round/Square - boosted with scale-110 & minimal padding) */}
+    <a
+      href="https://www.etsipl.in/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex h-14 sm:h-16 w-28 sm:w-32 items-center justify-center rounded-2xl border border-white/15 bg-white p-1.5 shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-xl"
+    >
+      <div className="relative h-full w-full scale-[1.12]">
+        <Image
+          src="/logos/etsipl-logo.png"
+          alt="Exhibitions & Trade Services India (ETSIPL)"
+          fill
+          sizes="140px"
+          className="object-contain object-center"
+        />
+      </div>
+    </a>
+  </div>
+</div>
 
         {/* Bottom Bar */}
         <div className="mt-10 flex flex-col items-center justify-between gap-4 text-xs text-slate-400 sm:flex-row">

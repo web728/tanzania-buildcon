@@ -4,6 +4,7 @@ import type { ExhibitorEnquiryInput } from "@/lib/validation/exhibitorEnquiry";
 import type { VisitorRegistrationInput } from "@/lib/validation/visitorRegistration";
 import type { ContactEnquiryInput } from "@/lib/validation/contactEnquiry";
 import type { PartnerEnquiryInput } from "@/lib/validation/partnerEnquiry";
+import type { BrochureDownloadInput } from "@/lib/validation/brochureDownload";
 
 export async function sendExhibitorEnquiryEmails(data: ExhibitorEnquiryInput & { referenceId: string }) {
   const recipients = getNotificationRecipients();
@@ -150,6 +151,78 @@ export async function sendPartnerEnquiryEmails(data: PartnerEnquiryInput & { ref
       bodyText:
         "Thank you for your interest in partnering with Tanzania Buildcon International Expo. Our team will review your enquiry and respond shortly.",
       referenceId: data.referenceId,
+    }),
+  });
+}
+
+export async function sendBrochureDownloadEmails(data: BrochureDownloadInput & { referenceId: string }) {
+  const recipients = getNotificationRecipients();
+  if (recipients.length > 0) {
+    await sendMail({
+      to: recipients,
+      subject: `Brochure Download Request – ${data.name} (${data.company}) – ${data.referenceId}`,
+      html: organiserNotificationEmail({
+        heading: "New Brochure Download",
+        referenceId: data.referenceId,
+        rows: [
+          { label: "Name", value: data.name },
+          { label: "Company", value: data.company },
+          { label: "Country", value: data.country },
+          { label: "Email", value: data.email },
+          { label: "Mobile / WhatsApp", value: data.mobile },
+        ],
+      }),
+    });
+  }
+
+  await sendMail({
+    to: data.email,
+    subject: `Tanzania Buildcon 2027 – Official Exhibition Brochure [${data.referenceId}]`,
+    html: userAcknowledgementEmail({
+      greetingName: data.name,
+      heading: "Thank You for Downloading the Brochure",
+      bodyText:
+        "Thank you for your interest in Tanzania Buildcon International Expo 2027. Your brochure download request has been received. Our exhibition sales team is available should you require custom space allocations or prime pavilion details.",
+      referenceId: data.referenceId,
+    }),
+  });
+}
+
+
+
+
+export async function sendNewsletterSubscriptionEmails(data: {
+  email: string;
+  country?: string;
+  interest?: string[];
+}) {
+  const recipients = getNotificationRecipients();
+  if (recipients.length > 0) {
+    await sendMail({
+      to: recipients,
+      subject: `New Newsletter Subscriber – ${data.email}`,
+      html: organiserNotificationEmail({
+        heading: "New Newsletter Subscriber",
+        referenceId: "NEWSLETTER",
+        rows: [
+          { label: "Subscriber Email", value: data.email },
+          { label: "Country", value: data.country || "Not specified" },
+          { label: "Interests", value: (data.interest && data.interest.length > 0) ? data.interest.join(", ") : "General Updates" },
+        ],
+      }),
+    });
+  }
+
+  // Subscriber ko acknowledgement mail
+  await sendMail({
+    to: data.email,
+    subject: `Subscription Confirmed – Tanzania Buildcon International Expo 2027`,
+    html: userAcknowledgementEmail({
+      greetingName: "Subscriber",
+      heading: "Thank You for Subscribing",
+      bodyText:
+        "You have successfully subscribed to Tanzania Buildcon International Expo updates. You will receive official trade announcements, floorplan releases, and exhibitor highlights directly in your inbox.",
+      referenceId: "TBCN-NEWSLETTER",
     }),
   });
 }

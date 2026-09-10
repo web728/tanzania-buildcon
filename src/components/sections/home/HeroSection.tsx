@@ -129,6 +129,60 @@ export function HeroSection() {
           animate="visible"
           className="mx-auto flex max-w-4xl flex-col items-center text-center"
         >
+
+       {/* Featured Glass Date & Venue Pill */}
+<motion.div
+  variants={itemVariants}
+  className="mb-8 inline-flex max-w-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-white/15 bg-white/[0.06] p-1.5 backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] sm:mb-10 sm:flex-row sm:gap-0 sm:rounded-full sm:px-4 sm:py-1.5"
+>
+  {/* Date */}
+  <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium text-slate-100 sm:text-sm">
+    <svg 
+      className="h-4 w-4 shrink-0 text-brand-blue" 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
+    >
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth={2} 
+        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" 
+      />
+    </svg>
+    <span className="whitespace-nowrap tracking-wide">{event.dates.display}</span>
+  </div>
+
+  {/* Divider (Desktop only) */}
+  <div className="hidden h-3.5 w-px bg-white/20 sm:block mx-1" aria-hidden="true" />
+
+  {/* Venue & City */}
+  <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium text-slate-100 sm:text-sm">
+    <svg 
+      className="h-4 w-4 shrink-0 text-brand-green" 
+      fill="none" 
+      viewBox="0 0 24 24" 
+      stroke="currentColor"
+    >
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth={2} 
+        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" 
+      />
+      <path 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth={2} 
+        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" 
+      />
+    </svg>
+    <span className="whitespace-nowrap tracking-wide">
+      {event.venue.name}, {event.venue.city}
+    </span>
+  </div>
+</motion.div>
+
           {/* Main Title */}
           <motion.h1
             variants={itemVariants}
@@ -148,30 +202,7 @@ export function HeroSection() {
             {event.descriptor || "East Africa's Premier Building & Construction Trade Exhibition"}
           </motion.p>
 
-          {/* Featured Glass Date & Venue Pill */}
-          <motion.div
-            variants={itemVariants}
-            className="mt-8 inline-flex flex-wrap items-center justify-center gap-y-2 rounded-full border border-white/20 bg-brand-dark/45 px-5 py-2 backdrop-blur-xl shadow-2xl"
-          >
-            {/* Date */}
-            <div className="flex items-center gap-2.5 px-3 py-0.5 text-xs sm:text-sm font-semibold tracking-wide text-white">
-              <svg className="h-4 w-4 text-brand-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span>{event.dates.display}</span>
-            </div>
-
-            <div className="hidden h-4 w-[1px] bg-white/20 sm:block" />
-
-            {/* Venue & Country */}
-            <div className="flex items-center gap-2.5 px-3 py-0.5 text-xs sm:text-sm font-semibold tracking-wide text-white">
-              <svg className="h-4 w-4 text-brand-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>{event.venue.name}, {event.venue.city}</span>
-            </div>
-          </motion.div>
+         
 
           {/* Action CTAs */}
           <motion.div

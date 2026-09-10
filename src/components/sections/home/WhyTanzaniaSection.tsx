@@ -333,45 +333,58 @@ export function WhyTanzaniaSection() {
           ))}
         </motion.div>
 
-        {/* ========================================================= */}
-        {/* Streamlined Sector Chips Strip                            */}
-        {/* ========================================================= */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.08] bg-[#071118]/70 px-4 py-3 backdrop-blur-xl"
-        >
-          <div className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-brand-green" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-200">
-              High-Growth Sectors:
-            </span>
-          </div>
+      {/* ========================================================= */}
+{/* High-Growth Sectors Smooth Marquee Strip                   */}
+{/* ========================================================= */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true }}
+  transition={{ duration: 0.6, delay: 0.2 }}
+  className="relative mt-8 overflow-hidden rounded-2xl border border-white/[0.08] bg-gradient-to-r from-white/[0.02] via-white/[0.05] to-white/[0.02] py-3.5 backdrop-blur-xl"
+>
+  {/* Side Fade Masks for ultra-clean edge fade */}
+  <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-[#071118] to-transparent sm:w-28" />
+  <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-[#071118] to-transparent sm:w-28" />
 
-          <div className="flex flex-wrap items-center gap-2">
-            {opportunityCategories.map((cat: string) => {
-              const isSelected = activeCategory === cat;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setActiveCategory(isSelected ? null : cat)}
-                  className={`inline-flex items-center rounded-lg border px-3 py-1 text-[11px] font-medium tracking-normal transition-all duration-200 cursor-pointer ${
-                    isSelected
-                      ? "border-brand-blue bg-brand-blue/20 text-white shadow-sm"
-                      : "border-white/10 bg-white/[0.03] text-slate-300 hover:border-brand-blue/40 hover:bg-white/[0.06] hover:text-white"
-                  }`}
-                >
-                  <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${isSelected ? "bg-brand-blue" : "bg-brand-green"}`} />
-                  {cat}
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
+  <div className="flex items-center">
+    {/* Left Fixed Label */}
+    <div className="relative z-20 flex shrink-0 items-center gap-2 border-r border-white/10 bg-[#071118]/90 py-1 pl-4 pr-5 shadow-lg">
+      <span className="relative flex h-2 w-2">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-blue opacity-75" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-blue" />
+      </span>
+      <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-300 sm:text-[11px]">
+        Key Focus Areas
+      </span>
+    </div>
 
+    {/* Seamless Infinite Looping Track */}
+    <div className="flex select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+      <motion.div
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{
+          repeat: Infinity,
+          ease: "linear",
+          duration: 25,
+        }}
+        className="flex shrink-0 items-center gap-6 pr-6"
+      >
+        {/* Array duplicate kiya hai infinite continuous loop ke liye */}
+        {[...opportunityCategories, ...opportunityCategories].map((cat: string, index: number) => (
+          <div
+            key={`${cat}-${index}`}
+            className="flex items-center gap-2 text-xs font-semibold tracking-wide text-slate-300/90 whitespace-nowrap"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-green/80" />
+            <span>{cat}</span>
+            <span className="ml-4 text-white/20">•</span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  </div>
+</motion.div>
       </Container>
     </section>
   );

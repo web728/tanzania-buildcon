@@ -9,19 +9,57 @@ import { appendLeadRow, isSheetsConfigured } from "@/lib/google/sheets";
 import { sendVisitorRegistrationEmails } from "@/lib/email/sendLeadEmails";
 import { isEmailConfigured } from "@/lib/email/mailer";
 
+// Google reCAPTCHA v2 Server Verification
+async function verifyRecaptcha(token: string) {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+  if (!secretKey) return true;
+
+  try {
+    const res = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `secret=${secretKey}&response=${token}`,
+    });
+    const result = await res.json();
+    return result.success === true;
+  } catch (err) {
+    console.error("Recaptcha verification failed:", err);
+    return false;
+  }
+}
+
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req.headers);
   if (isRateLimited(`visitor:${ip}`)) {
     return NextResponse.json({ error: "Too many submissions. Please try again later." }, { status: 429 });
   }
 
-  let body: unknown;
+  let body: any;
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
+  // 1. Google reCAPTCHA v2 Verification
+  const recaptchaToken = body.recaptchaToken || body["g-recaptcha-response"];
+  if (process.env.RECAPTCHA_SECRET_KEY) {
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { error: "Please verify that you are not a robot." },
+        { status: 400 }
+      );
+    }
+    const isHuman = await verifyRecaptcha(recaptchaToken);
+    if (!isHuman) {
+      return NextResponse.json(
+        { error: "reCAPTCHA verification failed. Please try again." },
+        { status: 400 }
+      );
+    }
+  }
+
+  // 2. Validation
   const parsed = visitorRegistrationSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
@@ -32,15 +70,14 @@ export async function POST(req: NextRequest) {
 
   const data = parsed.data;
 
+  // Bot Trap Check
   if (data.website_hp || (data.startedAt && Date.now() - data.startedAt < MIN_SUBMIT_MS)) {
     return NextResponse.json({ success: true, referenceId: generateReferenceId("TBVR") });
   }
 
   const referenceId = generateReferenceId("TBVR");
 
-  // MongoDB is the source of truth: a submission is only "accepted" once it
-  // is durably saved. A missing/unreachable database must never be silently
-  // treated as success.
+  // 3. MongoDB (Duplicate check & Durable Save)
   let alreadyRegisteredId: string | null = null;
   try {
     const conn = await connectToDatabase();
@@ -77,12 +114,12 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Agar user pehle se registered hai to duplicate row add nahi karenge
   if (alreadyRegisteredId) {
     return NextResponse.json({ success: true, referenceId: alreadyRegisteredId, alreadyRegistered: true });
   }
 
-  // MongoDB save has already succeeded at this point — Sheets/email are
-  // secondary and must never cause the (already-accepted) request to fail.
+  // 4. Same Google Sheet (Tab: "Visitor Registrations")
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Visitor Registrations", {
@@ -95,7 +132,7 @@ export async function POST(req: NextRequest) {
         email: data.email,
         phone: data.mobile,
         type: data.natureOfBusiness,
-        productInterest: data.productsInterested.join(", "),
+        productInterest: Array.isArray(data.productsInterested) ? data.productsInterested.join(", ") : "",
         message: data.purposeOfVisit,
         utmSource: data.utm?.source ?? "",
         utmMedium: data.utm?.medium ?? "",
@@ -109,6 +146,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  // 5. Send Email to BOTH Organisers (Futurex & ETSIPL) + User Registration Pass Mail
   if (isEmailConfigured()) {
     try {
       await sendVisitorRegistrationEmails({ ...data, referenceId });
