@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await ExhibitorEnquiry.create({
+          referenceId,
       companyName: data.companyName,
       country: data.country,
       city: data.city,
@@ -123,6 +124,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquries", {
+            referenceId,
         registerAs: "Exhibitor Enquiry",
         name: `${data.firstName} ${data.lastName}`,
         company: data.companyName,

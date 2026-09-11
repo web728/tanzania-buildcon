@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database unavailable");
 
     await CookieLeadModel.create({
+          referenceId,
       name: data.name,
       email: data.email,
       mobile: data.mobile,
@@ -80,6 +81,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquries", {
+            referenceId,
         registerAs: "Cookie Consent & Trade Alerts",
         name: data.name,
         company: data.company || "Trade Visitor",

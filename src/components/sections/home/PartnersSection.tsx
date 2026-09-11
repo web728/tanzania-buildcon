@@ -64,32 +64,29 @@ export async function PartnersSection() {
           </div>
         </div>
 
-        {/* ========================================================= */}
-        {/* Centered Joint Organisers Spotlight Row                    */}
-        {/* ========================================================= */}
-        <div className="mt-10 rounded-2xl border border-slate-200/90 bg-white p-8 shadow-sm text-center lg:text-left">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-            <div className="max-w-xl">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                Official Joint Organisers
-              </span>
-              <h3 className="mt-1.5 text-lg sm:text-xl font-bold tracking-tight text-slate-900">
-                Futurex Trade Fair &amp; Events &bull; ETSIPL
-              </h3>
-              <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                Global exhibition pioneers delivering premier international trade fairs across Africa and Asia, connecting thousands of exhibitors with professional trade buyers.
-              </p>
-            </div>
+{/* ========================================================= */}
+{/* Centered Joint Organisers Spotlight Row                   */}
+{/* ========================================================= */}
+<div className="mt-10 rounded-2xl border border-slate-200/90 bg-white p-4 sm:p-6 lg:p-8 shadow-sm text-center lg:text-left">
+  <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8">
+    <div className="max-w-xl">
+      <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
+        Official Joint Organisers
+      </span>
+      <h3 className="mt-1.5 text-lg sm:text-xl font-bold tracking-tight text-slate-900">
+        Futurex Trade Fair &amp; Events &bull; ETSIPL
+      </h3>
+      <p className="mt-2 text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+        Global exhibition pioneers delivering premier international trade fairs across Africa and Asia, connecting thousands of exhibitors with professional trade buyers.
+      </p>
+    </div>
 
-            {/* Organisers Logos Lockup */}
-            <div className="flex items-center justify-center shrink-0 border-t lg:border-t-0 lg:border-l border-slate-100 pt-6 lg:pt-0 lg:pl-8">
-              <OrganiserLogos
-                boxClassName="h-16 w-44 sm:h-20 sm:w-52"
-                className="items-center justify-center gap-8"
-              />
-            </div>
-          </div>
-        </div>
+    {/* Organisers Logos Lockup */}
+    <div className="w-full lg:w-auto flex items-center justify-center border-t lg:border-t-0 lg:border-l border-slate-100 pt-6 lg:pt-0 lg:pl-8">
+      <OrganiserLogos />
+    </div>
+  </div>
+</div>
 
         {/* ========================================================= */}
         {/* Dynamic Partner Grid                                      */}

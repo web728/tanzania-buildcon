@@ -92,6 +92,7 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await BrochureDownload.create({
+         referenceId,
       name: data.name,
       company: data.company,
       country: data.country,
@@ -113,6 +114,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquries", {
+           referenceId,
         registerAs: "Brochure Download",
         name: data.name,
         company: data.company,

@@ -88,6 +88,8 @@ export async function POST(req: NextRequest) {
       alreadyRegisteredId = (existing as { referenceId: string }).referenceId;
     } else {
       await VisitorRegistration.create({
+        
+            referenceId,
         firstName: data.firstName,
         lastName: data.lastName,
         designation: data.designation,
@@ -122,6 +124,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquries", {
+            referenceId,
         registerAs: "Visitor Registration",
         name: `${data.firstName} ${data.lastName}`,
         company: data.company,

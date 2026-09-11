@@ -89,6 +89,7 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await ContactEnquiry.create({
+         referenceId,
       name: data.name,
       company: data.company,
       designation: data.designation,
@@ -113,6 +114,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquries", {
+        referenceId,
         registerAs: "Contact Form",
         name: data.name,
         company: data.company,

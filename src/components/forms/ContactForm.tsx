@@ -195,14 +195,16 @@ export function ContactForm({
           )}
         </div>
 
-        {/* UI Widget reCAPTCHA Container */}
-        <div className="my-2">
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-            onChange={handleRecaptchaChange}
-          />
-        </div>
+       {/* UI Widget reCAPTCHA Container */}
+<div className="my-2 overflow-hidden">
+  <div className="w-full origin-top-left scale-[0.85] xs:scale-[0.9] sm:scale-100">
+    <ReCAPTCHA
+      ref={recaptchaRef}
+      sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+      onChange={handleRecaptchaChange}
+    />
+  </div>
+</div>
 
         {/* Error Alert */}
         {status === "error" && errorMessage && (

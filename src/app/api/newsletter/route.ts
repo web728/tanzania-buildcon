@@ -112,6 +112,7 @@ export async function POST(req: NextRequest) {
   if (isSheetsConfigured()) {
     try {
       await appendLeadRow("Website Enquries", {
+      
         registerAs: "Newsletter Signup",
         name: "",
         company: "",

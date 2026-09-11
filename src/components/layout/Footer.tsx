@@ -96,10 +96,10 @@ export function Footer() {
               <Image
                 src="/logos/Tanzania-Logo.png"
                 alt={event.name}
-                width={680}
-                height={260}
+                width={700}
+                height={280}
                 priority
-                className="h-16 sm:h-20 md:h-24 w-auto object-contain object-left"
+                className="h-16 sm:h-24 md:h-28 w-auto object-contain object-left"
               />
             </Link>
 
