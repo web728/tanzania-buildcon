@@ -89,7 +89,6 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await ContactEnquiry.create({
-      referenceId,
       name: data.name,
       company: data.company,
       designation: data.designation,
@@ -113,8 +112,8 @@ export async function POST(req: NextRequest) {
   // 2. Google Sheets sync check
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Contact Enquiries", {
-        referenceId,
+      await appendLeadRow("Website Enquries", {
+        registerAs: "Contact Form",
         name: data.name,
         company: data.company,
         designation: data.designation ?? "",

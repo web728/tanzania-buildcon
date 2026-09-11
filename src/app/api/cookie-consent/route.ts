@@ -65,7 +65,6 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database unavailable");
 
     await CookieLeadModel.create({
-      referenceId,
       name: data.name,
       email: data.email,
       mobile: data.mobile,
@@ -80,8 +79,8 @@ export async function POST(req: NextRequest) {
   // 2. Append to Same Google Sheet (Tab: "Cookie Leads")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Cookie Leads", {
-        referenceId,
+      await appendLeadRow("Website Enquries", {
+        registerAs: "Cookie Consent & Trade Alerts",
         name: data.name,
         company: data.company || "Trade Visitor",
         designation: "Opt-in Consent",

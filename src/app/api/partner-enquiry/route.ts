@@ -83,7 +83,6 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await PartnerEnquiry.create({
-      referenceId,
       organisation: data.organisation,
       organisationType: data.organisationType,
       country: data.country,
@@ -111,8 +110,8 @@ export async function POST(req: NextRequest) {
   // 4. Same Google Sheet (Tab: "Partner Enquiries")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Partner Enquiries", {
-        referenceId,
+      await appendLeadRow("Website Enquries", {
+        registerAs: "Partner Enquiry",
         name: data.contactPerson,
         company: data.organisation,
         designation: data.designation ?? "",

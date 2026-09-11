@@ -90,7 +90,6 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await ExhibitorEnquiry.create({
-      referenceId,
       companyName: data.companyName,
       country: data.country,
       city: data.city,
@@ -123,8 +122,8 @@ export async function POST(req: NextRequest) {
   // 4. Save to Same Google Sheet (Tab: "Exhibitor Enquiries")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Exhibitor Enquiries", {
-        referenceId,
+      await appendLeadRow("Website Enquries", {
+        registerAs: "Exhibitor Enquiry",
         name: `${data.firstName} ${data.lastName}`,
         company: data.companyName,
         designation: data.designation,
@@ -152,7 +151,6 @@ export async function POST(req: NextRequest) {
     try {
       await sendExhibitorEnquiryEmails({
         ...data,
-        referenceId,
         notifyEmails: [
           event.contact.futurex.email, // namit@futurextrade.com
           event.contact.etsipl.email,  // vijayanka@etsipl.in

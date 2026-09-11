@@ -4,7 +4,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { ContactClientView } from "@/components/sections/ContactClientView";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Secretariat & Enquiries | Tanzania Buildcon 2027",
+  title: "Contact Us | Exhibition Enquiries & Support | Tanzania Buildcon 2027",
   description: `Get in touch with the ${event.name} organizing secretariat for booth bookings, international participation, and visitor assistance.`,
   alternates: { canonical: "/contact" },
 };

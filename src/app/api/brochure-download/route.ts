@@ -92,7 +92,6 @@ export async function POST(req: NextRequest) {
     if (!conn) throw new Error("Database connection unavailable");
 
     await BrochureDownload.create({
-      referenceId,
       name: data.name,
       company: data.company,
       country: data.country,
@@ -113,8 +112,8 @@ export async function POST(req: NextRequest) {
   // 4. Save to Same Google Sheet (Sheet Tab: "Brochure Downloads")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Brochure Downloads", {
-        referenceId,
+      await appendLeadRow("Website Enquries", {
+        registerAs: "Brochure Download",
         name: data.name,
         company: data.company,
         designation: "",

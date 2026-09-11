@@ -88,7 +88,6 @@ export async function POST(req: NextRequest) {
       alreadyRegisteredId = (existing as { referenceId: string }).referenceId;
     } else {
       await VisitorRegistration.create({
-        referenceId,
         firstName: data.firstName,
         lastName: data.lastName,
         designation: data.designation,
@@ -122,8 +121,8 @@ export async function POST(req: NextRequest) {
   // 4. Same Google Sheet (Tab: "Visitor Registrations")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Visitor Registrations", {
-        referenceId,
+      await appendLeadRow("Website Enquries", {
+        registerAs: "Visitor Registration",
         name: `${data.firstName} ${data.lastName}`,
         company: data.company,
         designation: data.designation,

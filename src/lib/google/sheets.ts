@@ -3,7 +3,7 @@ import { google } from "googleapis";
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 const BASE64_CREDENTIALS = process.env.GOOGLE_CREDENTIALS_BASE64;
 
-export const TARGET_TAB_NAME = "Website Enquiries";
+export const TARGET_TAB_NAME = "Website Enquries";
 
 // Exact 25 columns strictly matching your operational Google Sheet
 export const SHEET_COLUMNS = [
