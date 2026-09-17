@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
   // 2. Google Sheets sync check
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Website Enquries", {
+      await appendLeadRow("Website Enquiries", {
         referenceId,
         registerAs: "Contact Form",
         name: data.name,

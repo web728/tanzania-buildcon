@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
   // 3. Append to Same Google Sheet (Tab: "Newsletter")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Website Enquries", {
+      await appendLeadRow("Website Enquiries", {
       
         registerAs: "Newsletter Signup",
         name: "",

@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
   // 4. Save to Same Google Sheet (Tab: "Exhibitor Enquiries")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Website Enquries", {
+      await appendLeadRow("Website Enquiries", {
             referenceId,
         registerAs: "Exhibitor Enquiry",
         name: `${data.firstName} ${data.lastName}`,

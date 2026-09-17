@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
   // 2. Append to Same Google Sheet (Tab: "Cookie Leads")
   if (isSheetsConfigured()) {
     try {
-      await appendLeadRow("Website Enquries", {
+      await appendLeadRow("Website Enquiries", {
             referenceId,
         registerAs: "Cookie Consent & Trade Alerts",
         name: data.name,
