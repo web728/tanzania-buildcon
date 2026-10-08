@@ -106,19 +106,20 @@ export const event = {
       email: "namit@futurextrade.com",
       phone: "(+91) 9810855697",
     },
-    {
-      company: "Futurex Group",
-      location: "New Delhi",
-      name: "Mr. Vaibhav Srivastava",
-      email: "vaibhav@futurextrade.com",
-      phone: "(+91) 9807169880",
-    },
+  
     {
       company: "ETSIPL",
       location: "Navi Mumbai",
       name: "Mr. Vijayanka Brighuvanshi",
       email: "vijayanka@etsipl.in",
       phone: "(+91) 9324232529",
+    },
+      {
+      company: "Futurex Group",
+      location: "New Delhi",
+      name: "Mr. Vaibhav Srivastava",
+      email: "vaibhav@futurextrade.com",
+      phone: "(+91) 9807169880",
     },
   ],
 
