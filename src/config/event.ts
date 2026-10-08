@@ -64,6 +64,12 @@ export const event = {
       email: "namit@futurextrade.com",
       phone: "(+91) 9810855697",
     },
+    futurexSecondary: {
+      company: "Futurex Group",
+      name: "Mr. Vaibhav Srivastava",
+      email: "vaibhav@futurextrade.com",
+      phone: "(+91) 9807169880",
+    },
     etsipl: {
       company: "ETSIPL",
       name: "Mr. Vijayanka Brighuvanshi",
@@ -90,6 +96,31 @@ export const event = {
       phone: "(+91) 9810855697",
     },
   },
+
+  // Poori website me contacts yahin se render honge (order yahi rahega)
+  contactList: [
+    {
+      company: "Futurex Group",
+      location: "New Delhi",
+      name: "Mr. Namit Gupta",
+      email: "namit@futurextrade.com",
+      phone: "(+91) 9810855697",
+    },
+    {
+      company: "Futurex Group",
+      location: "New Delhi",
+      name: "Mr. Vaibhav Srivastava",
+      email: "vaibhav@futurextrade.com",
+      phone: "(+91) 9807169880",
+    },
+    {
+      company: "ETSIPL",
+      location: "Navi Mumbai",
+      name: "Mr. Vijayanka Brighuvanshi",
+      email: "vijayanka@etsipl.in",
+      phone: "(+91) 9324232529",
+    },
+  ],
 
   social: {
     linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN || "",

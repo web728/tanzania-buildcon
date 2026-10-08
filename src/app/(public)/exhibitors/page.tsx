@@ -64,11 +64,7 @@ export default async function ExhibitorsPage() {
         <Container className="relative z-10 w-full">
           {exhibitors.length === 0 ? (
             <div className="flex flex-col gap-10">
-              <EmptyState
-                title="Exhibitor Allocations Underway"
-                body="Official directory listings and booth allocations are currently being verified and will be published live as participation agreements are finalized."
-              />
-
+              
               {/* Brochure What's on Display Snapshot */}
               <div className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-sm">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-5 border-b border-slate-100">

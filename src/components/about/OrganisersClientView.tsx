@@ -271,75 +271,62 @@ export function OrganisersClientView() {
   </div>
 
   {/* 3 Identical Cards Grid */}
-  <div className="mt-7 grid grid-cols-1 gap-4 md:grid-cols-3 items-stretch">
-    
+<div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+
     {/* Card 1 & 2: Contact Desks */}
-    {CONTACT_DESKS.map((desk) => {
-      const cleanPhone = desk.phone.replace(/[^0-9+]/g, "");
-      const isFuturex = desk.company === "Futurex Group";
+  {/* Cards 1-3: Contact Desks */}
+{event.contactList.map((desk) => {
+  const cleanPhone = desk.phone.replace(/[^0-9+]/g, "");
+  const isFuturex = desk.company === "Futurex Group";
 
-      return (
-        <div
-          key={desk.company}
-          className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/50 p-5 transition-all duration-200 hover:border-brand-blue/40 hover:bg-white hover:shadow-lg hover:shadow-slate-200/50"
-        >
-          <div>
-            {/* Header: Badge + Location */}
-            <div className="flex items-center justify-between gap-2">
-              <span
-                className={`inline-block rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                  isFuturex
-                    ? "bg-brand-blue/10 text-brand-blue"
-                    : "bg-brand-green/10 text-brand-green"
-                }`}
-              >
-                {desk.company}
-              </span>
-              <span className="text-[11px] font-medium text-slate-400">
-                {desk.location}
-              </span>
-            </div>
+  return (
+    <div
+      key={desk.email}
+      className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-slate-50/50 p-5 transition-all duration-200 hover:border-brand-blue/40 hover:bg-white hover:shadow-lg hover:shadow-slate-200/50"
+    >
+      <div>
+      
 
-            {/* Representative Name */}
-            <div className="mt-4">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Official Representative
-              </div>
-              <h4 className="mt-0.5 text-base font-bold text-brand-dark group-hover:text-brand-blue transition-colors">
-                {desk.name}
-              </h4>
-            </div>
+        {/* Representative Name */}
+        <div className="mt-4">
+          <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            Official Representative
           </div>
-
-          {/* Contact Links */}
-          <div className="mt-5 pt-3.5 border-t border-slate-200/70 flex flex-col gap-2 text-xs">
-            <a
-              href={`tel:${cleanPhone}`}
-              className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-white px-3 py-2 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:text-brand-green hover:shadow-sm"
-            >
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-emerald-50 text-brand-green">
-                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </span>
-              <span className="tabular-nums">{desk.phone}</span>
-            </a>
-
-            <a
-              href={`mailto:${desk.email}`}
-              className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-white px-3 py-2 font-semibold text-slate-700 transition-all hover:border-brand-blue/50 hover:text-brand-blue hover:shadow-sm"
-            >
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-sky-50 text-brand-blue">
-                <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-              </span>
-              <span className="truncate">{desk.email}</span>
-            </a>
-          </div>
+          <h4 className="mt-0.5 text-base font-bold text-brand-dark group-hover:text-brand-blue transition-colors">
+            {desk.name}
+          </h4>
         </div>
-      );
-    })}
+      </div>
+
+      {/* Contact Links */}
+      <div className="mt-5 pt-3.5 border-t border-slate-200/70 flex flex-col gap-2 text-xs">
+        <a
+          href={`tel:${cleanPhone}`}
+          className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-white px-3 py-2 font-semibold text-slate-700 transition-all hover:border-brand-green/50 hover:text-brand-green hover:shadow-sm"
+        >
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-emerald-50 text-brand-green">
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </span>
+          <span className="tabular-nums">{desk.phone}</span>
+        </a>
+
+        <a
+          href={`mailto:${desk.email}`}
+          className="inline-flex items-center gap-2.5 rounded-xl border border-slate-200/70 bg-white px-3 py-2 font-semibold text-slate-700 transition-all hover:border-brand-blue/50 hover:text-brand-blue hover:shadow-sm"
+        >
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-sky-50 text-brand-blue">
+            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </span>
+          <span className="truncate">{desk.email}</span>
+        </a>
+      </div>
+    </div>
+  );
+})}
 
     {/* Card 3: Reserve Stand (Exact Match in Size & Alignment) */}
     <div className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-[#071118] p-5 text-white shadow-md transition-all hover:shadow-xl">
